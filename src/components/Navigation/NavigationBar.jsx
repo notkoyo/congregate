@@ -15,7 +15,7 @@ export const NavigationBar = () => {
     <Navbar shouldHideOnScroll>
       <NavbarBrand>
         <CongregateLogo />
-        <p className="font-bold text-inherit">Congregate</p>
+        <p className="font-bold font-pally text-inherit">Congregate</p>
       </NavbarBrand>
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
         {navbarItems.map((item, i) => (
