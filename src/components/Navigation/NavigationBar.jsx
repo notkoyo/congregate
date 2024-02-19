@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
 import { ChevronDown, CalendarIcon, VenueIcon } from "./Icons";
+import { useRouter } from "next/navigation";
 
 const signedInUser = "kaiden@gmail.com";
 const menuItems = ["Meet", "Host", "Events", "Venues"];
@@ -26,6 +27,7 @@ const menuItems = ["Meet", "Host", "Events", "Venues"];
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const router = useRouter()
 
   return (
     <Navbar
@@ -38,7 +40,7 @@ export const NavigationBar = () => {
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         className="md:hidden"
       />
-      <NavbarBrand>
+      <NavbarBrand onClick={() => router.push('/')}>
         <div className="scale-75 cursor-default md:scale-100">
           <CongregateLogo />
         </div>
@@ -50,7 +52,7 @@ export const NavigationBar = () => {
         <NavbarItem>
           <Link
             className="font-satoshi text-lg font-medium text-white"
-            href="#"
+            href="/"
           >
             Meet
           </Link>
@@ -59,7 +61,8 @@ export const NavigationBar = () => {
           classNames={{
             content: "bg-cyan-700 shadow-2xl scrollbar-hide",
           }}
-        >
+          onOpenChange={(isOpen) => isOpen ? setRotation(180) : setRotation(0)}
+        > 
           <DropdownTrigger>
             <Button
               disableRipple
@@ -69,9 +72,7 @@ export const NavigationBar = () => {
               endContent={
                 <ChevronDown fill={"#FFF"} size={16} rotation={rotation} />
               }
-              onClick={() =>
-                rotation === 180 ? setRotation(0) : setRotation(180)
-              }
+ 
             >
               Host
             </Button>
