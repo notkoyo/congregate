@@ -59,7 +59,8 @@ export const NavigationBar = () => {
           classNames={{
             content: "bg-cyan-700 shadow-2xl scrollbar-hide",
           }}
-        >
+          onOpenChange={(isOpen) => isOpen ? setRotation(180) : setRotation(0)}
+        > 
           <DropdownTrigger>
             <Button
               disableRipple
@@ -69,9 +70,7 @@ export const NavigationBar = () => {
               endContent={
                 <ChevronDown fill={"#FFF"} size={16} rotation={rotation} />
               }
-              onClick={() =>
-                rotation === 180 ? setRotation(0) : setRotation(180)
-              }
+ 
             >
               Host
             </Button>
