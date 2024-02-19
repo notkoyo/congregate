@@ -9,7 +9,12 @@ module.exports = {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        pally: ["pally"],
+        satoshi: ["satoshi"],
+      }
+    },
   },
   darkMode: "class",
   plugins: [nextui()],

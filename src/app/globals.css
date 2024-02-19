@@ -1,3 +1,15 @@
+@import url("https://api.fontshare.com/v2/css?f[]=pally@400,700,500&display=swap");
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@700,500,501,401,400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
