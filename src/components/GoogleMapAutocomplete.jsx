@@ -15,7 +15,7 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
     setValue,
     clearSuggestions,
   } = usePlacesAutocomplete({
-    callbackName: "YOUR_CALLBACK_NAME",
+    callbackName: "mapCallback",
     requestOptions: {
       /* Define search scope here */
     },
