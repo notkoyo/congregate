@@ -23,8 +23,6 @@ export async function POST(req) {
     },
   );
 
-  console.log("hello");
-
   const {
     data: { session },
   } = await supabase.auth.getSession();

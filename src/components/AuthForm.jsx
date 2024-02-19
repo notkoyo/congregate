@@ -44,15 +44,14 @@ export default function AuthForm() {
   }
 
   async function handleGoogle() {
-    console.log("here");
     const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `http://localhost:3000/auth/callback`,
       },
     });
-    if (!error) {
-      router.push("/profile");
+    if (error) {
+      console.error(error);
     }
     console.log({ user, session, error });
   }
