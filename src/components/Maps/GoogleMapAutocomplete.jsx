@@ -67,7 +67,8 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
           value={value}
           onChange={handleInput}
           disabled={!ready}
-          placeholder="Where are you going?"
+          placeholder="Search near..."
+          className="border-solid border-black border-1"
         />
         {/* We can use the "status" to decide whether we should display the dropdown or not */}
         {status === "OK" && <ul>{renderSuggestions()}</ul>}
