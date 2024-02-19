@@ -13,7 +13,12 @@ export default function AuthForm() {
     <form className="flex flex-col gap-4">
       <EmailInput />
       <PasswordInput setPasswordStrength={setPasswordStrength} />
-      <Progress className={passwordStrength > 0 ? "" : "hidden"} size="sm" color={passwordStrength === 100 ? "success" : "danger"} aria-label="password strength bar" value={passwordStrength} />
+      <Progress
+        aria-label="password strength bar"
+        className={passwordStrength > 0 ? "" : "hidden"}
+        color={passwordStrength === 100 ? "success" : "danger"}
+        size="sm"
+        value={passwordStrength} />
     </form>
   )
 }
