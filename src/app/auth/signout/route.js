@@ -23,7 +23,7 @@ export async function POST(req) {
     },
   );
 
-  console.log("hello");
+  console.log("You've Signed Out!");
 
   const {
     data: { session },
