@@ -2,15 +2,21 @@
 
 import { useState } from "react";
 
-import { Progress } from "@nextui-org/react";
+import { Button, Progress } from "@nextui-org/react";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
 
 export default function AuthForm() {
   const [passwordStrength, setPasswordStrength] = useState(0);
 
+  const handleSubmit = () => {
+    if (typeof window !== "undefined") {
+      console.log("submitted entry");
+    }
+  }
+
   return (
-    <form className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 font-satoshi">
       <EmailInput />
       <PasswordInput setPasswordStrength={setPasswordStrength} />
       <Progress
@@ -19,6 +25,9 @@ export default function AuthForm() {
         color={passwordStrength === 100 ? "success" : "danger"}
         size="sm"
         value={passwordStrength} />
+      <Button type="submit" variant="solid" color="primary" className="font-semibold">
+        Login
+      </Button>
     </form>
   )
 }

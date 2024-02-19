@@ -35,7 +35,7 @@ export default function PasswordInput({ setPasswordStrength }) {
     <Input
       value={password}
       label="Password"
-      variant="bordered"
+      variant="faded"
       endContent={
         <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
           {isVisible ? (
@@ -49,8 +49,8 @@ export default function PasswordInput({ setPasswordStrength }) {
       isInvalid={!isValid}
       color={password !== "" ? (isValid ? "success" : "danger") : "default"}
       errorMessage={!isValid && "Please enter a valid password"}
-      onValueChange={(handlePasswordChange)}
-      className="max-w-xs"
+      onValueChange={handlePasswordChange}
+      className="max-w-xs font-medium"
     />
   );
 }
