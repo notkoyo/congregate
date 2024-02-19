@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Input } from "@nextui-org/react";
-import { EyeFilledIcon } from "./EyeIcons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "./EyeIcons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "./_eye-icons/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "./_eye-icons/EyeSlashFilledIcon";
 
 export default function PasswordInput() {
   const [password, setPassword] = useState("");
