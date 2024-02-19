@@ -20,6 +20,6 @@ export const supabase = (cookies) => {
 // import { cookies } from "next/headers";
 
 // export default async function Page() {
-//   const { data } = await supabase(cookies).from("events").select();
+//   const { data } = await supabase(cookies).from("events").select("id", "name").match(id)
 //   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 // }
