@@ -25,12 +25,12 @@ export default function EmailInput() {
       value={email}
       type="email"
       label="Email"
-      variant="bordered"
+      variant="faded"
       isInvalid={!isValid}
       color={email !== "" ? (isValid ? "success" : "danger") : "default"}
       errorMessage={!isValid && "Please enter a valid email"}
       onValueChange={handleEmailChange}
-      className="max-w-xs"
+      className="max-w-xs font-medium"
     />
   );
 }
