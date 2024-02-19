@@ -58,6 +58,32 @@ export default function AuthForm() {
     // console.log({ data, error });
   };
 
+  const handleFacebook = async () => {
+    const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
+      provider: "facebook",
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+      },
+    });
+    if (!error) {
+      router.push("/profile");
+    }
+    // console.log({ user, session, error });
+  }
+
+  const handleGitHub = async () => {
+    const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+      },
+    });
+    if (!error) {
+      router.push("/profile");
+    }
+    // console.log({ user, session, error });
+  }
+
   const handleGoogle = async () => {
     // console.log("here");
     const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
@@ -200,6 +226,12 @@ export default function AuthForm() {
       <Divider className="my-5" />
       <Button onPress={handleGoogle} endContent={<GoogleIcon />}>
         Login with Google
+      </Button>
+      <Button onPress={handleGitHub} endContent={<GoogleIcon />}>
+        Login with GitHub
+      </Button>
+      <Button onPress={handleFacebook} endContent={<GoogleIcon />}>
+        Login with Facebook
       </Button>
     </form>
   );
