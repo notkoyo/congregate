@@ -13,7 +13,8 @@ import { supabaseAuth } from "@/utils/supabaseClient";
 
 import { EyeFilledIcon } from "./_eye-icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./_eye-icons/EyeSlashFilledIcon";
-import { Button, Progress, Input } from "@nextui-org/react";
+import { Button, Progress, Input, Divider, Link } from "@nextui-org/react";
+import GoogleIcon from "./GoogleIcon";
 
 export default function AuthForm() {
   const [email, setEmail] = useState("");
@@ -125,7 +126,7 @@ export default function AuthForm() {
       onSubmit={isNewUser ? handleSignUp : handleLogin}
       className="flex flex-col gap-4 font-satoshi"
     >
-      {isNewUser ? <>Create an account</> : <>Login</>}
+      <h2 className="text-center text-2xl font-bold mb-12">{isNewUser ? "Create an account" : "Login"}</h2>
       <Input
         isClearable
         value={email}
@@ -136,7 +137,7 @@ export default function AuthForm() {
         color={email !== "" ? (isEmailValid ? "success" : "danger") : "default"}
         errorMessage={!isEmailValid && "Please enter a valid email"}
         onValueChange={handleEmailChange}
-        className="max-w-xs font-medium"
+        className="max-w-xs font-medium mb-2"
       />
       <Input
         value={password}
@@ -162,7 +163,7 @@ export default function AuthForm() {
         }
         errorMessage={!isPasswordValid && "Please enter a valid password"}
         onValueChange={handlePasswordChange}
-        className="max-w-xs font-medium"
+        className="max-w-xs font-medium mt-2"
       />
       <Progress
         aria-label="password strength bar"
@@ -171,31 +172,21 @@ export default function AuthForm() {
         size="sm"
         value={passwordStrength}
       />
-      <p>
         {isNewUser ? (
-          <>
-            Already have an Account?{" "}
-            <button
-              className="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"
-              type="button"
-              onClick={() => setIsNewUser(false)}
-            >
-              Sign In
-            </button>
-          </>
+          <div className="flex gap-1 justify-center my-1">
+            <p className="cursor-default text-sm">Already have an account?</p>
+            <Link className="font-medium text-sm cursor-pointer" onPress={() => setIsNewUser(false)}>
+              Login
+            </Link>
+          </div>
         ) : (
-          <>
-            Don't have an account?{" "}
-            <button
-              className="inline-block align-baseline text-sm font-bold text-blue-500 hover:text-blue-800"
-              type="button"
-              onClick={() => setIsNewUser(true)}
-            >
+          <div className="flex gap-1 justify-center my-1">
+            <p className="cursor-default text-sm">Don't have an account?</p>
+            <Link className="font-medium text-sm cursor-pointer" onPress={() => setIsNewUser(true)}>
               Sign Up
-            </button>
-          </>
+            </Link>
+          </div>
         )}
-      </p>
       {isSigningUp && signUpMessage}
       <Button
         isLoading={isSigningIn}
@@ -206,16 +197,10 @@ export default function AuthForm() {
       >
         {signInMessage}
       </Button>
-      <div className="flex justify-center">
-        <p>--------or--------</p>
-      </div>
-      <button
-        type="button"
-        className="border-gray rounded bg-slate-200"
-        onClick={handleGoogle}
-      >
-        Google
-      </button>
+      <Divider className="my-5" />
+      <Button onPress={handleGoogle} endContent={<GoogleIcon />}>
+        Login with Google
+      </Button>
     </form>
   );
 }
