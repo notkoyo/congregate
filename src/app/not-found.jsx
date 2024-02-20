@@ -7,7 +7,7 @@ export default function NotFound() {
         404 Error - Page Not Found
       </h1>
       <p className="mb-6 font-satoshi text-3xl font-bold">
-        Sorry, the page you are looking for cannot be found.
+        Sorry, the page you are looking for cannot be found
       </p>
       <div>
         <Link
