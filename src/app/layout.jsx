@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Providers } from "./providers";
-import { NavigationBar } from "@/components/Navigation/NavigationBar";
+import { NavigationBar } from "../components/Navigation/NavigationBar";
 
 export const metadata = {
   title: "Congregate",
