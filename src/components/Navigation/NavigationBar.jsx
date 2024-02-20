@@ -18,7 +18,7 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
-import { ChevronDown, CalendarIcon, VenueIcon } from "./Icons";
+import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 
 const signedInUser = "kaiden@gmail.com";
