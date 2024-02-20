@@ -5,7 +5,7 @@ import SignOutButton from "../../components/SignOutButton";
 import { getCurrentUserID } from "../../utils/api";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
-export default async function Profile() {
+export default function Profile() {
   const [users, setUsers] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
   const [currentUserID, setCurrentUserID] = useState("");
