@@ -15,6 +15,8 @@ import { EyeFilledIcon } from "./_eye-icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./_eye-icons/EyeSlashFilledIcon";
 import { Button, Progress, Input, Divider, Link } from "@nextui-org/react";
 import GoogleIcon from "./GoogleIcon";
+import GitHubIcon from "./GitHubIcon";
+import FacebookIcon from "./FacebookIcon";
 
 export default function AuthForm() {
   const [email, setEmail] = useState("");
@@ -227,10 +229,10 @@ export default function AuthForm() {
       <Button onPress={handleGoogle} endContent={<GoogleIcon />}>
         Login with Google
       </Button>
-      <Button onPress={handleGitHub} endContent={<GoogleIcon />}>
+      <Button onPress={handleGitHub} endContent={<GitHubIcon />}>
         Login with GitHub
       </Button>
-      <Button onPress={handleFacebook} endContent={<GoogleIcon />}>
+      <Button onPress={handleFacebook} endContent={<FacebookIcon />}>
         Login with Facebook
       </Button>
     </form>
