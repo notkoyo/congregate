@@ -3,9 +3,9 @@ import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import Link from "next/link";
 
 export default function ListVenue({ venue }) {
-  console.log(venue, "venue");
+  console.log(venue.venue_id);
   return (
-    <Link href={`/venues/${venue.id}`}>
+    <Link href={`/venues/${venue.venue_id}`}>
       <Card className="py-4">
         <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
           <p className="text-tiny font-bold uppercase">{venue.name}</p>
