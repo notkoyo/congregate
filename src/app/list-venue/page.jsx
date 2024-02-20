@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { supabaseAuth } from "../../utils/supabaseClient";
-import ListVenue from "../../components/ListVenue";
+import ListVenue from "../../components/Venue/ListVenue";
 
 import "./listVenue.css";
 function Page() {
   const [venuesData, setVenuesData] = useState(null);
-
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
