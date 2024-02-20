@@ -54,6 +54,7 @@ export default function AuthForm() {
       email,
       password,
     });
+    console.log(data);
     if (!error) {
       router.push("/profile");
     } else {
