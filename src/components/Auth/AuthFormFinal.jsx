@@ -1,22 +1,15 @@
 "use client";
 
-{/*
-
-  - Possible bug with isSigningIn - needs checking
-  - Styling
-
-*/}
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "@/utils/supabaseClient";
 
-import { EyeFilledIcon } from "./_eye-icons/EyeFilledIcon";
-import { EyeSlashFilledIcon } from "./_eye-icons/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "../Icons/_eye-icons/EyeFilledIcon";
+import { EyeSlashFilledIcon } from "../Icons/_eye-icons/EyeSlashFilledIcon";
 import { Button, Progress, Input, Divider, Link } from "@nextui-org/react";
-import GoogleIcon from "./GoogleIcon";
-import GitHubIcon from "./GitHubIcon";
-import FacebookIcon from "./FacebookIcon";
+import GoogleIcon from "../Icons/GoogleIcon";
+import GitHubIcon from "../Icons/GitHubIcon";
+// import FacebookIcon from "../Icons/FacebookIcon";
 
 export default function AuthForm() {
   const [email, setEmail] = useState("");
@@ -42,7 +35,6 @@ export default function AuthForm() {
       setIsSigningUp(true);
       setIsSigningIn(false);
     }
-    console.log({ data, error });
   };
 
   const handleLogin = async (e) => {
@@ -57,7 +49,6 @@ export default function AuthForm() {
     } else {
       setIsSigningUp(false);
     }
-    // console.log({ data, error });
   };
 
   const handleFacebook = async () => {
@@ -70,7 +61,6 @@ export default function AuthForm() {
     if (!error) {
       router.push("/profile");
     }
-    // console.log({ user, session, error });
   }
 
   const handleGitHub = async () => {
@@ -83,11 +73,9 @@ export default function AuthForm() {
     if (!error) {
       router.push("/profile");
     }
-    // console.log({ user, session, error });
   }
 
   const handleGoogle = async () => {
-    // console.log("here");
     const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -97,7 +85,6 @@ export default function AuthForm() {
     if (!error) {
       router.push("/profile");
     }
-    // console.log({ user, session, error });
   };
 
   let signInMessage = "Login";
@@ -232,9 +219,9 @@ export default function AuthForm() {
       <Button onPress={handleGitHub} endContent={<GitHubIcon />}>
         Login with GitHub
       </Button>
-      <Button onPress={handleFacebook} endContent={<FacebookIcon />}>
+      {/*<Button onPress={handleFacebook} endContent={<FacebookIcon />}>
         Login with Facebook
-      </Button>
+        </Button>*/}
     </form>
   );
 }
