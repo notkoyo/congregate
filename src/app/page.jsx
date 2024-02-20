@@ -1,13 +1,11 @@
-"use client"
+"use client";
 
-import LoginCard from "@/components/Auth/LoginCard";
-
+import AuthForm from "../components/auth-components/AuthFormFinal";
 export default function Home() {
-
   return (
     <>
-      <div className="min-h-screen grid place-items-center">
-        <LoginCard />
+      <div className="grid min-h-screen place-items-center">
+        <AuthForm />
       </div>
     </>
   );
