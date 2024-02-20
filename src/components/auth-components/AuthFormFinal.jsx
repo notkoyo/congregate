@@ -1,15 +1,17 @@
 "use client";
 
-{/*
+{
+  /*
 
   - Possible bug with isSigningIn - needs checking
   - Styling
 
-*/}
+*/
+}
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseAuth } from "@/utils/supabaseClient";
+import { supabaseAuth } from "../../utils/supabaseClient";
 
 import { EyeFilledIcon } from "./_eye-icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "./_eye-icons/EyeSlashFilledIcon";
@@ -71,7 +73,7 @@ export default function AuthForm() {
       router.push("/profile");
     }
     // console.log({ user, session, error });
-  }
+  };
 
   const handleGitHub = async () => {
     const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
@@ -84,7 +86,7 @@ export default function AuthForm() {
       router.push("/profile");
     }
     // console.log({ user, session, error });
-  }
+  };
 
   const handleGoogle = async () => {
     // console.log("here");
@@ -154,7 +156,9 @@ export default function AuthForm() {
       onSubmit={isNewUser ? handleSignUp : handleLogin}
       className="flex flex-col gap-4 font-satoshi"
     >
-      <h2 className="text-center text-2xl font-bold mb-12">{isNewUser ? "Create an account" : "Login"}</h2>
+      <h2 className="mb-12 text-center text-2xl font-bold">
+        {isNewUser ? "Create an account" : "Login"}
+      </h2>
       <Input
         isClearable
         value={email}
@@ -165,7 +169,7 @@ export default function AuthForm() {
         color={email !== "" ? (isEmailValid ? "success" : "danger") : "default"}
         errorMessage={!isEmailValid && "Please enter a valid email"}
         onValueChange={handleEmailChange}
-        className="max-w-xs font-medium mb-2"
+        className="mb-2 max-w-xs font-medium"
       />
       <Input
         value={password}
@@ -191,7 +195,7 @@ export default function AuthForm() {
         }
         errorMessage={!isPasswordValid && "Please enter a valid password"}
         onValueChange={handlePasswordChange}
-        className="max-w-xs font-medium mt-2"
+        className="mt-2 max-w-xs font-medium"
       />
       <Progress
         aria-label="password strength bar"
@@ -200,21 +204,27 @@ export default function AuthForm() {
         size="sm"
         value={passwordStrength}
       />
-        {isNewUser ? (
-          <div className="flex gap-1 justify-center my-1">
-            <p className="cursor-default text-sm">Already have an account?</p>
-            <Link className="font-medium text-sm cursor-pointer" onPress={() => setIsNewUser(false)}>
-              Login
-            </Link>
-          </div>
-        ) : (
-          <div className="flex gap-1 justify-center my-1">
-            <p className="cursor-default text-sm">Don't have an account?</p>
-            <Link className="font-medium text-sm cursor-pointer" onPress={() => setIsNewUser(true)}>
-              Sign Up
-            </Link>
-          </div>
-        )}
+      {isNewUser ? (
+        <div className="my-1 flex justify-center gap-1">
+          <p className="cursor-default text-sm">Already have an account?</p>
+          <Link
+            className="cursor-pointer text-sm font-medium"
+            onPress={() => setIsNewUser(false)}
+          >
+            Login
+          </Link>
+        </div>
+      ) : (
+        <div className="my-1 flex justify-center gap-1">
+          <p className="cursor-default text-sm">Don't have an account?</p>
+          <Link
+            className="cursor-pointer text-sm font-medium"
+            onPress={() => setIsNewUser(true)}
+          >
+            Sign Up
+          </Link>
+        </div>
+      )}
       {isSigningUp && signUpMessage}
       <Button
         isLoading={isSigningIn}
