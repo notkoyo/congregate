@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import ListVenue from "../../components/ListVenue";
+
+import "./listVenue.css";
 function Page() {
   const [venuesData, setVenuesData] = useState(null);
 
@@ -23,10 +25,12 @@ function Page() {
   }, []);
 
   return (
-    <div className="mx-auto mt-10 grid w-1600 grid-cols-3 gap-6">
-      {venuesData?.map((venue) => (
-        <ListVenue key={venue.id} venue={venue} />
-      ))}
+    <div className="venue_grid">
+      <div className="venue_inside">
+        {venuesData?.map((venue) => (
+          <ListVenue key={venue.id} venue={venue} />
+        ))}
+      </div>
     </div>
   );
 }
