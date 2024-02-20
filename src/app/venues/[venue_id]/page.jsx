@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { supabaseAuth } from "../../../utils/supabaseClient";
+import SingleVenue from "../../../components/Venue/SingleVenue";
 function Page({ params }) {
   const venue_id = params.venue_id;
-  const [venuesData, setVenuesData] = useState(null);
+  const [venuesData, setVenuesData] = useState([]);
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
@@ -25,7 +26,7 @@ function Page({ params }) {
 
   return (
     <div className="mx-auto mt-10 grid w-1600 grid-cols-3 gap-6">
-      <p>Nice</p>
+      <SingleVenue venue={venuesData} />
     </div>
   );
 }
