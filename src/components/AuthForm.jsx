@@ -25,7 +25,7 @@ export default function AuthForm() {
       setIsSigningUp(true);
       setIsSigningIn(false);
     }
-    console.log({ data, error });
+    
   }
 
   async function handleLogin(e) {
@@ -40,7 +40,7 @@ export default function AuthForm() {
     } else {
       setIsSigningUp(false);
     }
-    console.log({ data, error });
+;
   }
 
   let signInMessage = "Sign In";

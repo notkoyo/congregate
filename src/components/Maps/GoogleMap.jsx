@@ -13,35 +13,33 @@
 
 import {
   APIProvider,
+  AdvancedMarker,
   Map,
   MapCameraChangedEvent,
+  Pin,
 } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
 
-export const GoogleMap = ({ LocationInfo = [], selectedPos = {} }) => {
+export const GoogleMap = ({
+  selectedPos = {},
+  selectedEvents,
+}) => {
   const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   const [cameraProps, setCameraProps] = useState({
+    zoom: 1,
     center: { lat: 0, lng: 0 },
-    zoom: 15,
   });
 
   useEffect(() => {
-    Object.keys(selectedPos).length
-      ? setCameraProps({...cameraProps, center:{ lat: selectedPos.lat, lng: selectedPos.lng }})
-      : navigator.geolocation.getCurrentPosition((pos) => {
-          setCameraProps({
-            center: {
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude,
-            },
-            zoom: 15,
-          });
-        });
+    setCameraProps({
+      zoom: 13,
+      center: { lat: selectedPos.center.lat, lng: selectedPos.center.lng },
+    });
   }, [selectedPos]);
 
   const handleCameraChange = useCallback((MapCameraChangedEvent) =>
-    setCameraProps({...cameraProps, zoom: MapCameraChangedEvent.detail.zoom}),
+    setCameraProps({ ...cameraProps, zoom: MapCameraChangedEvent.detail.zoom }),
   );
 
   return (
@@ -51,7 +49,19 @@ export const GoogleMap = ({ LocationInfo = [], selectedPos = {} }) => {
         {...cameraProps}
         mapId={process.env.NEXT_PUBLIC_MAP_ID}
         onCameraChanged={handleCameraChange}
-      ></Map>
+      >
+        <AdvancedMarker position={selectedPos.center}>
+          <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'}/>
+        </AdvancedMarker>
+        {selectedEvents.length && selectedEvents.map((event) => {
+          return (
+            <AdvancedMarker
+              position={{ lat: event.lat, lng: event.lng }}
+              key={event.event_id}
+            ></AdvancedMarker>
+          );
+        })}
+      </Map>
     </APIProvider>
   );
 };
