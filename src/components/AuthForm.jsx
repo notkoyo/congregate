@@ -57,6 +57,34 @@ export default function AuthForm() {
     console.log({ user, session, error });
   }
 
+  async function handleFacebook() {
+    console.log("here");
+    const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
+      provider: "facebook",
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+      },
+    });
+    if (!error) {
+      router.push("/profile");
+    }
+    console.log({ user, session, error });
+  }
+
+  async function handleGithub() {
+    console.log("here");
+    const { user, session, error } = await supabaseAuth.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `http://localhost:3000/auth/callback`,
+      },
+    });
+    if (!error) {
+      router.push("/profile");
+    }
+    console.log({ user, session, error });
+  }
+
   let signInMessage = "Sign In";
 
   if (isSigningIn) {
@@ -139,6 +167,20 @@ export default function AuthForm() {
           onClick={handleGoogle}
         >
           Google
+        </button>
+        <button
+          type="button"
+          className="border-gray rounded bg-slate-200"
+          onClick={handleFacebook}
+        >
+          Facebook
+        </button>
+        <button
+          type="button"
+          className="border-gray rounded bg-slate-200"
+          onClick={handleGithub}
+        >
+          GitHub
         </button>
       </form>
     </div>
