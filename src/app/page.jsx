@@ -1,5 +1,8 @@
 "use client";
 
+import LoginCard from "../components/Auth/LoginCard"
+"use client";
+
 import { GoogleMap } from "@/components/Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "@/components/Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "@/utils/supabaseClient";
@@ -40,6 +43,10 @@ export default function Home() {
   }, [selectedPos]);
 
   return (
+    <>
+     <div className="grid min-h-screen place-items-center">
+        <LoginCard />
+      </div>
     <div className="z-0 m-4 mt-8 flex w-screen">
       <div className="flex flex-col gap-2">
         <section className="flex flex-col gap-2">
@@ -83,8 +90,11 @@ export default function Home() {
               x
             </motion.button>
           </motion.div>
+     
         )}
       </AnimatePresence>
     </div>
+    
+    </>
   );
 }

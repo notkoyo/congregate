@@ -1,10 +1,12 @@
-import SignOutButton from "@/components/SignOutButton";
+"use client";
+import React from "react";
+import { supabaseAuth } from "../../utils/supabaseClient";
 
-export default function Profile() {
-  return (
-    <div>
-      <div>Profile</div>
-      <SignOutButton />
-    </div>
-  );
+function page() {
+  const test = supabaseAuth.auth.getSession();
+  const res = test.then((res) => console.log(res));
+  console.log(res);
+  return <div>page</div>;
 }
+
+export default page;
