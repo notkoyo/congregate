@@ -6,7 +6,6 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
-  const mapCallback = () => {};
 
   const {
     ready,
@@ -15,7 +14,6 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
     setValue,
     clearSuggestions,
   } = usePlacesAutocomplete({
-    callbackName: "mapCallback",
     requestOptions: {
       /* Define search scope here */
     },
@@ -42,7 +40,7 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
 
       // Get latitude and longitude via utility functions
       getGeocode({ address: description }).then((results) => {
-        setSelectedPos(getLatLng(results[0]))
+        setSelectedPos({...setSelectedPos,center:getLatLng(results[0])})
       });
     };
 
