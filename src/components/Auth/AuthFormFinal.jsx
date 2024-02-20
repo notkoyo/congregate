@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabaseAuth } from "@/utils/supabaseClient";
+import { supabaseAuth } from "../../utils/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { EyeFilledIcon } from "../Icons/_eye-icons/EyeFilledIcon";
