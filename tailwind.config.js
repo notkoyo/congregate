@@ -17,6 +17,9 @@ module.exports = {
       width: {
         1600: "1500px",
       },
+      height: {
+        200: "200px",
+      },
     },
   },
   darkMode: "class",

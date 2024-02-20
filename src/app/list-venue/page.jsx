@@ -23,7 +23,7 @@ function Page() {
   }, []);
 
   return (
-    <div className="w-1600 mx-auto mt-10 grid grid-cols-3 gap-6">
+    <div className="mx-auto mt-10 grid w-1600 grid-cols-3 gap-6">
       {venuesData?.map((venue) => (
         <ListVenue key={venue.id} venue={venue} />
       ))}
