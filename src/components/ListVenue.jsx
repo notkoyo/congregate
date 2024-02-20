@@ -3,7 +3,6 @@ import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import Link from "next/link";
 
 export default function ListVenue({ venue }) {
-  console.log(venue.venue_id);
   return (
     <Link href={`/venues/${venue.venue_id}`}>
       <Card className="py-4">
@@ -11,14 +10,14 @@ export default function ListVenue({ venue }) {
           <p className="text-tiny font-bold uppercase">{venue.name}</p>
           <small className="text-default-500">{venue.description}</small>
         </CardHeader>
-        <CardBody className=" overflow-visible py-2">
+        <CardBody className="flex w-full flex-col items-center overflow-visible py-2 text-center">
           <Image
             alt="Card background"
-            className="rounded-xl object-cover"
+            className="w-400 h-260 rounded-xl object-cover"
             src={venue.photos}
           />
         </CardBody>
-        <CardBody className="overflow-visible py-2">
+        <CardBody className="overflow-visible pb-2 pt-5">
           <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
           <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
           <p className="text-tiny font-bold uppercase">{venue.city}</p>
