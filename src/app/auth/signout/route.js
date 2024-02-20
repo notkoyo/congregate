@@ -1,3 +1,4 @@
+import { CongregateLogo } from "@/components/Navigation/CongregateLogo";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -23,7 +24,7 @@ export async function POST(req) {
     },
   );
 
-  console.log("hello");
+  console.log("You've signed out");
 
   const {
     data: { session },
