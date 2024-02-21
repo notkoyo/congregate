@@ -22,13 +22,26 @@ import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
-const signedInUser = "kaiden";
+const getCurrentUser = async () => {
+  try {
+    const { data: session, error } = await supabaseAuth.auth.getSession();
+    if (error || !session || session.user === undefined)
+      return console.error("Error getting current session or user.", error);
+
+    return session.user.email;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+let signedInUser = getCurrentUser();
+
 const menuItems = ["Meet", "Host Events", "Host Venues"];
 
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Navbar
@@ -41,7 +54,7 @@ export const NavigationBar = () => {
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         className="md:hidden"
       />
-      <NavbarBrand onClick={() => router.push('/')}>
+      <NavbarBrand onClick={() => router.push("/")}>
         <div className="scale-75 cursor-default md:scale-100">
           <CongregateLogo />
         </div>
@@ -62,8 +75,10 @@ export const NavigationBar = () => {
           classNames={{
             content: "bg-cyan-700 shadow-2xl scrollbar-hide",
           }}
-          onOpenChange={(isOpen) => isOpen ? setRotation(180) : setRotation(0)}
-        > 
+          onOpenChange={(isOpen) =>
+            isOpen ? setRotation(180) : setRotation(0)
+          }
+        >
           <DropdownTrigger>
             <Button
               disableRipple
@@ -73,7 +88,6 @@ export const NavigationBar = () => {
               endContent={
                 <ChevronDown fill={"#FFF"} size={16} rotation={rotation} />
               }
- 
             >
               Host
             </Button>
@@ -109,7 +123,10 @@ export const NavigationBar = () => {
         </Dropdown>
       </NavbarContent>
       <NavbarContent justify="end">
-        <Dropdown placement="bottom-end" classNames={{ content: "bg-cyan-700 shadow-2xl text-white"}}>
+        <Dropdown
+          placement="bottom-end"
+          classNames={{ content: "bg-cyan-700 shadow-2xl text-white" }}
+        >
           <DropdownTrigger>
             <Avatar
               isBordered
@@ -121,7 +138,7 @@ export const NavigationBar = () => {
               src="#"
             />
           </DropdownTrigger>
-          {!signedInUser ? (
+          {signedInUser !== typeof "string" ? (
             <DropdownMenu aria-label="Login Menu" variant="flat">
               <DropdownItem
                 as={Link}
@@ -136,16 +153,57 @@ export const NavigationBar = () => {
             </DropdownMenu>
           ) : (
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="profile" className="h-14 gap-2">
+              <DropdownItem key="details" className="h-14 gap-2">
                 <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold text-white/35">{signedInUser}</p>
+                <p className="font-semibold text-white/35">{signedInUser === typeof "string" ? signedInUser : "Not signed in"}</p>
               </DropdownItem>
-              <DropdownItem as={Link} href="/profile" className="text-white" key="profile">Profile</DropdownItem>
-              <DropdownItem as={Link} href="/profile" className="text-white" key="joined_events">Joined Events</DropdownItem>
-              <DropdownItem as={Link} href="/profile" className="text-white" key="hosted_events">Hosted Events</DropdownItem>
-              <DropdownItem as={Link} href="/profile" className="text-white" key="hosted_venues">Hosted Venues</DropdownItem>
-              <DropdownItem as={Link} href="/profile/settings" className="text-white" key="settings">Settings</DropdownItem>
-              <DropdownItem as={Link} href="/auth/signout" className="text-white" key="logout" color="danger">
+              <DropdownItem
+                as={Link}
+                href="/profile"
+                className="text-white"
+                key="profile"
+              >
+                Profile
+              </DropdownItem>
+              <DropdownItem
+                as={Link}
+                href="/profile/joined-events"
+                className="text-white"
+                key="joined_events"
+              >
+                Joined Events
+              </DropdownItem>
+              <DropdownItem
+                as={Link}
+                href="/profile/hosted-events"
+                className="text-white"
+                key="hosted_events"
+              >
+                Hosted Events
+              </DropdownItem>
+              <DropdownItem
+                as={Link}
+                href="/profile/hosted-venues"
+                className="text-white"
+                key="hosted_venues"
+              >
+                Hosted Venues
+              </DropdownItem>
+              <DropdownItem
+                as={Link}
+                href="/profile/settings"
+                className="text-white"
+                key="settings"
+              >
+                Settings
+              </DropdownItem>
+              <DropdownItem
+                as={Link}
+                href="/auth/signout"
+                className="text-white"
+                key="logout"
+                color="danger"
+              >
                 Log Out
               </DropdownItem>
             </DropdownMenu>
@@ -155,7 +213,12 @@ export const NavigationBar = () => {
       <NavbarMenu className="scrollbar-hide">
         {menuItems.map((item, i) => (
           <NavbarMenuItem key={`${item}-${i}`} className="scrollbar-hide">
-            <Link color="foreground" className="w-full hover:bg-white/40" href="#" size="lg">
+            <Link
+              color="foreground"
+              className="w-full hover:bg-white/40"
+              href="#"
+              size="lg"
+            >
               {item}
             </Link>
           </NavbarMenuItem>
