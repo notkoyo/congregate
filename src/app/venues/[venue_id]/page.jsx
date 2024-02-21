@@ -5,6 +5,7 @@ import SingleVenue from "../../../components/Venue/SingleVenue";
 function Page({ params }) {
   const venue_id = params.venue_id;
   const [venuesData, setVenuesData] = useState([]);
+  console.log(venuesData);
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
