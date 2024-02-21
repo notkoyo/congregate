@@ -161,7 +161,7 @@ export const NavigationBar = () => {
               src={signedInUser ? signedInUser.avatar_url : "#"}
             />
           </DropdownTrigger>
-          {signedInUser ? (
+          {!signedInUser ? (
             <DropdownMenu aria-label="Login Menu" variant="flat">
               <DropdownItem
                 as={Link}
