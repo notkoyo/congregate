@@ -7,9 +7,18 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { EyeFilledIcon } from "../Icons/_eye-icons/EyeFilledIcon";
 import { EyeSlashFilledIcon } from "../Icons/_eye-icons/EyeSlashFilledIcon";
-import { Button, Progress, Input, Divider, Link } from "@nextui-org/react";
+import {
+  Button,
+  Progress,
+  Input,
+  Divider,
+  Link,
+  Tooltip,
+} from "@nextui-org/react";
 import GoogleIcon from "../Icons/GoogleIcon";
 import GitHubIcon from "../Icons/GitHubIcon";
+import { QuestionMarkIcon } from "../Icons/Icons";
+import { fetchUserData } from "@/utils/api";
 // import FacebookIcon from "../Icons/FacebookIcon";
 
 export default function AuthForm() {
@@ -19,6 +28,7 @@ export default function AuthForm() {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isProgressVisible, setIsProgressVisible] = useState(false);
+  const [isPasswordModal, setIsPasswordModal] = useState(false);
 
   const [isNewUser, setIsNewUser] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -54,9 +64,16 @@ export default function AuthForm() {
       email,
       password,
     });
-    console.log(data);
     if (!error) {
-      router.push("/profile");
+      // check if user exists that satisfies auth.user.id === public.user.auth_id
+      const userPublic = await fetchUserData(data.user.id);
+      if (userPublic) {
+        // if yes
+        router.push("/profile");
+      } else {
+        // if no
+        router.push("/create-profile");
+      }
     } else {
       setIsSigningUp(false);
     }
@@ -170,41 +187,73 @@ export default function AuthForm() {
         onValueChange={handleEmailChange}
         className="max-w-xs font-medium"
       />
-      <Input
-        isRequired
-        value={password}
-        label="Password"
-        variant="faded"
-        endContent={
-          <div>
-            <button
-              className="focus:outline-none"
-              type="button"
-              onClick={toggleVisibility}
-            >
-              {isProgressVisible ? (
-                <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              ) : (
-                <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
-              )}
-            </button>
-          </div>
-        }
-        type={isProgressVisible ? "text" : "password"}
-        isInvalid={!isPasswordValid}
-        color={
-          !isNewUser
-            ? "default"
-            : password !== ""
-              ? isPasswordValid
-                ? "success"
-                : "danger"
-              : "default"
-        }
-        errorMessage={!isPasswordValid && "Please enter a valid password"}
-        onValueChange={handlePasswordChange}
-        className="max-w-xs font-medium"
-      />
+      <div className="flex items-center gap-4">
+        <Input
+          isRequired
+          value={password}
+          label="Password"
+          variant="faded"
+          endContent={
+            <div>
+              <button
+                className="focus:outline-none"
+                type="button"
+                onClick={toggleVisibility}
+              >
+                {isProgressVisible ? (
+                  <EyeSlashFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                ) : (
+                  <EyeFilledIcon className="pointer-events-none text-2xl text-default-400" />
+                )}
+              </button>
+            </div>
+          }
+          type={isProgressVisible ? "text" : "password"}
+          isInvalid={!isPasswordValid}
+          color={
+            !isNewUser
+              ? "default"
+              : password !== ""
+                ? isPasswordValid
+                  ? "success"
+                  : "danger"
+                : "default"
+          }
+          errorMessage={!isPasswordValid && "Please enter a valid password"}
+          onValueChange={handlePasswordChange}
+          className="max-w-xs font-medium"
+        />
+        <Tooltip
+          isOpen={isPasswordModal}
+          onOpenChange={(open) => setIsPasswordModal(open)}
+          content={
+            <div className="p-2 text-center font-satoshi">
+              <h6 className="py-2 font-semibold">Password Requirements</h6>
+              <ul className="font-medium">
+                <li>
+                  3 Lowercase Characters{" "}
+                  <span className="font-bold">(a-z)</span>
+                </li>
+                <li>
+                  2 Uppercase Characters{" "}
+                  <span className="font-bold">(A-Z)</span>
+                </li>
+                <li>
+                  1 Special Character{" "}
+                  <span className="font-bold">(!,@,$,&,*)</span>
+                </li>
+                <li>
+                  2 Numbers <span className="font-bold">(0-9)</span>
+                </li>
+              </ul>
+            </div>
+          }
+        >
+          <Button isIconOnly>
+            <QuestionMarkIcon />
+          </Button>
+        </Tooltip>
+      </div>
       {isNewUser && (
         <Progress
           aria-label="password strength bar"
