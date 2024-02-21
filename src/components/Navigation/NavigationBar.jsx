@@ -29,8 +29,6 @@ export const NavigationBar = () => {
   const [rotation, setRotation] = useState(0);
   const [signedInUser, setSignedInUser] = useState(null);
 
-  console.log(signedInUser);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -163,7 +161,7 @@ export const NavigationBar = () => {
               src={signedInUser ? signedInUser.avatar_url : "#"}
             />
           </DropdownTrigger>
-          {signedInUser === null ? (
+          {signedInUser ? (
             <DropdownMenu aria-label="Login Menu" variant="flat">
               <DropdownItem
                 as={Link}
