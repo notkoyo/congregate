@@ -18,6 +18,7 @@ import {
 import GoogleIcon from "../Icons/GoogleIcon";
 import GitHubIcon from "../Icons/GitHubIcon";
 import { QuestionMarkIcon } from "../Icons/Icons";
+import { fetchUserData } from "@/utils/api";
 // import FacebookIcon from "../Icons/FacebookIcon";
 
 export default function AuthForm() {
@@ -53,22 +54,6 @@ export default function AuthForm() {
     } else if (error) {
       setIsSignupError(true);
       setTimeout(() => setIsSignupError(false), 7000);
-    }
-  };
-
-  const fetchUserData = async (id) => {
-    try {
-      const { data, error } = await supabaseAuth
-        .from("users")
-        .select()
-        .eq("auth_id", id);
-      if (error) {
-        console.error("Error fetching user data:", error);
-      } else {
-        return data[0];
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
     }
   };
 
