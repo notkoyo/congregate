@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  // const [testData, setTestData] = useState([]);
   const [userInterests, setUserInterests] = useState(null);
 
   useEffect(() => {
@@ -15,7 +16,7 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user:", error);
         } else if (data && data.user) {
-          console.log("data >>>", data);
+          // console.log("data >>>", data);
           return data.user.id;
         }
       } catch (error) {
@@ -39,63 +40,75 @@ export default function ProfileDisplay() {
       }
     };
 
-    const fetchUserInterests = async (authId) => {
-      const { data: user, error: userError } = await supabaseAuth
-        .from("users")
-        .select("id")
-        .eq("auth_id", authId);
+    const fetchUserInterests = async (id) => {
+      try {
+        const { data: user, error: userError } = await supabaseAuth
+          .from("users")
+          .select("id")
+          .eq("auth_id", id);
 
-      if (userError) {
-        console.error("Error fetching user:", userError);
-        return;
+        if (userError) {
+          console.error("Error fetching user:", userError);
+          return;
+        }
+
+        const userId = user[0].id;
+        console.log("User Id:", userId);
+
+        const { data: interests, error: interestsError } = await supabaseAuth
+          .from("user_interests")
+          .select("*")
+          .eq("user_id", String(userId));
+
+        console.log(interests, "table row where interest = user_id");
+
+        if (interestsError) {
+          console.error("Error fetching user interests:", interestsError);
+          return;
+        }
+
+        const interestIds = interests.map((interest) => interest.interest_id);
+
+        const { data: interestsData, error: interestsDataError } =
+          await supabaseAuth
+            .from("interests")
+            .select("*")
+            .in("interest_id", interestIds);
+
+        if (Array.isArray(interestsData) && interestsData.length > 0) {
+          setUserInterests(
+            interestsData.map((interest) => interest.interest).join(", "),
+          );
+        } else {
+          setUserInterests("");
+        }
+
+        console.log("UserInterests State:", userInterests);
+      } catch (error) {
+        console.error("Error fetching user interests:", error);
       }
-
-      const userId = user[0].id;
-      console.log("User ID:", userId);
-
-      const { data: interests, error: interestsError } = await supabaseAuth
-        .from("user_interests")
-        .select("interest_id")
-        .eq("user_id", userId);
-
-      console.log("User Interests Data:", userInterests);
-
-      if (interestsError) {
-        console.error("Error fetching user interests:", interestsError);
-        return;
-      }
-
-      const interestIds = interests.map((interest) => interest.interest_id);
-
-      const { data: interestsData, error: interestsDataError } =
-        await supabaseAuth
-          .from("interests")
-          .select("interest")
-          .in("interest_id", interestIds);
-
-      console.log("User Interests Data:", interestsData);
-
-      if (interestsDataError) {
-        console.error("Error fetching interests data:", interestsDataError);
-        return;
-      }
-
-      setUserInterests(interestsData);
-      console.log("User Interests State:", userInterests);
     };
 
-    fetchCurrentUser().then((authId) => {
-      fetchUserData(authId).then(() => {
-        fetchUserInterests(authId);
+    fetchCurrentUser().then((id) => {
+      fetchUserData(id).then(() => {
+        fetchUserInterests(id);
       });
     });
   }, []);
 
-  console.log(currentUser, "<<< currentUser");
+  // console.log(currentUser, "<<< currentUser");
 
   function toggleUpdate() {
     setIsUpdating((prevState) => !prevState);
   }
+
+  // const fetchTest = async () => {
+  //   const data = await supabaseAuth.from("user_interests").select();
+  //   setTestData(data);
+  // };
+  // fetchTest();
+  // console.log(testData);
+  // console.log(testInterests());
 
   return (
     <div className="flex flex-col gap-4 font-satoshi">
@@ -162,7 +175,13 @@ export default function ProfileDisplay() {
                 <input
                   id="interests"
                   type="text"
-                  placeholder={userInterests ? userInterests.join(", ") : ""}
+                  placeholder={
+                    userInterests
+                      ? Array.isArray(userInterests)
+                        ? userInterests.join(", ")
+                        : userInterests
+                      : ""
+                  }
                   disabled={!isUpdating}
                   className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
