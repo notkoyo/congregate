@@ -1,3 +1,4 @@
+import { Slider } from "@nextui-org/react";
 import { GoogleMap } from "../components/Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "../components/Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../utils/supabaseClient";
@@ -12,6 +13,8 @@ export const Events = () => {
   });
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
+  const [distance, setDistance] = useState(10);
+  const [priceRange, setPriceRange] = useState([10,50])
 
   useEffect(() => {
     if (!selectedPos.center.lat && !selectedPos.center.lng) {
@@ -24,18 +27,19 @@ export const Events = () => {
     } else {
       supabaseAuth
         .rpc("get_venues_radius", {
-          radius: 130000,
+          radius: distance,
           user_lat: selectedPos.center.lat,
           user_lng: selectedPos.center.lng,
         })
-        .select(`lng,lat,photos,events(*)`)
-        .order("name", { referencedTable: "events", descending: true })
-        .then(({ data }) => {
+        .select(`lng,lat,photos,events!inner(*)`)
+        .gte("events.event_price", priceRange[0])
+        .lte("events.event_price", priceRange[1])
+        // .order("events.event_price", {descending: true})
+        .then(( {data} ) => {
           console.log(data);
           setSelectedEvents(
             data
               .map((event) => {
-                console.log(event.events[0].event_id);
                 return {
                   lng: event.lng,
                   lat: event.lat,
@@ -56,9 +60,10 @@ export const Events = () => {
                 return 0;
               }),
           );
-        });
+        })
+        .catch((err) => console.log(err));
     }
-  }, [selectedPos]);
+  }, [selectedPos, distance, priceRange]);
 
   const sort = () => {
     setSelectedEvents((selectedEvents) => selectedEvents.reverse());
@@ -75,27 +80,64 @@ export const Events = () => {
           <GoogleMapAutocomplete setSelectedPos={setSelectedPos} />
         </section>
         <section>
-          <button onClick={sort}>fill</button>
-          <div>fill</div>
+          <Slider
+            label="Distance"
+            value={distance}
+            onChange={setDistance}
+            defaultValue={10}
+            minValue={1}
+            maxValue={50}
+            formatOptions={{ style: "unit", unit: "kilometer" }}
+            marks={[
+              {
+                value: 5,
+                label: "5km",
+              },
+              {
+                value: 15,
+                label: "15km",
+              },
+              {
+                value: 25,
+                label: "25km",
+              },
+              {
+                value: 50,
+                label: "50km",
+              },
+            ]}
+          />
+          <Slider
+            label="Price range"
+            formatOptions={{ style: "currency", currency: "GBP" }}
+            maxValue={100}
+            minValue={0}
+            value={priceRange}
+            onChange={setPriceRange}
+          />
           <div>fill</div>
           <div>fill</div>
           <div>fill</div>
         </section>
       </div>
       <div className="flex flex-1 flex-wrap">
-        {selectedEvents.length > 1 &&
+        {selectedEvents.length > 0 &&
           selectedEvents.map((item) => {
             return (
               <div
-                className="flex-grow-1 m-1 w-2/5 border-1 border-solid border-black rounded-lg"
+                className="flex-grow-1 m-1 w-2/5 rounded-lg border-1 border-solid border-black"
                 // layoutId={item.events.event_id}
-                onClick={() => setSelectedId(item.event_id)}
                 key={item.event_id}
               >
-                <img className="w-full h-2/4 object-cover" src={item.photo} alt="" />
+                <img
+                  className="h-2/4 w-full object-cover"
+                  src={item.photo}
+                  alt=""
+                />
                 <h2>{item.name}</h2>
                 <h5 className="line-clamp-2">{item.description}</h5>
                 <h6>{item.start_date}</h6>
+                <h6>{item.event_price ? `£${item.event_price}` : "FREE"}</h6>
               </div>
             );
           })}

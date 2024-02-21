@@ -1,7 +1,7 @@
 "use client";
 
 import LoginCard from "../components/Auth/LoginCard";
-import { Events } from "../components/Events";
+import { Events } from "@/components/Events";
 export default function Home() {
   return (
     <>
