@@ -16,32 +16,57 @@ import {
   Button,
   Avatar,
 } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
 import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
-
-const getCurrentUser = async () => {
-  try {
-    const { data: session, error } = await supabaseAuth.auth.getSession();
-    if (error || !session || session.user === undefined)
-      return console.error("Error getting current session or user.", error);
-
-    return session.user.email;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-let signedInUser = getCurrentUser();
 
 const menuItems = ["Meet", "Host Events", "Host Venues"];
 
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
+  const [signedInUser, setSignedInUser] = useState(null);
+
+  console.log(signedInUser);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchSignedInUser = async () => {
+      try {
+        const { data, error } = await supabaseAuth.auth.getUser();
+        if (error) {
+          console.error("Error fetching user:", error);
+        } else if (data && data.user) {
+          return data.user.id;
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    const fetchUserData = async (id) => {
+      try {
+        const { data, error } = await supabaseAuth
+          .from("users")
+          .select()
+          .eq("auth_id", id);
+        if (error) {
+          console.error("Error fetching user data:", error);
+        } else {
+          setSignedInUser(data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchSignedInUser().then((res) => {
+      fetchUserData(res);
+    });
+  }, [signedInUser]);
 
   return (
     <Navbar
@@ -135,10 +160,10 @@ export const NavigationBar = () => {
               className="transition-transform"
               color="default"
               size="sm"
-              src="#"
+              src={signedInUser ? signedInUser.avatar_url : "#"}
             />
           </DropdownTrigger>
-          {signedInUser !== typeof "string" ? (
+          {signedInUser === null ? (
             <DropdownMenu aria-label="Login Menu" variant="flat">
               <DropdownItem
                 as={Link}
@@ -154,8 +179,10 @@ export const NavigationBar = () => {
           ) : (
             <DropdownMenu aria-label="Profile Actions" variant="flat">
               <DropdownItem key="details" className="h-14 gap-2">
-                <p className="font-semibold">Signed in as</p>
-                <p className="font-semibold text-white/35">{signedInUser === typeof "string" ? signedInUser : "Not signed in"}</p>
+                <p className="font-semibold">Hello, {`${signedInUser.given_names} ${signedInUser.surname}`}</p>
+                <p className="font-semibold text-white/35">
+                  {signedInUser ? signedInUser.email : "Not signed in"}
+                </p>
               </DropdownItem>
               <DropdownItem
                 as={Link}
@@ -190,6 +217,7 @@ export const NavigationBar = () => {
                 Hosted Venues
               </DropdownItem>
               <DropdownItem
+                showDivider
                 as={Link}
                 href="/profile/settings"
                 className="text-white"
@@ -198,13 +226,13 @@ export const NavigationBar = () => {
                 Settings
               </DropdownItem>
               <DropdownItem
-                as={Link}
-                href="/auth/signout"
                 className="text-white"
                 key="logout"
                 color="danger"
               >
-                Log Out
+                <form action="/auth/signout" method="post">
+                  <Button onPress={() => setSignedInUser(null)} fullWidth type="submit" color="danger">Logout</Button>
+                </form>
               </DropdownItem>
             </DropdownMenu>
           )}
