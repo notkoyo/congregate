@@ -22,7 +22,7 @@ import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
-const signedInUser = "";
+const signedInUser = "kaiden";
 const menuItems = ["Meet", "Host Events", "Host Venues"];
 
 export const NavigationBar = () => {
@@ -140,12 +140,12 @@ export const NavigationBar = () => {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold text-white/35">{signedInUser}</p>
               </DropdownItem>
-              <DropdownItem key="team_settings">Profile</DropdownItem>
-              <DropdownItem key="team_settings">Joined Events</DropdownItem>
-              <DropdownItem key="analytics">Hosted Events</DropdownItem>
-              <DropdownItem key="system">Hosted Venues</DropdownItem>
-              <DropdownItem key="settings">Settings</DropdownItem>
-              <DropdownItem key="logout" color="danger">
+              <DropdownItem as={Link} href="/profile" className="text-white" key="profile">Profile</DropdownItem>
+              <DropdownItem as={Link} href="/profile" className="text-white" key="joined_events">Joined Events</DropdownItem>
+              <DropdownItem as={Link} href="/profile" className="text-white" key="hosted_events">Hosted Events</DropdownItem>
+              <DropdownItem as={Link} href="/profile" className="text-white" key="hosted_venues">Hosted Venues</DropdownItem>
+              <DropdownItem as={Link} href="/profile/settings" className="text-white" key="settings">Settings</DropdownItem>
+              <DropdownItem as={Link} href="/auth/signout" className="text-white" key="logout" color="danger">
                 Log Out
               </DropdownItem>
             </DropdownMenu>
