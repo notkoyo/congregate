@@ -15,6 +15,8 @@ export const Events = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [distance, setDistance] = useState(10);
   const [priceRange, setPriceRange] = useState([10,50])
+  const [distanceSlider, setDistanceSlider] = useState(10);
+  const [priceRangeSlider, setPriceRangeSlider] = useState([10,50])
 
   useEffect(() => {
     if (!selectedPos.center.lat && !selectedPos.center.lng) {
@@ -69,6 +71,14 @@ export const Events = () => {
     setSelectedEvents((selectedEvents) => selectedEvents.reverse());
   };
 
+  const priceChange = () => {
+    setPriceRange(priceRangeSlider)
+  }
+
+  const distanceChange = () => {
+    setDistance(distanceSlider)
+  }
+
   return (
     <div className="z-0 m-4 mt-8 flex w-screen">
       <div className="flex flex-col gap-2">
@@ -82,8 +92,9 @@ export const Events = () => {
         <section>
           <Slider
             label="Distance"
-            value={distance}
-            onChange={setDistance}
+            value={distanceSlider}
+            onChange={setDistanceSlider}
+            onChangeEnd={distanceChange}
             defaultValue={10}
             minValue={1}
             maxValue={50}
@@ -112,8 +123,9 @@ export const Events = () => {
             formatOptions={{ style: "currency", currency: "GBP" }}
             maxValue={100}
             minValue={0}
-            value={priceRange}
-            onChange={setPriceRange}
+            value={priceRangeSlider}
+            onChange={setPriceRangeSlider}
+            onChangeEnd={priceChange}
           />
         </section>
       </div>
