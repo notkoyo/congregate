@@ -49,6 +49,7 @@ export const GoogleMap = ({
         {...cameraProps}
         mapId={process.env.NEXT_PUBLIC_MAP_ID}
         onCameraChanged={handleCameraChange}
+        
       >
         <AdvancedMarker position={selectedPos.center}>
           <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'}/>
