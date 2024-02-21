@@ -22,14 +22,6 @@ import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
-const getUser = async () => {
-  const { data, error } = await supabaseAuth.auth.getSession().session.user;
-  console.log(data);
-}
-
-getUser();
-
-const signedInUser = "kaiden@gmail.com";
 const menuItems = ["Meet", "Host Events", "Host Venues"];
 
 export const NavigationBar = () => {
