@@ -115,9 +115,6 @@ export const Events = () => {
             value={priceRange}
             onChange={setPriceRange}
           />
-          <div>fill</div>
-          <div>fill</div>
-          <div>fill</div>
         </section>
       </div>
       <div className="flex flex-1 flex-wrap">
