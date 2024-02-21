@@ -21,6 +21,7 @@ import { CongregateLogo } from "./CongregateLogo";
 import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
+import { revalidatePath } from "next/cache";
 
 const menuItems = ["Meet", "Host Events", "Host Venues"];
 
@@ -30,6 +31,7 @@ export const NavigationBar = () => {
   const [signedInUser, setSignedInUser] = useState(null);
 
   const router = useRouter();
+ 
 
   useEffect(() => {
     const fetchSignedInUser = async () => {
@@ -176,7 +178,7 @@ export const NavigationBar = () => {
             </DropdownMenu>
           ) : (
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem key="details" className="h-14 gap-2">
+              <DropdownItem textValue="is signed in?" key="details" className="h-14 gap-2">
                 <p className="font-semibold">Hello, {`${signedInUser.given_names} ${signedInUser.surname}`}</p>
                 <p className="font-semibold text-white/35">
                   {signedInUser ? signedInUser.email : "Not signed in"}
@@ -227,9 +229,10 @@ export const NavigationBar = () => {
                 className="text-white"
                 key="logout"
                 color="danger"
+                textValue="logout button"
               >
                 <form action="/auth/signout" method="post">
-                  <Button onPress={() => setSignedInUser(null)} fullWidth type="submit" color="danger">Logout</Button>
+                  <Button  onPress={() => setSignedInUser(null)} fullWidth type="submit" color="danger">Logout</Button>
                 </form>
               </DropdownItem>
             </DropdownMenu>
