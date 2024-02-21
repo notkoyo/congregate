@@ -56,6 +56,22 @@ export default function AuthForm() {
     }
   };
 
+  const fetchUserData = async (id) => {
+    try {
+      const { data, error } = await supabaseAuth
+        .from("users")
+        .select()
+        .eq("auth_id", id);
+      if (error) {
+        console.error("Error fetching user data:", error);
+      } else {
+        return data[0];
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsSigningIn(true);
@@ -63,9 +79,16 @@ export default function AuthForm() {
       email,
       password,
     });
-    console.log(data);
     if (!error) {
-      router.push("/profile");
+      // check if user exists that satisfies auth.user.id === public.user.auth_id
+      const userPublic = await fetchUserData(data.user.id);
+      if (userPublic) {
+        // if yes
+        router.push("/profile");
+      } else {
+        // if no
+        router.push("/create-profile");
+      }
     } else {
       setIsSigningUp(false);
     }
@@ -219,13 +242,24 @@ export default function AuthForm() {
           isOpen={isPasswordModal}
           onOpenChange={(open) => setIsPasswordModal(open)}
           content={
-            <div className="p-2 font-satoshi text-center">
-              <h6 className="font-semibold py-2">Password Requirements</h6>
+            <div className="p-2 text-center font-satoshi">
+              <h6 className="py-2 font-semibold">Password Requirements</h6>
               <ul className="font-medium">
-                <li>3 Lowercase Characters <span className="font-bold">(a-z)</span></li>
-                <li>2 Uppercase Characters <span className="font-bold">(A-Z)</span></li>
-                <li>1 Special Character <span className="font-bold">(!,@,$,&,*)</span></li>
-                <li>2 Numbers <span className="font-bold">(0-9)</span></li>
+                <li>
+                  3 Lowercase Characters{" "}
+                  <span className="font-bold">(a-z)</span>
+                </li>
+                <li>
+                  2 Uppercase Characters{" "}
+                  <span className="font-bold">(A-Z)</span>
+                </li>
+                <li>
+                  1 Special Character{" "}
+                  <span className="font-bold">(!,@,$,&,*)</span>
+                </li>
+                <li>
+                  2 Numbers <span className="font-bold">(0-9)</span>
+                </li>
               </ul>
             </div>
           }

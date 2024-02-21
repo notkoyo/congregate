@@ -8,7 +8,7 @@ export default function Profile() {
     <>
       <div>
         <div className="grid min-h-screen place-items-center">
-          <ProfileCard />
+          Create Profile
         </div>
       </div>
     </>
