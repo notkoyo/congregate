@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import Link from "next/link";
-
+import { Button } from "@nextui-org/react";
+import EditVenue from "./EditVenue";
 export default function ListVenue({ venue }) {
-  console.log(venue);
+  const [showEditMenu, setShowEditMenu] = useState(false);
+  const handleEditClick = () => {
+    setShowEditMenu(true);
+  };
+
+  const handleEditClose = () => {
+    setShowEditMenu(false);
+  };
+
   return (
-    <Link href={`/venues/${venue.venue_id}`}>
-      <Card className="py-4">
+    <Card className="py-4">
+      <Link href={`/venues/${venue.venue_id}`}>
         <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
           <p className="text-tiny font-bold uppercase">{venue.name}</p>
           <small className="text-default-500">{venue.description}</small>
@@ -21,12 +30,27 @@ export default function ListVenue({ venue }) {
             src={venue.photos}
           />
         </CardBody>
-        <CardBody className="h-100 overflow-visible pb-2 pt-5">
-          <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
-          <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
-          <p className="text-tiny font-bold uppercase">{venue.city}</p>
-        </CardBody>
-      </Card>
-    </Link>
+      </Link>
+      <CardBody className="h-100 overflow-visible pb-2 pt-5">
+        <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
+        <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
+        <p className="text-tiny font-bold uppercase">{venue.city}</p>
+        <div className="mt-3">
+          {venue.isUserVenue && (
+            <Button
+              onClick={handleEditClick}
+              className="w-full"
+              color="primary"
+              radius="lg"
+            >
+              Edit
+            </Button>
+          )}
+        </div>
+        {showEditMenu === true ? (
+          <EditVenue handleEditClose={handleEditClose} />
+        ) : null}
+      </CardBody>
+    </Card>
   );
 }
