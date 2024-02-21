@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [userInterests, setUserInterests] = useState(null);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -14,6 +15,7 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user:", error);
         } else if (data && data.user) {
+          console.log("data >>>", data);
           return data.user.id;
         }
       } catch (error) {
@@ -37,8 +39,55 @@ export default function ProfileDisplay() {
       }
     };
 
-    fetchCurrentUser().then((res) => {
-      fetchUserData(res);
+    const fetchUserInterests = async (authId) => {
+      const { data: user, error: userError } = await supabaseAuth
+        .from("users")
+        .select("id")
+        .eq("auth_id", authId);
+
+      if (userError) {
+        console.error("Error fetching user:", userError);
+        return;
+      }
+
+      const userId = user[0].id;
+      console.log("User ID:", userId);
+
+      const { data: interests, error: interestsError } = await supabaseAuth
+        .from("user_interests")
+        .select("interest_id")
+        .eq("user_id", userId);
+
+      console.log("User Interests Data:", userInterests);
+
+      if (interestsError) {
+        console.error("Error fetching user interests:", interestsError);
+        return;
+      }
+
+      const interestIds = interests.map((interest) => interest.interest_id);
+
+      const { data: interestsData, error: interestsDataError } =
+        await supabaseAuth
+          .from("interests")
+          .select("interest")
+          .in("interest_id", interestIds);
+
+      console.log("User Interests Data:", interestsData);
+
+      if (interestsDataError) {
+        console.error("Error fetching interests data:", interestsDataError);
+        return;
+      }
+
+      setUserInterests(interestsData);
+      console.log("User Interests State:", userInterests);
+    };
+
+    fetchCurrentUser().then((authId) => {
+      fetchUserData(authId).then(() => {
+        fetchUserInterests(authId);
+      });
     });
   }, []);
 
@@ -113,7 +162,7 @@ export default function ProfileDisplay() {
                 <input
                   id="interests"
                   type="text"
-                  placeholder="TBD"
+                  placeholder={userInterests ? userInterests.join(", ") : ""}
                   disabled={!isUpdating}
                   className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
