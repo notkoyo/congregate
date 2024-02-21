@@ -91,7 +91,7 @@ export default function ProfileDisplay() {
                 <input
                   id="email"
                   type="text"
-                  placeholder={currentUser.email}
+                  placeholder={currentUser ? currentUser.email : ""}
                   disabled={!isUpdating}
                   className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
@@ -102,7 +102,7 @@ export default function ProfileDisplay() {
                 <input
                   id="dob"
                   type="text"
-                  placeholder={currentUser.dob}
+                  placeholder={currentUser ? currentUser.dob : ""}
                   disabled={!isUpdating}
                   className={`bg-none ${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
