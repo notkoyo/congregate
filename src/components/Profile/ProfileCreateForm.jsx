@@ -1,4 +1,8 @@
-import { fetchCurrentUserData, postUserData } from "@/utils/api";
+import {
+  fetchCurrentUserData,
+  postUserData,
+  postUserInterests,
+} from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Input } from "./Input";
@@ -14,8 +18,7 @@ export default function ProfileCreate() {
     email: "",
     auth_id: "",
   });
-  const [interests, setInterests] = useState([]);
-  const [interestsText, setInterestsText] = useState("");
+  const [userInterestsArray, setUserInterestsArray] = useState([]);
   const [errorPosting, setErrorPosting] = useState(false);
   const router = useRouter();
 
@@ -30,11 +33,14 @@ export default function ProfileCreate() {
   const handleSubmit = (e) => {
     e.preventDefault();
     postUserData(formData).then((res) => {
-      if (res) {
-        router.push("/profile");
-      } else {
-        setErrorPosting(true);
-      }
+      postUserInterests(userInterestsArray).then((res) => {
+        if (res) {
+          console.log(res);
+          router.push("/profile");
+        } else {
+          setErrorPosting(true);
+        }
+      });
     });
   };
 
@@ -72,7 +78,10 @@ export default function ProfileCreate() {
           />
         </div>
         <div>
-          <Interests interests={interests} setInterests={setInterests} />
+          <Interests
+            userInterestsArray={userInterestsArray}
+            setUserInterestsArray={setUserInterestsArray}
+          />
         </div>
       </div>
 
