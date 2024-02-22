@@ -31,7 +31,9 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          setCurrentUser(data[0]);
+          // Store original data.dob
+          const previousDob = data[0].dob;
+          setCurrentUser({ ...data[0], previousDob });
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -91,6 +93,10 @@ export default function ProfileDisplay() {
   }, []);
 
   function toggleUpdate() {
+    if (!isUpdating) {
+      // Revert to previous state, dob
+      setCurrentUser({ ...currentUser, dob: currentUser.previousDob });
+    }
     setIsUpdating((prevState) => !prevState);
   }
 
@@ -148,7 +154,9 @@ export default function ProfileDisplay() {
                 <input
                   id="dob"
                   type="text"
-                  placeholder={currentUser ? currentUser.dob : ""}
+                  placeholder={
+                    !isUpdating ? currentUser.previousDob : currentUser.dob
+                  }
                   disabled={!isUpdating}
                   className={`bg-none ${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
