@@ -62,3 +62,16 @@ export const postUserData = async (userObject) => {
     console.error("Error posting user data:", error);
   }
 };
+
+export const fetchInterestsData = async () => {
+  try {
+    const { data, error } = await supabaseAuth.from("interests").select();
+    if (error) {
+      console.error("Error fetching interests data:", error);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error fetching interests data:", error);
+  }
+};
