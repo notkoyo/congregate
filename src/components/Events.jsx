@@ -80,7 +80,7 @@ export const Events = () => {
   }
 
   return (
-    <div className="z-0 m-4 mt-8 flex w-screen">
+    <div className="z-0 m-4 mt-8 flex">
       <div className="flex flex-col gap-2">
         <section className="flex flex-col gap-2">
           <GoogleMap
