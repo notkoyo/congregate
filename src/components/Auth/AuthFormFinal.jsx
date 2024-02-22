@@ -72,7 +72,7 @@ export default function AuthForm() {
         router.push("/profile");
       } else {
         // if no
-        router.push("/create-profile");
+        router.push("/profile/create");
       }
     } else {
       setIsSigningUp(false);
