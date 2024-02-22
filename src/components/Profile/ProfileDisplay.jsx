@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [userInterests, setUserInterests] = useState(null);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -37,12 +38,57 @@ export default function ProfileDisplay() {
       }
     };
 
-    fetchCurrentUser().then((res) => {
-      fetchUserData(res);
+    const fetchUserInterests = async (id) => {
+      try {
+        const { data: user, error: userError } = await supabaseAuth
+          .from("users")
+          .select("id")
+          .eq("auth_id", id);
+
+        if (userError) {
+          console.error("Error fetching user:", userError);
+          return;
+        }
+
+        const userId = user[0].id;
+        console.log("User Id:", userId);
+
+        const { data: interests, error: interestsError } = await supabaseAuth
+          .from("user_interests")
+          .select("*")
+          .eq("user_id", String(userId));
+
+        if (interestsError) {
+          console.error("Error fetching user interests:", interestsError);
+          return;
+        }
+
+        const interestIds = interests.map((interest) => interest.interest_id);
+
+        const { data: interestsData, error: interestsDataError } =
+          await supabaseAuth
+            .from("interests")
+            .select("*")
+            .in("interest_id", interestIds);
+
+        if (Array.isArray(interestsData) && interestsData.length > 0) {
+          setUserInterests(
+            interestsData.map((interest) => interest.interest).join(", "),
+          );
+        } else {
+          setUserInterests("");
+        }
+      } catch (error) {
+        console.error("Error fetching user interests:", error);
+      }
+    };
+
+    fetchCurrentUser().then((id) => {
+      fetchUserData(id).then(() => {
+        fetchUserInterests(id);
+      });
     });
   }, []);
-
-  console.log(currentUser, "<<< currentUser");
 
   function toggleUpdate() {
     setIsUpdating((prevState) => !prevState);
@@ -113,7 +159,13 @@ export default function ProfileDisplay() {
                 <input
                   id="interests"
                   type="text"
-                  placeholder="TBD"
+                  placeholder={
+                    userInterests
+                      ? Array.isArray(userInterests)
+                        ? userInterests.join(", ")
+                        : userInterests
+                      : ""
+                  }
                   disabled={!isUpdating}
                   className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                 />
