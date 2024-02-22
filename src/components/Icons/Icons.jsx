@@ -12,7 +12,7 @@ export const CalendarIcon = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class="lucide lucide-calendar-days"
+      className="lucide lucide-calendar-days"
     >
       <path d="M8 2v4" />
       <path d="M16 2v4" />
@@ -71,7 +71,7 @@ export const VenueIcon = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class="lucide lucide-hotel"
+      className="lucide lucide-hotel"
     >
       <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z" />
       <path d="m9 16 .348-.24c1.465-1.013 3.84-1.013 5.304 0L15 16" />
