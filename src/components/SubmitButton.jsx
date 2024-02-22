@@ -2,7 +2,7 @@ export default function SubmitButton() {
   return (
     <button
       type="submit"
-      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+      className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
     >
       Submit
     </button>
