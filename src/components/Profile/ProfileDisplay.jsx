@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  // const [testData, setTestData] = useState([]);
   const [userInterests, setUserInterests] = useState(null);
 
   useEffect(() => {
@@ -16,7 +15,6 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user:", error);
         } else if (data && data.user) {
-          // console.log("data >>>", data);
           return data.user.id;
         }
       } catch (error) {
@@ -60,8 +58,6 @@ export default function ProfileDisplay() {
           .select("*")
           .eq("user_id", String(userId));
 
-        console.log(interests, "table row where interest = user_id");
-
         if (interestsError) {
           console.error("Error fetching user interests:", interestsError);
           return;
@@ -82,8 +78,6 @@ export default function ProfileDisplay() {
         } else {
           setUserInterests("");
         }
-
-        console.log("UserInterests State:", userInterests);
       } catch (error) {
         console.error("Error fetching user interests:", error);
       }
@@ -96,19 +90,9 @@ export default function ProfileDisplay() {
     });
   }, []);
 
-  // console.log(currentUser, "<<< currentUser");
-
   function toggleUpdate() {
     setIsUpdating((prevState) => !prevState);
   }
-
-  // const fetchTest = async () => {
-  //   const data = await supabaseAuth.from("user_interests").select();
-  //   setTestData(data);
-  // };
-  // fetchTest();
-  // console.log(testData);
-  // console.log(testInterests());
 
   return (
     <div className="flex flex-col gap-4 font-satoshi">
