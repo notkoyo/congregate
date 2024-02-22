@@ -1,10 +1,9 @@
 "use client";
 
-import { Events } from "../components/Events";
+import { Events } from "./meet/Events";
 export default function Home() {
   return (
     <>
-      <Events />
     </>
   );
 }
