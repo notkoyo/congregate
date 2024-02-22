@@ -151,7 +151,7 @@ export default function ProfileDisplay() {
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
-                  <label htmlFor="email">First Name</label>
+                  <label htmlFor="email">Given Name</label>
                   <input
                     id="name"
                     type="text"
