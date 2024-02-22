@@ -39,53 +39,27 @@ export const Events = () => {
       });
     } else {
       supabaseAuth
-        .rpc("get_venues_radius", {
+        .rpc("get_events_radius", {
           radius: distance,
           user_lat: selectedPos.center.lat,
           user_lng: selectedPos.center.lng,
         })
-        .select(`lng,lat,photos,events!inner(*)`)
-        .gte("events.event_price", priceRange[0])
-        .lte("events.event_price", priceRange[1])
-        // .order("events.event_price", {descending: true})
+        .select(`*`)
+        .gte("event_price", priceRange[0])
+        .lte("event_price", priceRange[1])
+        .order("start_date", {descending: true})
         .then(({ data }) => {
-          setSelectedEvents(
-            data
-              .map((event) => {
-                return {
-                  lng: event.lng,
-                  lat: event.lat,
-                  photo: event.photos,
-                  ...event.events[0],
-                };
-              })
-              .sort((eventA, eventB) => {
-                const dateA = eventA.start_date;
-                const dateB = eventB.start_date;
-                if (dateA < dateB) {
-                  return -1;
-                }
-                if (dateA > dateB) {
-                  return 1;
-                }
-
-                return 0;
-              }),
-          );
+          setSelectedEvents(data);
         })
         .catch((err) => console.log(err));
     }
   }, [selectedPos, distance, priceRange]);
 
-  const sort = () => {
-    setSelectedEvents((selectedEvents) => selectedEvents.reverse());
-  };
-
-  const priceChange = () => {
+  const handlePriceChange = () => {
     setPriceRange(priceRangeSlider);
   };
 
-  const distanceChange = () => {
+  const handleDistanceChange = () => {
     setDistance(distanceSlider);
   };
 
@@ -110,7 +84,7 @@ export const Events = () => {
               label="Distance"
               value={distanceSlider}
               onChange={setDistanceSlider}
-              onChangeEnd={distanceChange}
+              onChangeEnd={handleDistanceChange}
               defaultValue={10}
               minValue={1}
               maxValue={50}
@@ -141,12 +115,12 @@ export const Events = () => {
               minValue={0}
               value={priceRangeSlider}
               onChange={setPriceRangeSlider}
-              onChangeEnd={priceChange}
+              onChangeEnd={handlePriceChange}
             />
           </section>
         </div>
         <div className="flex flex-1 flex-wrap justify-center gap-5">
-          {selectedEvents.length > 0 &&
+          {selectedEvents.length > 0 ?
             selectedEvents.map((item) => {
               return (
                 <>
@@ -161,7 +135,7 @@ export const Events = () => {
                   >
                     <img
                       className="h-4/5 w-full object-cover "
-                      src={item.photo}
+                      src={item.photos}
                       alt=""
                     />
                     <div className="flex-grow px-2">
@@ -197,7 +171,7 @@ export const Events = () => {
                           <>
                             <ModalHeader>{openedEvent.name}</ModalHeader>
                             <ModalBody>
-                              <img src={openedEvent.photo} alt="" />
+                              <img src={openedEvent.photos} alt="" />
                               <p>{openedEvent.description}</p>
                             </ModalBody>
                             <ModalFooter>
@@ -219,7 +193,7 @@ export const Events = () => {
                   </div>
                 </>
               );
-            })}
+            }): <h2>no events</h2>}
         </div>
       </div>
     </>
