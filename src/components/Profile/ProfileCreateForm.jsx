@@ -1,6 +1,9 @@
 import { fetchCurrentUserData, postUserData } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Input } from "./Input";
+import SubmitButton from "../SubmitButton";
+import Interests from "./Interests";
 
 export default function ProfileCreate() {
   const [formData, setFormData] = useState({
@@ -11,7 +14,8 @@ export default function ProfileCreate() {
     email: "",
     auth_id: "",
   });
-  const [interests, setInterests] = useState(["Badminton", "Football"]);
+  const [interests, setInterests] = useState([]);
+  const [interestsText, setInterestsText] = useState("");
   const [errorPosting, setErrorPosting] = useState(false);
   const router = useRouter();
 
@@ -36,103 +40,52 @@ export default function ProfileCreate() {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
-      <div className="mb-4 flex items-center">
-        <label htmlFor="given_names" className="mb-1 block">
-          Given Names:
-        </label>
-        <input
-          type="text"
-          id="given_names"
-          name="given_names"
-          value={formData.given_names}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-        />
-      </div>
-
-      <div className="mb-4 flex items-center">
-        <label htmlFor="surname" className="mb-1 block">
-          Surname:
-        </label>
-        <input
-          type="text"
-          id="surname"
-          name="surname"
-          value={formData.surname}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-        />
-      </div>
-
-      <div className="mb-4 flex justify-between">
-        <label htmlFor="dob" className="mb-1 block">
-          Date of Birth:
-        </label>
-        <input
-          type="date"
-          id="dob"
-          name="dob"
-          value={formData.dob}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-        />
-      </div>
-
-      <div className="mb-4 flex items-center">
-        <label htmlFor="avatar_url" className="mb-1 block">
-          Avatar URL:
-        </label>
-        <input
-          type="text"
-          id="avatar_url"
-          name="avatar_url"
-          value={formData.avatar_url}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-        />
-      </div>
-
-      <div className="mb-4 flex flex-col">
-        <div className="">
-          <label htmlFor="interests" className="mb-1 block"></label>
-          <input
-            type="text"
-            id="interests"
-            name="interests"
-            value={formData.interests}
+      <div className="flex justify-between gap-10">
+        <div>
+          <Input
+            label="Given names"
+            id="given_names"
+            value={formData.given_names}
             onChange={handleChange}
-            className="w-half rounded border px-3 py-2"
-            placeholder="provide us with your interests"
+            type="text"
           />
-          <button
-            type="button"
-            className="rounded bg-slate-200 px-4 py-2 text-black hover:bg-slate-300"
-          >
-            Add Interest
-          </button>
+          <Input
+            label="Surname"
+            id="surname"
+            value={formData.surname}
+            onChange={handleChange}
+            type="text"
+          />
+          <Input
+            label="Date of Birth"
+            id="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            type="date"
+          />
+          <Input
+            label="Avatar URL"
+            id="avatar_url"
+            value={formData.avatar_url}
+            onChange={handleChange}
+            type="text"
+          />
         </div>
         <div>
-          <h2>Interest List</h2>
-          <ul>
-            {interests.map((interest) => (
-              <li key={interest}>{interest}</li>
-            ))}
-          </ul>
+          <Interests interests={interests} setInterests={setInterests} />
         </div>
       </div>
 
-      {errorPosting && (
-        <p className="text-red-500">
-          Sorry, something went wrong with your request - please try again later
-        </p>
-      )}
+      <div className="flex justify-end gap-10">
+        {errorPosting && (
+          <p className="text-red-500">
+            Sorry, something went wrong with your request - please try again
+            later
+          </p>
+        )}
 
-      <button
-        type="submit"
-        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-      >
-        Submit
-      </button>
+        <SubmitButton />
+      </div>
     </form>
   );
 }
