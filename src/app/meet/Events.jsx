@@ -1,4 +1,13 @@
-import { Modal, ModalHeader, Slider, useDisclosure } from "@nextui-org/react";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Slider,
+  useDisclosure,
+} from "@nextui-org/react";
 import { GoogleMap } from "../../components/Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "../../components/Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../../utils/supabaseClient";
@@ -12,13 +21,13 @@ export const Events = () => {
     zoom: 10,
     center: { lat: 0, lng: 0 },
   });
-  const { isOpen, onOpen, OnClose } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [selectedEvents, setSelectedEvents] = useState([]);
-  const [selectedId, setSelectedId] = useState(null);
-  const [distance, setDistance] = useState(10);
-  const [priceRange, setPriceRange] = useState([10, 50]);
-  const [distanceSlider, setDistanceSlider] = useState(10);
-  const [priceRangeSlider, setPriceRangeSlider] = useState([10, 50]);
+  const [distance, setDistance] = useState(26000);
+  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [distanceSlider, setDistanceSlider] = useState(50);
+  const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
+  const [openedEvent, setOpenedEvent] = useState();
 
   useEffect(() => {
     if (!selectedPos.center.lat && !selectedPos.center.lng) {
@@ -80,6 +89,11 @@ export const Events = () => {
     setDistance(distanceSlider);
   };
 
+  const handleOpen = (item) => {
+    console.log(item);
+    onOpen();
+  };
+
   return (
     <>
       <div className="z-0 m-4 mt-8 flex">
@@ -139,8 +153,11 @@ export const Events = () => {
                   <div
                     className="flex-grow-1 h-96 w-2/5  rounded-lg border-1 border-solid border-black"
                     layoutId={item.event_id}
-                    onClick={() => onOpen()}
                     key={item.event_id}
+                    // onClick={() => {
+                    //   setOpenedEvent(item);
+                    //   onOpen();
+                    // }}
                   >
                     <img
                       className="h-4/5 w-full object-cover "
@@ -158,16 +175,48 @@ export const Events = () => {
                         <p>
                           {item.event_price ? `£${item.event_price}` : "FREE"}
                         </p>
+                        <Button
+                          onPress={() => {
+                            setOpenedEvent(item);
+                            onOpen();
+                          }}
+                        >
+                          show more
+                        </Button>
                       </div>
                     </div>
+                    <Modal
+                      isOpen={isOpen}
+                      onClose={onClose}
+                      onOpenChange={onOpenChange}
+                      size="4xl"
+                      backdrop="blur"
+                    >
+                      <ModalContent>
+                        {(onClose) => (
+                          <>
+                            <ModalHeader>{openedEvent.name}</ModalHeader>
+                            <ModalBody>
+                              <img src={openedEvent.photo} alt="" />
+                              <p>{openedEvent.description}</p>
+                            </ModalBody>
+                            <ModalFooter>
+                              <p className="flex-grow">
+                                Starts:{" "}
+                                {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
+                              </p>
+                              <p>
+                                {item.event_price
+                                  ? `£${item.event_price}`
+                                  : "FREE"}
+                              </p>
+                              <Button>Book now</Button>
+                            </ModalFooter>
+                          </>
+                        )}
+                      </ModalContent>
+                    </Modal>
                   </div>
-                  <Modal>
-                    {(onClose) => {
-                      <>
-                        <ModalHeader>{item.name}</ModalHeader>
-                      </>;
-                    }}
-                  </Modal>
                 </>
               );
             })}

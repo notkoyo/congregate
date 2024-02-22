@@ -91,7 +91,7 @@ export const NavigationBar = () => {
         <NavbarItem>
           <Link
             className="font-satoshi text-lg font-medium text-white"
-            href="/"
+            href="/meet"
           >
             Meet
           </Link>
