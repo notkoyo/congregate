@@ -16,6 +16,7 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user:", error);
         } else if (data && data.user) {
+          console.log("User Auth ID:", data.user.id);
           return data.user.id;
         }
       } catch (error) {
@@ -24,6 +25,7 @@ export default function ProfileDisplay() {
     };
 
     const fetchUserData = async (id) => {
+      console.log(id);
       try {
         const { data, error } = await supabaseAuth
           .from("users")
@@ -92,22 +94,53 @@ export default function ProfileDisplay() {
         fetchUserInterests(id);
       });
     });
-    setEditableUser({ ...currentUser });
-  }, [currentUser]);
+  }, []);
 
   function toggleUpdate() {
     if (!isUpdating) {
-      // Revert to previous state, dob
       setEditableUser({ ...currentUser });
     } else {
-      setEditableUser(null);
+      setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
   }
 
-  function handleSubmit() {
-    setCurrentUser(editableUser);
-    setIsUpdating(false);
+  // function handleSubmit() {
+  //   setCurrentUser(editableUser);
+  //   setIsUpdating(false);
+  // }
+  async function handleSubmit() {
+    if (!editableUser) return;
+
+    if (!editableUser.email) {
+      console.error("Email cannot be null");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseAuth.from("users").upsert(
+        [
+          {
+            auth_id: currentUser.auth_id,
+            given_names: editableUser.given_names,
+            surname: editableUser.surname,
+            dob: editableUser.dob,
+            email: editableUser.email,
+          },
+        ],
+        { onConflict: ["auth_id"] },
+      );
+
+      if (error) {
+        console.error("Error updating user details:", error);
+      } else {
+        console.log("User details updated successfully:", data);
+        setCurrentUser(editableUser);
+        setIsUpdating(false);
+      }
+    } catch (error) {
+      console.error("Error updating user details:", error);
+    }
   }
 
   return (
@@ -147,7 +180,13 @@ export default function ProfileDisplay() {
             )}
           </div>
 
-          <form action="submit">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
+            {/* <form action="submit"> */}
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
