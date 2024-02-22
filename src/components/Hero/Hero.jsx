@@ -15,7 +15,7 @@ import {
 import { supabaseAuth } from "@/utils/supabaseClient";
 import GitHubIcon from "../Icons/GitHubIcon";
 import FacebookIcon from "../Icons/FacebookIcon";
-import TwitterIcon from "../Icons/XbrandIcon";
+import TwitterIcon from "../Icons/TwitterIcon";
 import DiamondIcon from "../Icons/DiamondIcon";
 
 export default function Hero() {
