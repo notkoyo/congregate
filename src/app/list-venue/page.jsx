@@ -8,6 +8,7 @@ function Page() {
   const [venuesData, setVenuesData] = useState([]);
   const [session, setSession] = useState({});
   const [userId, setUserId] = useState();
+  const [venueHasBeenUpdate, setVenueHasBeenUpdate] = useState(false);
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
@@ -20,6 +21,7 @@ function Page() {
           console.error("Error fetching venues data:", error);
         } else {
           setVenuesData(data);
+          setVenueHasBeenUpdate(false);
         }
       } catch (error) {
         console.error("Error fetching venues data:", error);
@@ -27,7 +29,7 @@ function Page() {
     };
 
     fetchVenuesData();
-  }, []);
+  }, [venueHasBeenUpdate]);
 
   const readyVenues = [];
 
@@ -52,7 +54,11 @@ function Page() {
     <div className="venue_grid">
       <div className="venue_inside">
         {readyVenues?.map((venue) => (
-          <ListVenue key={venue.id} venue={venue} />
+          <ListVenue
+            key={venue.id}
+            venue={venue}
+            setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+          />
         ))}
       </div>
     </div>
