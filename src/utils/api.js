@@ -75,3 +75,39 @@ export const fetchInterestsData = async () => {
     console.error("Error fetching interests data:", error);
   }
 };
+
+export const postUserInterests = async (userInterestArray) => {
+  try {
+    const authID = await fetchCurrentUserID();
+    const { id } = await fetchUserData(authID);
+    // console.log(userData);
+    // const id = userData.id;
+    console.log(id);
+    const interestsData = await fetchInterestsData();
+
+    const userInterestObjects = [];
+
+    userInterestArray.forEach((interestName) => {
+      const { interest_id } = interestsData.find(
+        (interestsObject) => interestsObject.interest === interestName,
+      );
+      const finalObject = {
+        user_id: id,
+        interest_id: interest_id,
+      };
+      userInterestObjects.push(finalObject);
+    });
+
+    const { data, error } = await supabaseAuth
+      .from("user_interests")
+      .insert(userInterestObjects)
+      .select();
+    if (error) {
+      console.error("Error posting user_interests data:", error);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error posting user_interests data:", error);
+  }
+};
