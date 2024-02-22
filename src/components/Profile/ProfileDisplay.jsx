@@ -165,7 +165,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded border px-4 text-small"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Cancel
               </button>
@@ -173,7 +173,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded border px-4 text-small"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Update
               </button>
@@ -251,7 +251,7 @@ export default function ProfileDisplay() {
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      className="rounded border px-4 text-small"
+                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
                     </button>
