@@ -7,6 +7,7 @@ export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userInterests, setUserInterests] = useState(null);
+  const [editableUser, setEditableUser] = useState(null);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -32,8 +33,9 @@ export default function ProfileDisplay() {
           console.error("Error fetching user data:", error);
         } else {
           // Store original data.dob
-          const previousDob = data[0].dob;
-          setCurrentUser({ ...data[0], previousDob });
+          // const previousDob = data[0].dob ? data[0].dob : "";
+          setCurrentUser(data[0]);
+          setEditableUser({ ...data[0] });
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -90,14 +92,22 @@ export default function ProfileDisplay() {
         fetchUserInterests(id);
       });
     });
+    setEditableUser({ ...currentUser });
   }, []);
 
   function toggleUpdate() {
     if (!isUpdating) {
       // Revert to previous state, dob
-      setCurrentUser({ ...currentUser, dob: currentUser.previousDob });
+      setEditableUser({ ...currentUser });
+    } else {
+      setEditableUser(null);
     }
     setIsUpdating((prevState) => !prevState);
+  }
+
+  function handleSubmit() {
+    setCurrentUser(editableUser);
+    setIsUpdating(false);
   }
 
   return (
@@ -137,55 +147,62 @@ export default function ProfileDisplay() {
           </div>
 
           <form action="submit">
-            <div className="flex flex-col gap-4  pt-4">
-              <div className="flex justify-between ">
-                <label htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="text"
-                  placeholder={currentUser ? currentUser.email : ""}
-                  disabled={!isUpdating}
-                  className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
-                />
-              </div>
-
-              <div className="flex justify-between">
-                <label htmlFor="dob">Date of Birth</label>
-                <input
-                  id="dob"
-                  type="text"
-                  placeholder={
-                    !isUpdating ? currentUser.previousDob : currentUser.dob
-                  }
-                  disabled={!isUpdating}
-                  className={`bg-none ${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
-                />
-              </div>
-
-              <div className="flex justify-between">
-                <label htmlFor="interests">Interests</label>
-                <input
-                  id="interests"
-                  type="text"
-                  placeholder={
-                    userInterests
-                      ? Array.isArray(userInterests)
-                        ? userInterests.join(", ")
-                        : userInterests
-                      : ""
-                  }
-                  disabled={!isUpdating}
-                  className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
-                />
-              </div>
-              {isUpdating && (
-                <div className="flex justify-end">
-                  <button className="rounded border px-4 text-small">
-                    Confirm
-                  </button>
+            {editableUser && (
+              <div className="flex flex-col gap-4 pt-4">
+                <div className="flex justify-between">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    id="email"
+                    type="text"
+                    value={editableUser.email}
+                    onChange={(e) =>
+                      setEditableUser({
+                        ...editableUser,
+                        email: e.target.value,
+                      })
+                    }
+                    disabled={!isUpdating}
+                    className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                  />
                 </div>
-              )}
-            </div>
+
+                <div className="flex justify-between">
+                  <label htmlFor="dob">Date of Birth</label>
+                  <input
+                    id="dob"
+                    type="text"
+                    value={editableUser.dob}
+                    onChange={(e) =>
+                      setEditableUser({ ...editableUser, dob: e.target.value })
+                    }
+                    disabled={!isUpdating}
+                    className={`bg-none ${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                  />
+                </div>
+
+                <div className="flex justify-between">
+                  <label htmlFor="interests">Interests</label>
+                  <input
+                    id="interests"
+                    type="text"
+                    value={userInterests}
+                    disabled={!isUpdating}
+                    className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                  />
+                </div>
+                {isUpdating && (
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      className="rounded border px-4 text-small"
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </form>
         </div>
       </div>
