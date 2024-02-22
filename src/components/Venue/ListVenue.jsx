@@ -3,7 +3,7 @@ import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import EditVenue from "./EditVenue";
-export default function ListVenue({ venue }) {
+export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const handleEditClick = () => {
     setShowEditMenu(true);
@@ -48,7 +48,12 @@ export default function ListVenue({ venue }) {
           )}
         </div>
         {showEditMenu === true ? (
-          <EditVenue handleEditClose={handleEditClose} />
+          <EditVenue
+            setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+            handleEditClose={handleEditClose}
+            userId={venue.founder_id}
+            venue_id={venue.venue_id}
+          />
         ) : null}
       </CardBody>
     </Card>
