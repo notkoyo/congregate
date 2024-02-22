@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import UpdateSuccessMessage from "./Succes";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
@@ -20,14 +21,10 @@ const schema = z.object({
   postcode: z.string().min(6, { message: "At least 6 characters" }),
 });
 
-const EditVenue = ({
-  handleEditClose,
-  userId,
-  venue_id,
-  setVenueHasBeenUpdate,
-}) => {
+const EditVenue = ({ userId }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const text2 = "Your venue has been updated successfully!";
+  const text = "Your venue has been created successfully!";
+  const router = useRouter();
 
   const {
     register,
@@ -46,6 +43,9 @@ const EditVenue = ({
 
   const handleVenueUpdateSuccess = () => {
     setShowSuccessMessage(true);
+    setTimeout(() => {
+      router.push("/list-venue");
+    }, 2000);
   };
   const onSubmit = async (data) => {
     try {
@@ -61,23 +61,20 @@ const EditVenue = ({
         county,
         postcode,
       } = data;
-      const res = await supabaseAuth
-        .from("venues")
-        .update({
-          name,
-          price,
-          photos: photo,
-          description,
-          house_number: house,
-          address_1: address,
-          city,
-          county,
-          postcode,
-        })
-        .match({ venue_id: venue_id });
+      const res = await supabaseAuth.from("venues").insert({
+        name,
+        price,
+        photos: photo,
+        description,
+        house_number: house,
+        address_1: address,
+        city,
+        county,
+        postcode,
+        founder_id: userId,
+      });
       console.log(res);
-      if (res.status === 204) {
-        setVenueHasBeenUpdate(true);
+      if (res.status === 201) {
         handleVenueUpdateSuccess();
       }
     } catch (err) {
@@ -93,13 +90,7 @@ const EditVenue = ({
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
-            <h2 className="text-xl font-bold">Edit Venue</h2>
-            <button
-              onClick={handleEditClose}
-              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-700"
-            >
-              Close
-            </button>
+            <h2 className="text-xl font-bold">Create Venue</h2>
           </div>
           <div className="flex w-full ">
             <div className="mr-4  flex w-1/2 flex-col">
@@ -230,7 +221,7 @@ const EditVenue = ({
       </div>
       {showSuccessMessage && (
         <UpdateSuccessMessage
-          text2={text2}
+          text={text}
           handleHide={handleSuccessMessageHide}
         />
       )}
