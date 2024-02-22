@@ -93,7 +93,7 @@ export default function ProfileDisplay() {
       });
     });
     setEditableUser({ ...currentUser });
-  }, []);
+  }, [currentUser]);
 
   function toggleUpdate() {
     if (!isUpdating) {
@@ -120,7 +120,8 @@ export default function ProfileDisplay() {
             alt=""
           />
           {currentUser && (
-            <p>{`${currentUser.given_names} ${currentUser.surname}`}</p>
+            // <p>{`${currentUser.given_names} ${currentUser.surname}`}</p>
+            <p>{`${currentUser.email}`}</p>
           )}
         </div>
 
@@ -150,15 +151,31 @@ export default function ProfileDisplay() {
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">First Name</label>
                   <input
-                    id="email"
+                    id="name"
                     type="text"
-                    value={editableUser.email}
+                    defaultValue={editableUser.given_names}
                     onChange={(e) =>
                       setEditableUser({
                         ...editableUser,
-                        email: e.target.value,
+                        given_names: e.target.value,
+                      })
+                    }
+                    disabled={!isUpdating}
+                    className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <label htmlFor="email">Surname</label>
+                  <input
+                    id="name"
+                    type="text"
+                    defaultValue={editableUser.surname}
+                    onChange={(e) =>
+                      setEditableUser({
+                        ...editableUser,
+                        surname: e.target.value,
                       })
                     }
                     disabled={!isUpdating}
@@ -170,8 +187,8 @@ export default function ProfileDisplay() {
                   <label htmlFor="dob">Date of Birth</label>
                   <input
                     id="dob"
-                    type="text"
-                    value={editableUser.dob}
+                    type="date"
+                    defaultValue={editableUser.dob}
                     onChange={(e) =>
                       setEditableUser({ ...editableUser, dob: e.target.value })
                     }
@@ -185,7 +202,7 @@ export default function ProfileDisplay() {
                   <input
                     id="interests"
                     type="text"
-                    value={userInterests}
+                    defaultValue={userInterests}
                     disabled={!isUpdating}
                     className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                   />
