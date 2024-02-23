@@ -1,36 +1,22 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Slider,
-  useDisclosure,
-  Image,
-} from "@nextui-org/react";
+import { Slider } from "@nextui-org/react";
 import { GoogleMap } from "../Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
 import { useEffect, useState } from "react";
-import moment from "moment";
+import EventCards from "./EventCards";
 
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
     zoom: 10,
     center: { lat: 0, lng: 0 },
   });
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [distance, setDistance] = useState(26000);
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [distanceSlider, setDistanceSlider] = useState(50);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
-  const [openedEvent, setOpenedEvent] = useState();
 
   useEffect(() => {
     if (!selectedPos.center.lat && !selectedPos.center.lng) {
@@ -125,76 +111,7 @@ export const Events = () => {
         <div className="flex flex-1 flex-wrap justify-center gap-5">
           {selectedEvents.length > 0 ? (
             selectedEvents.map((item) => {
-              return (
-                <>
-                  <div className="flex-grow-1 " key={item.event_id}>
-                    <Card
-                      className="h-64 w-96"
-                      isPressable={true}
-                      onPress={() => {
-                        setOpenedEvent(item);
-                        onOpen();
-                      }}
-                    >
-                      <CardBody>
-                        <Image
-                          className="h-4/5 w-full object-cover "
-                          src={item.photos}
-                          alt=""
-                        />
-                        <CardFooter>
-                          <div className="flex-grow px-2">
-                            <h2 className="font-bold">{item.name}</h2>
-                            <p className="line-clamp-1">{item.description}</p>
-                            <div className="flex font-medium">
-                              <p className="flex-grow">
-                                Starts:{" "}
-                                {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
-                              </p>
-                              <p>
-                                {item.event_price
-                                  ? `£${item.event_price}`
-                                  : "FREE"}
-                              </p>
-                            </div>
-                          </div>
-                        </CardFooter>
-                      </CardBody>
-                    </Card>
-                    <Modal
-                      isOpen={isOpen}
-                      onClose={onClose}
-                      onOpenChange={onOpenChange}
-                      size="4xl"
-                      backdrop="blur"
-                    >
-                      <ModalContent>
-                        {(onClose) => (
-                          <>
-                            <ModalHeader>{openedEvent.name}</ModalHeader>
-                            <ModalBody>
-                              <img src={openedEvent.photos} alt="" />
-                              <p>{openedEvent.description}</p>
-                            </ModalBody>
-                            <ModalFooter>
-                              <p className="flex-grow">
-                                Starts:{" "}
-                                {`${moment(openedEvent.start_date).format("DD/MM/YYYY")}, ${moment(openedEvent.start_date).format("HH:mm")}`}
-                              </p>
-                              <p>
-                                {openedEvent.event_price
-                                  ? `£${openedEvent.event_price}`
-                                  : "FREE"}
-                              </p>
-                              <Button>Book now</Button>
-                            </ModalFooter>
-                          </>
-                        )}
-                      </ModalContent>
-                    </Modal>
-                  </div>
-                </>
-              );
+              return <EventCards item={item} showDelete={false}></EventCards>;
             })
           ) : (
             <h2>no events</h2>

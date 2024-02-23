@@ -29,7 +29,7 @@ export default function EventForm() {
           return supabaseAuth.from("users").select("id").eq("auth_id", id);
         })
         .then(({ data }) => {
-          console.log(data[0].id);
+          console.log({data});
           setFormData({ ...formData, founder_id: data[0].id });
         });
     }
