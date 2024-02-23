@@ -32,8 +32,6 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          // Store original data.dob
-          // const previousDob = data[0].dob ? data[0].dob : "";
           setCurrentUser(data[0]);
           setEditableUser({ ...data[0] });
         }
@@ -55,7 +53,6 @@ export default function ProfileDisplay() {
         }
 
         const userId = user[0].id;
-        console.log("User Id:", userId);
 
         const { data: interests, error: interestsError } = await supabaseAuth
           .from("user_interests")
@@ -97,7 +94,6 @@ export default function ProfileDisplay() {
 
   function toggleUpdate() {
     if (!isUpdating) {
-      // Revert to previous state, dob
       setEditableUser({ ...currentUser });
     } else {
       setEditableUser(null);
@@ -119,10 +115,7 @@ export default function ProfileDisplay() {
             src="https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg"
             alt=""
           />
-          {currentUser && (
-            // <p>{`${currentUser.given_names} ${currentUser.surname}`}</p>
-            <p>{`${currentUser.email}`}</p>
-          )}
+          {currentUser && <p>{`${currentUser.email}`}</p>}
         </div>
 
         <div className="w-96 p-6">
