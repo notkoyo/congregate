@@ -111,3 +111,19 @@ export const postUserInterests = async (userInterestArray) => {
     console.error("Error posting user_interests data:", error);
   }
 };
+
+export const fetchVenueDataByID = async (venue_id) => {
+  try {
+    const { data, error } = await supabaseAuth
+      .from("venues")
+      .select()
+      .eq("venue_id", 1);
+    if (error) {
+      console.error("Error fetching venue data:", error);
+    } else {
+      return data[0];
+    }
+  } catch (error) {
+    console.error("Error fetching venue data:", error);
+  }
+};
