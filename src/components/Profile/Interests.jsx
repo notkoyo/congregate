@@ -20,8 +20,7 @@ export default function Interests({
   }, []);
 
   const handleChange = (e) => {
-    if (userInterestsArray.includes(e.target.value)) {
-    } else {
+    if (!userInterestsArray.includes(e.target.value) && e.target.value !== "") {
       setUserInterestsArray((prev) => [...prev, e.target.value]);
     }
   };
