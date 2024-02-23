@@ -1,10 +1,10 @@
 "use client";
 
-import { Events } from "../components/Events";
+import Hero from "../components/Hero/Hero"
 export default function Home() {
   return (
     <>
-      <Events />
+      <Hero />
     </>
   );
 }

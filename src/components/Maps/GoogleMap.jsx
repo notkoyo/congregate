@@ -16,14 +16,14 @@ import {
   AdvancedMarker,
   Map,
   MapCameraChangedEvent,
+  MapControl,
   Pin,
+  ControlPosition,
 } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useState } from "react";
+import { CustomMarker } from "./CustomMarker";
 
-export const GoogleMap = ({
-  selectedPos = {},
-  selectedEvents,
-}) => {
+export const GoogleMap = ({ selectedPos = {}, selectedEvents }) => {
   const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   const [cameraProps, setCameraProps] = useState({
@@ -49,19 +49,20 @@ export const GoogleMap = ({
         {...cameraProps}
         mapId={process.env.NEXT_PUBLIC_MAP_ID}
         onCameraChanged={handleCameraChange}
-        
+        disableDefaultUI={true}
       >
+        <MapControl position={ControlPosition.TOP_LEFT}></MapControl>
         <AdvancedMarker position={selectedPos.center}>
-          <Pin background={'#FBBC04'} glyphColor={'#000'} borderColor={'#000'}/>
+          <Pin
+            background={"#FBBC04"}
+            glyphColor={"#000"}
+            borderColor={"#000"}
+          />
         </AdvancedMarker>
-        {selectedEvents.length && selectedEvents.map((event) => {
-          return (
-            <AdvancedMarker
-              position={{ lat: event.lat, lng: event.lng }}
-              key={event.event_id}
-            ></AdvancedMarker>
-          );
-        })}
+        {selectedEvents.length &&
+          selectedEvents.map((event) => {
+            return <CustomMarker event={event} key={event.event_id} />;
+          })}
       </Map>
     </APIProvider>
   );
