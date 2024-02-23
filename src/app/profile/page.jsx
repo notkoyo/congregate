@@ -15,7 +15,7 @@ export default function Profile() {
         </p>
       </div>
       <ProfileCard />
-      <SignOutButton className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-xl text-white hover:bg-cyan-600" />
+      {/* <SignOutButton className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-xl text-white hover:bg-cyan-600" /> */}
       <Link
         href="/"
         className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-xl text-white hover:bg-cyan-600"
