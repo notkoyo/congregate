@@ -5,7 +5,6 @@ import {
 } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-// import { Input } from "./Input";
 import SubmitButton from "../SubmitButton";
 import Interests from "./Interests";
 import { Input } from "@nextui-org/react";
@@ -35,34 +34,36 @@ export default function ProfileCreate() {
     if (name === "dob") {
       setIsDobValid(validateDOB(value));
     }
+    if (name === "given_names") {
+      value === "" ? setIsGivenNamesValid(false) : setIsGivenNamesValid(true);
+    }
+    if (name === "surname") {
+      value === "" ? setIsSurnameValid(false) : setIsSurnameValid(true);
+    }
 
-    console.log(name, value);
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
-  const validateDOB = (dob) => {
-    dob.match(/^\d{4}-\d{2}-\d{2}$/);
+  const validateDOB = (dobString) => {
+    const dob = new Date(dobString);
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(hundredYearsAgo.getFullYear() - 100);
+
+    if (dob > new Date() || dob < hundredYearsAgo) {
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(!formData.given_names);
-    console.log(!formData.surname);
-    console.log(validateDOB(formData.dob));
-
-    if (
-      !formData.given_names ||
-      !formData.surname ||
-      validateDOB(formData.dob)
-    ) {
-      setIsGivenNamesValid(false);
-      setIsSurnameValid(false);
+    if (!isDobValid) {
       setIsDobValid(false);
-      console.log(isGivenNamesValid);
     } else {
       postUserData(formData)
         .then((res) => {
