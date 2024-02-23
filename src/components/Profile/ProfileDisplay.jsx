@@ -89,21 +89,49 @@ export default function ProfileDisplay() {
         fetchUserInterests(id);
       });
     });
-    setEditableUser({ ...currentUser });
-  }, [currentUser]);
+  }, []);
 
   function toggleUpdate() {
     if (!isUpdating) {
       setEditableUser({ ...currentUser });
     } else {
-      setEditableUser(null);
+      setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
   }
 
-  function handleSubmit() {
-    setCurrentUser(editableUser);
-    setIsUpdating(false);
+  async function handleSubmit() {
+    if (!editableUser) return;
+
+    if (!editableUser.email) {
+      console.error("Email cannot be null");
+      return;
+    }
+
+    try {
+      const { data, error } = await supabaseAuth.from("users").upsert(
+        [
+          {
+            auth_id: currentUser.auth_id,
+            given_names: editableUser.given_names,
+            surname: editableUser.surname,
+            dob: editableUser.dob,
+            email: editableUser.email,
+          },
+        ],
+        { onConflict: ["auth_id"] },
+      );
+
+      if (error) {
+        console.error("Error updating user details:", error);
+      } else {
+        console.log("User details updated successfully:", data);
+        setCurrentUser(editableUser);
+        setIsUpdating(false);
+      }
+    } catch (error) {
+      console.error("Error updating user details:", error);
+    }
   }
 
   return (
@@ -125,7 +153,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Cancel
               </button>
@@ -133,14 +161,19 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Update
               </button>
             )}
           </div>
 
-          <form action="submit">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit();
+            }}
+          >
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
@@ -205,7 +238,8 @@ export default function ProfileDisplay() {
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                      className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+
                     >
                       Confirm
                     </button>
