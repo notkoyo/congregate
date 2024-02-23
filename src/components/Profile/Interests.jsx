@@ -4,16 +4,14 @@ import {
   fetchUserData,
 } from "@/utils/api";
 import { useEffect, useState } from "react";
-import { Tooltip, Button, button } from "@nextui-org/react";
+import { Tooltip, Button, button, Select, SelectItem } from "@nextui-org/react";
 import React from "react";
 
 export default function Interests({
   userInterestsArray,
   setUserInterestsArray,
 }) {
-  const [selectedInterest, setSelectedInterest] = useState("");
   const [allInterests, setAllInterests] = useState([]);
-  const [addButtonDisabled, setAddButtonDisabled] = useState(true);
 
   useEffect(() => {
     fetchInterestsData().then((res) => {
@@ -22,18 +20,9 @@ export default function Interests({
   }, []);
 
   const handleChange = (e) => {
-    e.preventDefault();
-    setSelectedInterest(e.target.value);
-    setAddButtonDisabled(false);
-  };
-
-  const handleInterest = (e) => {
-    e.preventDefault();
-    if (userInterestsArray.includes(selectedInterest)) {
-      setAddButtonDisabled(true);
+    if (userInterestsArray.includes(e.target.value)) {
     } else {
-      setUserInterestsArray((prev) => [...prev, selectedInterest]);
-      setAddButtonDisabled(true);
+      setUserInterestsArray((prev) => [...prev, e.target.value]);
     }
   };
 
@@ -42,52 +31,24 @@ export default function Interests({
       const newArr = prev.filter((item) => item !== interest);
       return newArr;
     });
-
-    setAddButtonDisabled(false);
   };
 
   return (
-    <div className="mb-4 flex flex-col gap-10">
-      <div className="flex flex-col">
-        <label
-          htmlFor="interests"
-          className="mb-2 block text-sm font-bold text-gray-700"
-        >
-          Interests
-        </label>
-
-        <div className="flex gap-2">
-          <select
-            name="interests"
-            id="interests"
+    <div className="mb-4 flex w-80 flex-col gap-10">
+      <div className="flex w-80 flex-col">
+        <div className="flex w-80 flex-col gap-2">
+          <Select
+            label="Interests"
+            placeholder="Select an interest"
+            className="max-w-xs"
             onChange={handleChange}
-            className=" rounded border py-2"
-            defaultValue="placeholder"
           >
-            <option value="placeholder" disabled hidden></option>
             {allInterests.map((interest) => (
-              <option key={interest.interest_id} value={interest.interest}>
+              <SelectItem key={interest.interest} value={interest.interest}>
                 {interest.interest}
-              </option>
+              </SelectItem>
             ))}
-          </select>
-
-          {!addButtonDisabled ? (
-            <Button
-              className="rounded bg-slate-200 px-4 py-2 text-black hover:bg-slate-300"
-              onClick={handleInterest}
-            >
-              Add Interest
-            </Button>
-          ) : (
-            <Button
-              className="rounded bg-gray-300 px-4 py-2 text-gray-600 opacity-50"
-              type="button"
-              isDisabled
-            >
-              Select an interest
-            </Button>
-          )}
+          </Select>
         </div>
       </div>
 
