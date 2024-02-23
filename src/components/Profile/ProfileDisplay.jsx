@@ -16,7 +16,6 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user:", error);
         } else if (data && data.user) {
-          console.log("User Auth ID:", data.user.id);
           return data.user.id;
         }
       } catch (error) {
@@ -25,7 +24,6 @@ export default function ProfileDisplay() {
     };
 
     const fetchUserData = async (id) => {
-      console.log(id);
       try {
         const { data, error } = await supabaseAuth
           .from("users")
@@ -34,8 +32,6 @@ export default function ProfileDisplay() {
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
-          // Store original data.dob
-          // const previousDob = data[0].dob ? data[0].dob : "";
           setCurrentUser(data[0]);
           setEditableUser({ ...data[0] });
         }
@@ -57,7 +53,6 @@ export default function ProfileDisplay() {
         }
 
         const userId = user[0].id;
-        console.log("User Id:", userId);
 
         const { data: interests, error: interestsError } = await supabaseAuth
           .from("user_interests")
@@ -105,10 +100,6 @@ export default function ProfileDisplay() {
     setIsUpdating((prevState) => !prevState);
   }
 
-  // function handleSubmit() {
-  //   setCurrentUser(editableUser);
-  //   setIsUpdating(false);
-  // }
   async function handleSubmit() {
     if (!editableUser) return;
 
@@ -152,10 +143,7 @@ export default function ProfileDisplay() {
             src="https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg"
             alt=""
           />
-          {currentUser && (
-            // <p>{`${currentUser.given_names} ${currentUser.surname}`}</p>
-            <p>{`${currentUser.email}`}</p>
-          )}
+          {currentUser && <p>{`${currentUser.email}`}</p>}
         </div>
 
         <div className="w-96 p-6">
@@ -186,7 +174,6 @@ export default function ProfileDisplay() {
               handleSubmit();
             }}
           >
-            {/* <form action="submit"> */}
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
