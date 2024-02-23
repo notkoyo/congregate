@@ -2,41 +2,35 @@
 
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userInterests, setUserInterests] = useState(null);
   const [editableUser, setEditableUser] = useState(null);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      try {
-        const { data, error } = await supabaseAuth.auth.getUser();
-        if (error) {
-          console.error("Error fetching user:", error);
-        } else if (data && data.user) {
-          return data.user.id;
-        }
-      } catch (error) {
+      const { data, error } = await supabaseAuth.auth.getUser();
+      if (error) {
         console.error("Error fetching user:", error);
+      } else if (data && data.user) {
+        return data.user.id;
       }
     };
 
     const fetchUserData = async (id) => {
-      try {
-        const { data, error } = await supabaseAuth
-          .from("users")
-          .select()
-          .eq("auth_id", id);
-        if (error) {
-          console.error("Error fetching user data:", error);
-        } else {
-          setCurrentUser(data[0]);
-          setEditableUser({ ...data[0] });
-        }
-      } catch (error) {
+      const { data, error } = await supabaseAuth
+        .from("users")
+        .select()
+        .eq("auth_id", id);
+      if (error) {
         console.error("Error fetching user data:", error);
+      } else {
+        setCurrentUser(data[0]);
+        setEditableUser({ ...data[0] });
       }
     };
 
@@ -89,22 +83,46 @@ export default function ProfileDisplay() {
         fetchUserInterests(id);
       });
     });
-    setEditableUser({ ...currentUser });
-  }, [currentUser]);
+  }, []);
 
   function toggleUpdate() {
     if (!isUpdating) {
       setEditableUser({ ...currentUser });
     } else {
-      setEditableUser(null);
+      setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
   }
 
-  function handleSubmit() {
-    setCurrentUser(editableUser);
-    setIsUpdating(false);
-  }
+  const handleProfileUpdate = async () => {
+    if (!editableUser) return;
+
+    try {
+      const { data, error } = await supabaseAuth.from("users").upsert(
+        [
+          {
+            auth_id: currentUser.auth_id,
+            given_names: editableUser.given_names,
+            surname: editableUser.surname,
+            dob: editableUser.dob,
+            email: editableUser.email,
+          },
+        ],
+        { onConflict: ["auth_id"] },
+      );
+
+      if (error) {
+        console.error("Error updating user details:", error);
+      } else {
+        setCurrentUser(editableUser);
+        setIsUpdating(false);
+        setIsProfileUpdated(true);
+        setTimeout(() => setIsProfileUpdated(false), 4000);
+      }
+    } catch (error) {
+      console.error("Error updating user details:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 font-satoshi">
@@ -125,7 +143,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Cancel
               </button>
@@ -133,14 +151,19 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Update
               </button>
             )}
           </div>
 
-          <form action="submit">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleProfileUpdate();
+            }}
+          >
             {editableUser && (
               <div className="flex flex-col gap-4 pt-4">
                 <div className="flex justify-between">
@@ -187,6 +210,7 @@ export default function ProfileDisplay() {
                     }
                     disabled={!isUpdating}
                     className={`bg-none ${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                    style={{ flex: 0.65 }}
                   />
                 </div>
 
@@ -203,9 +227,9 @@ export default function ProfileDisplay() {
                 {isUpdating && (
                   <div className="flex justify-end">
                     <button
-                      type="button"
-                      onClick={handleSubmit}
-                      className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
+                      type="submit"
+                      onClick={handleProfileUpdate}
+                      className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
                     </button>
@@ -214,6 +238,20 @@ export default function ProfileDisplay() {
               </div>
             )}
           </form>
+          <AnimatePresence>
+            {isProfileUpdated && (
+              <motion.div
+                initial={{ x: 5000, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1.2 }}
+                exit={{ x: 1000, transition: { duration: 3 } }}
+                layout
+                className="fixed bottom-4 right-4 z-50 rounded-lg border border-black bg-white px-4 py-3 font-semibold text-black shadow-xl"
+              >
+                Your profile has been updated! 🚀
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
