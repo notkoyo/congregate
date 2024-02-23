@@ -11,7 +11,6 @@ const schema = z.object({
   price: z.number().refine((data) => !isNaN(data), {
     message: "Price must be a number",
   }),
-  photo: z.string().min(6, { message: "At least 6 characters" }),
   description: z.string().min(6, { message: "At least 6 characters" }),
   house: z.number(),
   address: z.string().min(6, { message: "At least 6 characters" }),
@@ -28,7 +27,10 @@ const EditVenue = ({
 }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const text2 = "Your venue has been updated successfully!";
-
+  const [selectedFile, setSelectedFile] = useState(null);
+  const text = "Your venue has been created successfully!";
+  const [erroInputFile, setErrorInputFile] = useState("");
+  const [urlPhoto, setUrlPhoto] = useState("");
   const {
     register,
     handleSubmit,
@@ -50,10 +52,12 @@ const EditVenue = ({
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      const photoURL = await uploadImage().then((res) => {
+        return res;
+      });
       const {
         name,
         price,
-        photo,
         description,
         house,
         address,
@@ -66,7 +70,7 @@ const EditVenue = ({
         .update({
           name,
           price,
-          photos: photo,
+          photos: photoURL,
           description,
           house_number: house,
           address_1: address,
@@ -87,7 +91,57 @@ const EditVenue = ({
       // });
     }
   };
+  async function uploadImage() {
+    // const file = e?.target?.files?.[0];
+    // console.log(typeof file);
+    if (!selectedFile) {
+      setErrorInputFile("No file selected");
+      return;
+    }
+    if (
+      !selectedFile.type?.includes("jpeg") &&
+      !selectedFile.type?.includes("jpg") &&
+      !selectedFile.type?.includes("png")
+    ) {
+      console.log("Invalid file type");
+      return;
+    }
+    const uniqueName = `venue_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.png`;
 
+    const { data, error } = await supabaseAuth.storage
+      .from("venues")
+      .upload(uniqueName, selectedFile);
+    if (data) {
+      const baseUrl =
+        "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
+      const photoUrl = baseUrl + data.fullPath;
+      // return photoUrl;
+      await setUrlPhoto(photoUrl);
+      return photoUrl;
+    } else {
+      console.log(error);
+    }
+  }
+  const handleFileChange = (e) => {
+    const file = e?.target?.files?.[0];
+    console.log(typeof file);
+
+    if (!file) {
+      setErrorInputFile("No file selected");
+      return;
+    }
+    if (
+      !file.type?.includes("jpeg") &&
+      !file.type?.includes("jpg") &&
+      !file.type?.includes("png")
+    ) {
+      setErrorInputFile("Invalid type of data");
+      return;
+    } else {
+      setErrorInputFile("");
+      setSelectedFile(file);
+    }
+  };
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center">
       <div className="w-650 rounded bg-white p-8 shadow-md">
@@ -129,15 +183,46 @@ const EditVenue = ({
                 )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Photo</label>
-                <input
-                  required
-                  {...register("photo")}
-                  placeholder="Photo"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
-                />
-                {errors.photo && (
-                  <div className="text-red-500">{errors.photo.message}</div>
+                <label className="mb-1 mt-1 block text-sm font-medium text-gray-700">
+                  Photo
+                </label>
+                <label
+                  className={`mt-1 flex w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                    selectedFile ? "border-green-500" : "border-gray-300"
+                  }`}
+                >
+                  {" "}
+                  <svg
+                    className={`mr-2 h-6 w-6 ${
+                      selectedFile ? "text-green-500" : "text-blue-500"
+                    }`}
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                  </svg>
+                  <span
+                    className={`${selectedFile ? "text-green-500" : "text-blue-500"}`}
+                  >
+                    {selectedFile ? selectedFile.name : "Choose File"}
+                  </span>{" "}
+                  <input
+                    type="file"
+                    onChange={(e) => {
+                      uploadImage(e);
+                      handleFileChange(e);
+                    }}
+                    required
+                    accept=".jpeg, .jpg, .png"
+                    className="hidden"
+                  />
+                </label>
+                {erroInputFile && (
+                  <div className="text-red-500">{erroInputFile}</div>
                 )}
               </div>
               <label className="mb-1 mt-1">Description</label>
