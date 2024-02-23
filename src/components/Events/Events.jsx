@@ -12,8 +12,8 @@ import {
   useDisclosure,
   Image,
 } from "@nextui-org/react";
-import { GoogleMap } from "../../components/Maps/GoogleMap";
-import { GoogleMapAutocomplete } from "../../components/Maps/GoogleMapAutocomplete";
+import { GoogleMap } from "../Maps/GoogleMap";
+import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
 import { useEffect, useState } from "react";
@@ -127,11 +127,9 @@ export const Events = () => {
             selectedEvents.map((item) => {
               return (
                 <>
-                  <div
-                    className="flex-grow-1 h-96 w-2/5  rounded-lg border-1 border-solid border-black"
-                    key={item.event_id}
-                  >
+                  <div className="flex-grow-1 " key={item.event_id}>
                     <Card
+                      className="h-64 w-96"
                       isPressable={true}
                       onPress={() => {
                         setOpenedEvent(item);
