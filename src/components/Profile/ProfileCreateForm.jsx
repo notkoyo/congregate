@@ -32,22 +32,28 @@ export default function ProfileCreate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    postUserData(formData).then((res) => {
-      postUserInterests(userInterestsArray).then((res) => {
-        if (res) {
-          console.log(res);
-          router.push("/profile");
-        } else {
-          setErrorPosting(true);
+    postUserData(formData)
+      .then((res) => {
+        if (!res) {
+          throw Error;
         }
+        postUserInterests(userInterestsArray);
+      })
+      .then((res) => {
+        if (!res) {
+          throw Error;
+        }
+        router.push("/profile");
+      })
+      .catch((err) => {
+        setErrorPosting(true);
       });
-    });
   };
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
-      <div className="flex justify-between gap-10">
-        <div>
+      <div className="flex justify-center gap-10">
+        <div className="w-80">
           <Input
             label="Given names"
             id="given_names"
