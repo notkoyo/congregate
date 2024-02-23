@@ -24,7 +24,6 @@ const CreateVenue = ({ userId }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const text = "Your venue has been created successfully!";
   const [erroInputFile, setErrorInputFile] = useState("");
-  const [target, setTarget] = useState({});
   const router = useRouter();
   const [urlPhoto, setUrlPhoto] = useState("");
   async function uploadImage() {
@@ -42,9 +41,11 @@ const CreateVenue = ({ userId }) => {
       console.log("Invalid file type");
       return;
     }
+    const uniqueName = `venue_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.png`;
+
     const { data, error } = await supabaseAuth.storage
       .from("venues")
-      .upload(`venue${userId}.png`, selectedFile);
+      .upload(uniqueName, selectedFile);
     if (data) {
       const baseUrl =
         "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
