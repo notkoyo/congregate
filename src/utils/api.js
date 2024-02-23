@@ -117,7 +117,7 @@ export const fetchVenueDataByID = async (venue_id) => {
     const { data, error } = await supabaseAuth
       .from("venues")
       .select()
-      .eq("venue_id", 1);
+      .eq("venue_id", venue_id);
     if (error) {
       console.error("Error fetching venue data:", error);
     } else {
