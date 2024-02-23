@@ -1,5 +1,8 @@
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
   Modal,
   ModalBody,
   ModalContent,
@@ -7,14 +10,14 @@ import {
   ModalHeader,
   Slider,
   useDisclosure,
+  Image,
 } from "@nextui-org/react";
 import { GoogleMap } from "../../components/Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "../../components/Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../../utils/supabaseClient";
-import { AnimatePresence } from "framer-motion";
+
 import { useEffect, useState } from "react";
 import moment from "moment";
-const { motion } = require("framer-motion");
 
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
@@ -47,7 +50,7 @@ export const Events = () => {
         .select(`*`)
         .gte("event_price", priceRange[0])
         .lte("event_price", priceRange[1])
-        .order("start_date", {descending: true})
+        .order("start_date", { descending: true })
         .then(({ data }) => {
           setSelectedEvents(data);
         })
@@ -120,45 +123,46 @@ export const Events = () => {
           </section>
         </div>
         <div className="flex flex-1 flex-wrap justify-center gap-5">
-          {selectedEvents.length > 0 ?
+          {selectedEvents.length > 0 ? (
             selectedEvents.map((item) => {
               return (
                 <>
                   <div
                     className="flex-grow-1 h-96 w-2/5  rounded-lg border-1 border-solid border-black"
-                    layoutId={item.event_id}
                     key={item.event_id}
-                    // onClick={() => {
-                    //   setOpenedEvent(item);
-                    //   onOpen();
-                    // }}
                   >
-                    <img
-                      className="h-4/5 w-full object-cover "
-                      src={item.photos}
-                      alt=""
-                    />
-                    <div className="flex-grow px-2">
-                      <h2 className="font-bold">{item.name}</h2>
-                      <p className="line-clamp-1">{item.description}</p>
-                      <div className="flex font-medium">
-                        <p className="flex-grow">
-                          Starts:{" "}
-                          {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
-                        </p>
-                        <p>
-                          {item.event_price ? `£${item.event_price}` : "FREE"}
-                        </p>
-                        <Button
-                          onPress={() => {
-                            setOpenedEvent(item);
-                            onOpen();
-                          }}
-                        >
-                          show more
-                        </Button>
-                      </div>
-                    </div>
+                    <Card
+                      isPressable={true}
+                      onPress={() => {
+                        setOpenedEvent(item);
+                        onOpen();
+                      }}
+                    >
+                      <CardBody>
+                        <Image
+                          className="h-4/5 w-full object-cover "
+                          src={item.photos}
+                          alt=""
+                        />
+                        <CardFooter>
+                          <div className="flex-grow px-2">
+                            <h2 className="font-bold">{item.name}</h2>
+                            <p className="line-clamp-1">{item.description}</p>
+                            <div className="flex font-medium">
+                              <p className="flex-grow">
+                                Starts:{" "}
+                                {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
+                              </p>
+                              <p>
+                                {item.event_price
+                                  ? `£${item.event_price}`
+                                  : "FREE"}
+                              </p>
+                            </div>
+                          </div>
+                        </CardFooter>
+                      </CardBody>
+                    </Card>
                     <Modal
                       isOpen={isOpen}
                       onClose={onClose}
@@ -177,11 +181,11 @@ export const Events = () => {
                             <ModalFooter>
                               <p className="flex-grow">
                                 Starts:{" "}
-                                {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
+                                {`${moment(openedEvent.start_date).format("DD/MM/YYYY")}, ${moment(openedEvent.start_date).format("HH:mm")}`}
                               </p>
                               <p>
-                                {item.event_price
-                                  ? `£${item.event_price}`
+                                {openedEvent.event_price
+                                  ? `£${openedEvent.event_price}`
                                   : "FREE"}
                               </p>
                               <Button>Book now</Button>
@@ -193,7 +197,10 @@ export const Events = () => {
                   </div>
                 </>
               );
-            }): <h2>no events</h2>}
+            })
+          ) : (
+            <h2>no events</h2>
+          )}
         </div>
       </div>
     </>
