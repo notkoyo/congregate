@@ -2,41 +2,35 @@
 
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userInterests, setUserInterests] = useState(null);
   const [editableUser, setEditableUser] = useState(null);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      try {
-        const { data, error } = await supabaseAuth.auth.getUser();
-        if (error) {
-          console.error("Error fetching user:", error);
-        } else if (data && data.user) {
-          return data.user.id;
-        }
-      } catch (error) {
+      const { data, error } = await supabaseAuth.auth.getUser();
+      if (error) {
         console.error("Error fetching user:", error);
+      } else if (data && data.user) {
+        return data.user.id;
       }
     };
 
     const fetchUserData = async (id) => {
-      try {
-        const { data, error } = await supabaseAuth
-          .from("users")
-          .select()
-          .eq("auth_id", id);
-        if (error) {
-          console.error("Error fetching user data:", error);
-        } else {
-          setCurrentUser(data[0]);
-          setEditableUser({ ...data[0] });
-        }
-      } catch (error) {
+      const { data, error } = await supabaseAuth
+        .from("users")
+        .select()
+        .eq("auth_id", id);
+      if (error) {
         console.error("Error fetching user data:", error);
+      } else {
+        setCurrentUser(data[0]);
+        setEditableUser({ ...data[0] });
       }
     };
 
@@ -100,13 +94,8 @@ export default function ProfileDisplay() {
     setIsUpdating((prevState) => !prevState);
   }
 
-  async function handleSubmit() {
+  const handleProfileUpdate = async () => {
     if (!editableUser) return;
-
-    if (!editableUser.email) {
-      console.error("Email cannot be null");
-      return;
-    }
 
     try {
       const { data, error } = await supabaseAuth.from("users").upsert(
@@ -125,14 +114,15 @@ export default function ProfileDisplay() {
       if (error) {
         console.error("Error updating user details:", error);
       } else {
-        console.log("User details updated successfully:", data);
         setCurrentUser(editableUser);
         setIsUpdating(false);
+        setIsProfileUpdated(true);
+        setTimeout(() => setIsProfileUpdated(false), 4000);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-4 font-satoshi">
@@ -171,7 +161,7 @@ export default function ProfileDisplay() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit();
+              handleProfileUpdate();
             }}
           >
             {editableUser && (
@@ -237,8 +227,8 @@ export default function ProfileDisplay() {
                 {isUpdating && (
                   <div className="flex justify-end">
                     <button
-                      type="button"
-                      onClick={handleSubmit}
+                      type="submit"
+                      onClick={handleProfileUpdate}
                       className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
@@ -248,6 +238,20 @@ export default function ProfileDisplay() {
               </div>
             )}
           </form>
+          <AnimatePresence>
+            {isProfileUpdated && (
+              <motion.div
+                initial={{ x: 5000, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 1.2 }}
+                exit={{ x: 1000, transition: { duration: 3 } }}
+                layout
+                className="fixed bottom-4 right-4 z-50 rounded-lg border border-black bg-white px-4 py-3 font-semibold text-black shadow-xl"
+              >
+                Your profile has been updated! 🚀
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
