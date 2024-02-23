@@ -5,7 +5,9 @@ import {
   CardBody,
   Image,
   CardFooter,
+  Button,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function App({ venue }) {
   const data = venue[0];
@@ -18,7 +20,7 @@ export default function App({ venue }) {
       <CardBody className="flex w-full flex-col items-center overflow-visible py-2 text-center">
         <Image
           alt="Card background"
-          className="w-400 h-260 rounded-xl object-cover"
+          className="h-260 w-400 rounded-xl object-cover"
           src={data?.photos}
         />
       </CardBody>
@@ -27,6 +29,22 @@ export default function App({ venue }) {
         <p>{data?.postcode}</p>
         <p>{data?.address_1}</p>
         <p>{data?.city}</p>
+        <Link href="/host/event">
+          <Button
+            onPress={() => {
+              const eventForm = JSON.parse(
+                localStorage.getItem("eventFormDetails"),
+              );
+              eventForm.venue_id = data.venue_id;
+              localStorage.setItem(
+                "eventFormDetails",
+                JSON.stringify(eventForm),
+              );
+            }}
+          >
+            Choose
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
