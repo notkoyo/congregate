@@ -125,7 +125,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded border px-4 text-small"
+                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
               >
                 Cancel
               </button>
@@ -133,7 +133,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded border px-4 text-small"
+                className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
               >
                 Update
               </button>
@@ -205,7 +205,7 @@ export default function ProfileDisplay() {
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      className="rounded border px-4 text-small"
+                      className="inline-block rounded bg-cyan-600 px-5 py-3 font-satoshi text-sm text-white hover:bg-cyan-700"
                     >
                       Confirm
                     </button>
