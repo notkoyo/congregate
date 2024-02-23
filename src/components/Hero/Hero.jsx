@@ -35,9 +35,6 @@ export default function Hero() {
       .then(({ data }) => setEvents(data));
   }, []);
 
-  const defaultContent =
-    "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda quidem voluptates molestias vero magnam in velit, adipisci distinctio quod eaque! Eum temporibus quaerat praesentium harum quis odio fuga enim veniam.";
-
   const defaultBio =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, quod.";
 
@@ -67,21 +64,21 @@ export default function Hero() {
             aria-label="Who we are section"
             title="Who we are"
           >
-            {defaultContent}
+            {"A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."}
           </AccordionItem>
           <AccordionItem
             key="2"
             aria-label="What we do section"
             title="What we do"
           >
-            {defaultContent}
+            {"We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."}
           </AccordionItem>
           <AccordionItem
             key="3"
             aria-label="Get started section"
             title="Get started"
           >
-            {defaultContent}
+            {"Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."}
           </AccordionItem>
         </Accordion>
       </div>
@@ -120,8 +117,8 @@ export default function Hero() {
         )}
       </div>
       <footer>
-        <div className="flex min-h-36 items-center justify-between px-20">
-          <span className="font-satoshi font-semibold">
+        <div className="flex min-h-36 items-center justify-center md:justify-between px-20">
+          <span className="font-satoshi font-semibold hidden md:block">
             © 2024 Congregate Ltd. All rights reserved.
           </span>
           <div>
@@ -265,7 +262,7 @@ export default function Hero() {
                               <UserCard
                                 name={"Dmytro Pen"}
                                 emoji={"🎧"}
-                                linkedInHref=""
+                                linkedInHref="https://www.linkedin.com/in/dmytro-pen-a79988257/"
                                 gitHubHref="https://github.com/PENbDM"
                                 bio={defaultBio}
                                 imageSrc={"https://avatars.githubusercontent.com/u/102535430?v=4"}
