@@ -5,9 +5,10 @@ import {
 } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Input } from "./Input";
+// import { Input } from "./Input";
 import SubmitButton from "../SubmitButton";
 import Interests from "./Interests";
+import { Input } from "@nextui-org/react";
 
 export default function ProfileCreate() {
   const [formData, setFormData] = useState({
@@ -20,67 +21,140 @@ export default function ProfileCreate() {
   });
   const [userInterestsArray, setUserInterestsArray] = useState([]);
   const [errorPosting, setErrorPosting] = useState(false);
+
+  // valid states
+  const [isGivenNamesValid, setIsGivenNamesValid] = useState(true);
+  const [isSurnameValid, setIsSurnameValid] = useState(true);
+  const [isDobValid, setIsDobValid] = useState(true);
+
   const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "dob") {
+      setIsDobValid(validateDOB(value));
+    }
+
+    console.log(name, value);
     setFormData({
       ...formData,
       [name]: value,
     });
   };
 
+  const validateDOB = (dob) => {
+    dob.match(/^\d{4}-\d{2}-\d{2}$/);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    postUserData(formData)
-      .then((res) => {
-        if (!res) {
-          throw Error;
-        }
-        postUserInterests(userInterestsArray);
-      })
-      .then((res) => {
-        if (!res) {
-          throw Error;
-        }
-        router.push("/profile");
-      })
-      .catch((err) => {
-        setErrorPosting(true);
-      });
+
+    console.log(!formData.given_names);
+    console.log(!formData.surname);
+    console.log(validateDOB(formData.dob));
+
+    if (
+      !formData.given_names ||
+      !formData.surname ||
+      validateDOB(formData.dob)
+    ) {
+      setIsGivenNamesValid(false);
+      setIsSurnameValid(false);
+      setIsDobValid(false);
+      console.log(isGivenNamesValid);
+    } else {
+      postUserData(formData)
+        .then((res) => {
+          if (!res) {
+            throw Error;
+          }
+          postUserInterests(userInterestsArray);
+        })
+        .then((res) => {
+          if (!res) {
+            throw Error;
+          }
+          router.push("/profile");
+        })
+        .catch((err) => {
+          setErrorPosting(true);
+        });
+    }
   };
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
       <div className="flex justify-center gap-10">
-        <div className="w-80">
+        <div className="flex w-80 flex-col gap-6">
           <Input
-            label="Given names"
-            id="given_names"
+            name="given_names"
+            isRequired
             value={formData.given_names}
-            onChange={handleChange}
             type="text"
+            label="First name(s)"
+            variant="faded"
+            isInvalid={!isGivenNamesValid}
+            color={
+              formData.given_names !== ""
+                ? isGivenNamesValid
+                  ? "success"
+                  : "danger"
+                : "default"
+            }
+            errorMessage={
+              !isGivenNamesValid && "Please enter your first name(s)"
+            }
+            onChange={handleChange}
+            className="max-w-xs font-medium"
           />
           <Input
-            label="Surname"
-            id="surname"
+            name="surname"
+            isRequired
             value={formData.surname}
-            onChange={handleChange}
             type="text"
+            label="Surname"
+            variant="faded"
+            isInvalid={!isSurnameValid}
+            color={
+              formData.surname !== ""
+                ? isSurnameValid
+                  ? "success"
+                  : "danger"
+                : "default"
+            }
+            errorMessage={!isSurnameValid && "Please enter your surname"}
+            onChange={handleChange}
+            className="max-w-xs font-medium"
           />
           <Input
-            label="Date of Birth"
-            id="dob"
+            name="dob"
+            placeholder="Enter your date of birth"
+            isRequired
             value={formData.dob}
-            onChange={handleChange}
             type="date"
+            label="Date of Birth"
+            variant="faded"
+            isInvalid={!isDobValid}
+            color={
+              formData.dob !== ""
+                ? isDobValid
+                  ? "success"
+                  : "danger"
+                : "default"
+            }
+            errorMessage={!isDobValid && "Please enter a valid date of birth"}
+            onChange={handleChange}
+            className="max-w-xs font-medium"
           />
           <Input
-            label="Avatar URL"
-            id="avatar_url"
+            name="avatar_url"
             value={formData.avatar_url}
-            onChange={handleChange}
             type="text"
+            label="Avatar URL"
+            variant="faded"
+            onChange={handleChange}
+            className="max-w-xs font-medium"
           />
         </div>
         <div>
