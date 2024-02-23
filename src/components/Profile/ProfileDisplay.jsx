@@ -1,19 +1,33 @@
 "use client";
-
+import { createClient } from "@supabase/supabase-js";
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Interests from "./Interests";
+import React from "react";
 
 export default function ProfileDisplay() {
+  // const supabase = createClient(
+  //   process.env.NEXT_PUBLIC_SUPABASE_URL,
+  //   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  // );
   const [isUpdating, setIsUpdating] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [userInterests, setUserInterests] = useState(null);
   const [editableUser, setEditableUser] = useState(null);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
+  const [userInterestsArray, setUserInterestsArray] = useState([]);
+  const [showInterests, setShowInterests] = useState(false);
+
+  const handleInterestsChange = (newInterests) => {
+    setUserInterestsArray(newInterests);
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const { data, error } = await supabaseAuth.auth.getUser();
+      console.log(data, "<<< UserData");
+      console.log(data.user.id);
       if (error) {
         console.error("Error fetching user:", error);
       } else if (data && data.user) {
@@ -57,8 +71,12 @@ export default function ProfileDisplay() {
           console.error("Error fetching user interests:", interestsError);
           return;
         }
+        console.log(userId);
+        console.log(id);
+        // console.log(interests); empty array
 
         const interestIds = interests.map((interest) => interest.interest_id);
+        // console.log(interestIds); empty array
 
         const { data: interestsData, error: interestsDataError } =
           await supabaseAuth
@@ -118,10 +136,67 @@ export default function ProfileDisplay() {
         setIsUpdating(false);
         setIsProfileUpdated(true);
         setTimeout(() => setIsProfileUpdated(false), 4000);
+
+        await updateUserInterests(currentUser.id, userInterestsArray);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
     }
+  };
+
+  const updateUserInterests = async (userId, interestsArray) => {
+    // Assuming you have a function to clear existing interests for the user
+    // await clearUserInterests(userId);
+
+    // Fetch interest IDs first
+    const interestIds = await Promise.all(
+      interestsArray.map(async (interestDescription) => {
+        console.log(interestDescription, "<<< interest description");
+        const { data: interest, error } = await supabaseAuth
+          .from("interests")
+          .select("interest_id")
+          .eq("interest", interestDescription);
+
+        if (error) {
+          console.error("Error fetching interest ID:", error);
+          return null;
+        }
+
+        console.log(interest, "<<< interest");
+        return interest?.[0]?.interest_id || null; // Return the interest ID directly
+      }),
+    );
+
+    // Insert new interests for the user
+
+    // const { data: interest } = await supabaseAuth.from("users").upsert(
+    //   [
+    //     {
+    //       interest_id: interest.interest_id,
+    //     },
+    //   ],
+    //   { onConflict: ["interest_id"] },
+    // );
+
+    // Filter out any null values (in case of errors)
+    const validInterestIds = interestIds.filter((id) => id !== null);
+    // Insert new interests for the user
+    for (const interestId of validInterestIds) {
+      await supabaseAuth
+        .from("user_interests")
+        .insert([{ user_id: String(userId), interest_id: interestId }], {
+          onConflict: ["interest_id"],
+        });
+    }
+
+    console.log("User interests updated successfully");
+  };
+
+  const clearUserInterests = async (userId) => {
+    await supabaseAuth
+      .from("user_interests")
+      .delete()
+      .eq("user_id", String(userId));
   };
 
   return (
@@ -169,7 +244,7 @@ export default function ProfileDisplay() {
                 <div className="flex justify-between">
                   <label htmlFor="email">Given Name</label>
                   <input
-                    id="name"
+                    id="given_names"
                     type="text"
                     defaultValue={editableUser.given_names}
                     onChange={(e) =>
@@ -213,7 +288,15 @@ export default function ProfileDisplay() {
                     style={{ flex: 0.65 }}
                   />
                 </div>
-
+                <div>
+                  {isUpdating && (
+                    <Interests
+                      userInterestsArray={userInterestsArray}
+                      setUserInterestsArray={setUserInterestsArray}
+                      onInterestsChange={handleInterestsChange}
+                    />
+                  )}
+                </div>
                 <div className="flex justify-between">
                   <label htmlFor="interests">Interests</label>
                   <input
@@ -224,11 +307,12 @@ export default function ProfileDisplay() {
                     className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
                   />
                 </div>
+
                 {isUpdating && (
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      onClick={handleProfileUpdate}
+                      // onClick={handleProfileUpdate}
                       className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
