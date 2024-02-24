@@ -1,10 +1,10 @@
 "use client";
-import { createClient } from "@supabase/supabase-js";
+// import { createClient } from "@supabase/supabase-js";
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Interests from "./Interests";
-import React from "react";
+// import React from "react";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -13,11 +13,37 @@ export default function ProfileDisplay() {
   const [editableUser, setEditableUser] = useState(null);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
   const [userInterestsArray, setUserInterestsArray] = useState([]);
-  const [showInterests, setShowInterests] = useState(false);
+  // const [showInterests, setShowInterests] = useState(false);
 
   const handleInterestsChange = (newInterests) => {
     setUserInterestsArray(newInterests);
     console.log(newInterests, "<<< newInterests");
+  };
+
+  const fetchUserInterests = async (userId) => {
+    console.log("Inside fetchUserInterests, userId:", userId);
+    try {
+      const { data: interestIds, error: userError } = await supabaseAuth
+        .from("user_interests")
+        .select("interest_id")
+        .eq("user_id", userId);
+
+      if (userError) {
+        console.error("Error fetching user interests:", userError);
+        return null;
+      }
+
+      const validInterestIds = interestIds.map(
+        (interest) => interest.interest_id,
+      );
+
+      const interestsData = await fetchInterestsData(validInterestIds);
+      setUserInterests(
+        interestsData.map((interest) => interest.interest).join(", "),
+      );
+    } catch (error) {
+      console.error("Error fetching user interests:", error);
+    }
   };
 
   useEffect(() => {
@@ -25,15 +51,15 @@ export default function ProfileDisplay() {
     const fetchCurrentUser = async () => {
       const { data, error } = await supabaseAuth.auth.getUser();
       console.log(data, "<<< UserData");
-      console.log(data.user.id);
+      console.log(data.user.id, "<<< authId");
       if (error) {
         console.error("Error fetching user:", error);
       } else if (data && data.user) {
-        fetchUserData(data.user.id);
-        return data.user.id;
+        const authUser = data.user;
+        fetchUserData(authUser.id); // returning authId as a result (see log above)
+        console.log(authUser.id, "<<< authUser.id");
       }
     };
-    // console.log("authId after fetchCurrentUser:", authId);
 
     const fetchUserData = async (authId) => {
       console.log("Inside fetchUserData, authId:", authId);
@@ -44,22 +70,40 @@ export default function ProfileDisplay() {
       if (error) {
         console.error("Error fetching user data:", error);
       } else {
+        const userId = data[0].id;
+        console.log(userId, "userId, data[0].id");
         setCurrentUser(data[0]);
         setEditableUser({ ...data[0] });
+        fetchUserInterests(userId);
       }
     };
 
-    fetchCurrentUser().then((id) => {
-      fetchUserData(id).then(() => {
-        fetchUserInterests(id);
-      });
-    });
+    const fetchInterestsData = async (interestIds) => {
+      console.log("Inside fetchInterestsData, interestIds:", interestIds);
+      try {
+        const { data, error } = await supabaseAuth
+          .from("interests")
+          .select("*")
+          .in("interest_id", interestIds);
+
+        if (error) {
+          console.error("Error fetching interests data:", error);
+          return [];
+        }
+
+        return data;
+      } catch (error) {
+        console.error("Error fetching interests data:", error);
+        return [];
+      }
+    };
+
+    // Initial fetch
+    fetchCurrentUser();
   }, []);
 
   function toggleUpdate() {
     if (!isUpdating) {
-      setEditableUser({ ...currentUser });
-    } else {
       setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
@@ -67,10 +111,7 @@ export default function ProfileDisplay() {
 
   const clearUserInterests = async (userId) => {
     console.log(userId, "<<< userId");
-    await supabaseAuth
-      .from("user_interests")
-      .delete()
-      .eq("user_id", String(userId));
+    await supabaseAuth.from("user_interests").delete().eq("user_id", userId); // removed String(userId)
   };
 
   const updateUserInterests = async (userId, interestsArray) => {
@@ -106,6 +147,10 @@ export default function ProfileDisplay() {
           onConflict: ["interest_id"],
         });
     }
+  };
+
+  const handleProfileUpdate = async () => {
+    if (!editableUser) return;
 
     const updatedInterests = await fetchUserInterests(userId);
     if (updatedInterests !== null) {
@@ -117,58 +162,6 @@ export default function ProfileDisplay() {
     } else {
       console.error("Error fetching updated user interests:", error);
     }
-  };
-
-  const fetchUserInterests = async (authId) => {
-    console.log("Inside fetchUserInterests, authId:", authId);
-    try {
-      const { data: user, error: userError } = await supabaseAuth
-        .from("users")
-        .select("id")
-        .eq("auth_id", authId);
-
-      if (userError) {
-        console.error("Error fetching user:", userError);
-        return null;
-      }
-
-      const userId = user[0].id;
-
-      const { data: interests, error: interestsError } = await supabaseAuth
-        .from("user_interests")
-        .select("*")
-        .eq("user_id", userId);
-
-      if (interestsError) {
-        console.error("Error fetching user interests:", interestsError);
-        return null;
-      }
-      console.log(userId, "<<< userId", typeof userId);
-      console.log(authId, "<<< authId", typeof authId);
-      // console.log(interests); empty array
-
-      const interestIds = interests.map((interest) => interest.interest_id);
-      // console.log(interestIds); empty array
-
-      const { data: interestsData, error: interestsDataError } =
-        await supabaseAuth
-          .from("interests")
-          .select("*")
-          .in("interest_id", interestIds);
-
-      if (Array.isArray(interestsData) && interestsData.length > 0) {
-        return interestsData;
-      } else {
-        return [];
-      }
-    } catch (error) {
-      console.error("Error fetching user interests:", error);
-      return null;
-    }
-  };
-
-  const handleProfileUpdate = async () => {
-    if (!editableUser) return;
 
     try {
       const { data, error } = await supabaseAuth.from("users").upsert(
@@ -389,3 +382,58 @@ export default function ProfileDisplay() {
 //     updatedInterests.map((interest) => interest.interest).join(", "),
 //   );
 // }
+
+//   fetchCurrentUser().then((id) => {
+//     fetchUserData(id).then(() => {
+//       fetchUserInterests(id);
+//     });
+//   });
+// }, []);
+
+// const fetchUserInterests = async (authId) => {
+//   console.log("Inside fetchUserInterests, authId:", authId);
+//   try {
+//     const { data: user, error: userError } = await supabaseAuth
+//       .from("users")
+//       .select("id")
+//       .eq("auth_id", authId);
+
+//     if (userError) {
+//       console.error("Error fetching user:", userError);
+//       return null;
+//     }
+
+//     const userId = user[0].id;
+
+//     const { data: interests, error: interestsError } = await supabaseAuth
+//       .from("user_interests")
+//       .select("interest_id")
+//       .eq("user_id", userId);
+
+//     if (interestsError) {
+//       console.error("Error fetching user interests:", interestsError);
+//       return null;
+//     }
+//     console.log(userId, "<<< userId", typeof userId);
+//     console.log(authId, "<<< authId", typeof authId);
+//     // console.log(interests); empty array
+
+//     const interestIds = interests.map((interest) => interest.interest_id);
+//     // console.log(interestIds); empty array
+
+//     const { data: interestsData, error: interestsDataError } =
+//       await supabaseAuth
+//         .from("interests")
+//         .select("interest")
+//         .eq("interest_id", interestIds);
+
+//     if (Array.isArray(interestsData) && interestsData.length > 0) {
+//       return interestsData;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error("Error fetching user interests:", error);
+//     return null;
+//   }
+// };
