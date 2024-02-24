@@ -10,6 +10,7 @@ import React from "react";
 export default function Interests({
   userInterestsArray,
   setUserInterestsArray,
+  onInterestsChange,
 }) {
   const [allInterests, setAllInterests] = useState([]);
 
@@ -19,18 +20,35 @@ export default function Interests({
     });
   }, []);
 
+  // const handleChange = (e) => {
+  //   if (userInterestsArray.includes(e.target.value)) {
+  //   } else {
+  //     setUserInterestsArray((prev) => [...prev, e.target.value]);
+  //   }
+  // };
+
   const handleChange = (e) => {
     if (userInterestsArray.includes(e.target.value)) {
     } else {
-      setUserInterestsArray((prev) => [...prev, e.target.value]);
+      const updatedInterests = [...userInterestsArray, e.target.value];
+      setUserInterestsArray(updatedInterests);
+      onInterestsChange(updatedInterests);
     }
   };
 
+  // const handleDeleteInterest = (interest) => {
+  //   setUserInterestsArray((prev) => {
+  //     const newArr = prev.filter((item) => item !== interest);
+  //     return newArr;
+  //   });
+  // };
+
   const handleDeleteInterest = (interest) => {
-    setUserInterestsArray((prev) => {
-      const newArr = prev.filter((item) => item !== interest);
-      return newArr;
-    });
+    const updatedInterests = userInterestsArray.filter(
+      (item) => item !== interest,
+    );
+    setUserInterestsArray(updatedInterests);
+    onInterestsChange(updatedInterests);
   };
 
   return (
