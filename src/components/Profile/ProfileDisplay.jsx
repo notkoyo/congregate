@@ -21,8 +21,7 @@ export default function ProfileDisplay() {
   };
 
   useEffect(() => {
-    // let mounted = true;
-
+    // console.log("Initial authId:", authId);
     const fetchCurrentUser = async () => {
       const { data, error } = await supabaseAuth.auth.getUser();
       console.log(data, "<<< UserData");
@@ -34,12 +33,14 @@ export default function ProfileDisplay() {
         return data.user.id;
       }
     };
+    // console.log("authId after fetchCurrentUser:", authId);
 
-    const fetchUserData = async (id) => {
+    const fetchUserData = async (authId) => {
+      console.log("Inside fetchUserData, authId:", authId);
       const { data, error } = await supabaseAuth
         .from("users")
-        .select()
-        .eq("auth_id", id);
+        .select("*")
+        .eq("auth_id", authId);
       if (error) {
         console.error("Error fetching user data:", error);
       } else {
@@ -65,6 +66,7 @@ export default function ProfileDisplay() {
   }
 
   const clearUserInterests = async (userId) => {
+    console.log(userId, "<<< userId");
     await supabaseAuth
       .from("user_interests")
       .delete()
@@ -117,12 +119,13 @@ export default function ProfileDisplay() {
     }
   };
 
-  const fetchUserInterests = async (id) => {
+  const fetchUserInterests = async (authId) => {
+    console.log("Inside fetchUserInterests, authId:", authId);
     try {
       const { data: user, error: userError } = await supabaseAuth
         .from("users")
         .select("id")
-        .eq("auth_id", String(id));
+        .eq("auth_id", authId);
 
       if (userError) {
         console.error("Error fetching user:", userError);
@@ -134,14 +137,14 @@ export default function ProfileDisplay() {
       const { data: interests, error: interestsError } = await supabaseAuth
         .from("user_interests")
         .select("*")
-        .eq("user_id", String(userId));
+        .eq("user_id", userId);
 
       if (interestsError) {
         console.error("Error fetching user interests:", interestsError);
         return null;
       }
-      console.log(userId);
-      console.log(id);
+      console.log(userId, "<<< userId", typeof userId);
+      console.log(authId, "<<< authId", typeof authId);
       // console.log(interests); empty array
 
       const interestIds = interests.map((interest) => interest.interest_id);
