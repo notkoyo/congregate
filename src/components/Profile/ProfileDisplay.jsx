@@ -20,8 +20,34 @@ export default function ProfileDisplay() {
     console.log(newInterests, "<<< newInterests");
   };
 
+  const fetchInterestsData = async (interestIds) => {
+    console.log("Inside fetchInterestsData, interestIds:", interestIds);
+    try {
+      const { data, error } = await supabaseAuth
+        .from("interests")
+        .select("*")
+        .in("interest_id", interestIds);
+
+      if (error) {
+        console.error("Error fetching interests data:", error);
+        return [];
+      }
+      console.log(data, "<<< interests");
+      return data;
+    } catch (error) {
+      console.error("Error fetching interests data:", error);
+      return [];
+    }
+  };
+
   const fetchUserInterests = async (userId) => {
-    console.log("Inside fetchUserInterests, userId:", userId);
+    // Check if userId is defined and not null
+    if (userId === undefined || userId === null) {
+      console.error("Error: userId is undefined or null");
+      return null;
+    }
+
+    console.log("userId:", userId);
     try {
       const { data: interestIds, error: userError } = await supabaseAuth
         .from("user_interests")
@@ -33,68 +59,80 @@ export default function ProfileDisplay() {
         return null;
       }
 
+      // Log interestIds
+      console.log("Interest IDs from the database:", interestIds);
+
       const validInterestIds = interestIds.map(
         (interest) => interest.interest_id,
       );
+      console.log("Valid Interest IDs:", validInterestIds);
 
       const interestsData = await fetchInterestsData(validInterestIds);
-      setUserInterests(
-        interestsData.map((interest) => interest.interest).join(", "),
+
+      // Log interest details from the 'interests' table
+      console.log(
+        "Interest details from the 'interests' table:",
+        interestsData,
       );
+      // Create the string of interests to be set
+      const interestsString = interestsData
+        .map((interest) => interest.interest)
+        .join(", ");
+
+      // Log the interests string before setting it
+      console.log("Interests string to set:", interestsString);
+
+      setUserInterests(interestsString);
     } catch (error) {
       console.error("Error fetching user interests:", error);
+      return null;
     }
   };
 
   useEffect(() => {
-    // console.log("Initial authId:", authId);
     const fetchCurrentUser = async () => {
-      const { data, error } = await supabaseAuth.auth.getUser();
-      console.log(data, "<<< UserData");
-      console.log(data.user.id, "<<< authId");
-      if (error) {
-        console.error("Error fetching user:", error);
-      } else if (data && data.user) {
-        const authUser = data.user;
-        fetchUserData(authUser.id); // returning authId as a result (see log above)
-        console.log(authUser.id, "<<< authUser.id");
+      try {
+        const { data, error } = await supabaseAuth.auth.getUser();
+
+        console.log(data, "<<< UserData");
+        console.log(data.user.id, "<<< authId");
+        if (error) {
+          console.error("Error fetching user:", error);
+        } else if (data && data.user) {
+          const authUser = data.user;
+          const userData = await fetchUserData(authUser.id);
+
+          if (userData) {
+            const userId = userData.id;
+            setCurrentUser(userData);
+            setEditableUser({ ...userData });
+            await fetchUserInterests(userId);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
       }
     };
 
     const fetchUserData = async (authId) => {
       console.log("Inside fetchUserData, authId:", authId);
-      const { data, error } = await supabaseAuth
-        .from("users")
-        .select("*")
-        .eq("auth_id", authId);
-      if (error) {
-        console.error("Error fetching user data:", error);
-      } else {
-        const userId = data[0].id;
-        console.log(userId, "userId, data[0].id");
-        setCurrentUser(data[0]);
-        setEditableUser({ ...data[0] });
-        fetchUserInterests(userId);
-      }
-    };
-
-    const fetchInterestsData = async (interestIds) => {
-      console.log("Inside fetchInterestsData, interestIds:", interestIds);
       try {
         const { data, error } = await supabaseAuth
-          .from("interests")
+          .from("users")
           .select("*")
-          .in("interest_id", interestIds);
+          .eq("auth_id", authId);
 
         if (error) {
-          console.error("Error fetching interests data:", error);
-          return [];
+          console.error("Error fetching user data:", error);
+          return null;
         }
 
-        return data;
+        const user = data[0];
+        console.log(user.id, "userId, data[0].id");
+        return user;
       } catch (error) {
-        console.error("Error fetching interests data:", error);
-        return [];
+        console.error("Error fetching user data:", error);
+        return null;
       }
     };
 
@@ -102,16 +140,16 @@ export default function ProfileDisplay() {
     fetchCurrentUser();
   }, []);
 
-  function toggleUpdate() {
+  const toggleUpdate = () => {
     if (!isUpdating) {
       setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
-  }
+  };
 
   const clearUserInterests = async (userId) => {
     console.log(userId, "<<< userId");
-    await supabaseAuth.from("user_interests").delete().eq("user_id", userId); // removed String(userId)
+    await supabaseAuth.from("user_interests").delete().eq("user_id", userId);
   };
 
   const updateUserInterests = async (userId, interestsArray) => {
@@ -132,7 +170,7 @@ export default function ProfileDisplay() {
         }
 
         console.log(interest, "<<< interest");
-        return interest?.[0]?.interest_id || null; // Return the interest ID directly
+        return interest?.[0]?.interest_id || null;
       }),
     );
 
@@ -152,18 +190,31 @@ export default function ProfileDisplay() {
   const handleProfileUpdate = async () => {
     if (!editableUser) return;
 
-    const updatedInterests = await fetchUserInterests(userId);
-    if (updatedInterests !== null) {
-      setUserInterests(
-        updatedInterests.map((interest) => interest.interest).join(", "),
-      );
-      console.log(updatedInterests);
-      console.log("User interests updated successfully");
-    } else {
-      console.error("Error fetching updated user interests:", error);
-    }
-
     try {
+      const updatedInterests = await fetchUserInterests(currentUser.id);
+
+      if (updatedInterests !== null) {
+        if (Array.isArray(updatedInterests)) {
+          const interestsArray = updatedInterests.map(
+            (interest) => interest.interest,
+          );
+
+          setUserInterests(interestsArray.join(", "));
+          console.log(updatedInterests, "<<< updated Interests");
+          console.log("User interests updated successfully");
+        } else {
+          console.error(
+            "Error fetching updated user interests. Data format is unexpected:",
+            updatedInterests,
+          );
+        }
+      } else {
+        console.error(
+          "Error fetching updated user interests:",
+          updatedInterests,
+        );
+      }
+
       const { data, error } = await supabaseAuth.from("users").upsert(
         [
           {
