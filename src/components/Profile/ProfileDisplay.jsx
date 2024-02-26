@@ -313,27 +313,28 @@ export default function ProfileDisplay() {
                     style={{ flex: 0.65 }}
                   />
                 </div>
-                <div>
-                  {isUpdating && (
-                    <Interests
-                      userInterestsArray={userInterestsArray}
-                      setUserInterestsArray={setUserInterestsArray}
-                      onInterestsChange={handleInterestsChange}
-                    />
-                  )}
-                </div>
 
-                <div className="flex justify-between text-2xl font-bold">
-                  <p>Interests</p>
-                </div>
-                <div>
-                  {userInterests &&
-                    userInterests
-                      .split(",")
-                      .map((interest, index) => (
-                        <div key={index}>{interest.trim()}</div>
-                      ))}
-                </div>
+                {isUpdating ? (
+                  <Interests
+                    userInterestsArray={userInterestsArray}
+                    setUserInterestsArray={setUserInterestsArray}
+                    onInterestsChange={handleInterestsChange}
+                  />
+                ) : (
+                  <div>
+                    <div className="flex justify-between text-2xl font-bold">
+                      <p>Interests</p>
+                    </div>
+                    <div>
+                      {userInterests &&
+                        userInterests
+                          .split(",")
+                          .map((interest, index) => (
+                            <div key={index}>{interest.trim()}</div>
+                          ))}
+                    </div>
+                  </div>
+                )}
 
                 {isUpdating && (
                   <div className="flex justify-end">
