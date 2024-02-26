@@ -42,7 +42,7 @@ export const Events = () => {
         .order("start_date", { descending: true })
         .then(({ data }) => {
           setSelectedEvents(data);
-          setIsLoading(false)
+          setIsLoading(false);
         })
         .catch((err) => console.log(err));
     }
@@ -115,7 +115,13 @@ export const Events = () => {
         <div className="flex flex-1 flex-wrap justify-center gap-5">
           {selectedEvents.length > 0 && !isLoading ? (
             selectedEvents.map((item) => {
-              return <EventCards item={item} showDelete={false}></EventCards>;
+              return (
+                <EventCards
+                  item={item}
+                  showDelete={false}
+                  key={item.event_id}
+                ></EventCards>
+              );
             })
           ) : (
             <>
@@ -126,8 +132,8 @@ export const Events = () => {
               <CardSkeleton />
               <CardSkeleton />
               <CardSkeleton />
-              <CardSkeleton/>
-              <CardSkeleton/>
+              <CardSkeleton />
+              <CardSkeleton />
             </>
           )}
         </div>

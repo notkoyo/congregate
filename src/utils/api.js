@@ -127,3 +127,28 @@ export const fetchVenueDataByID = async (venue_id) => {
     console.error("Error fetching venue data:", error);
   }
 };
+
+export const postEventAttendee = async (event_id) => {
+  try {
+    const currentUserID = await fetchCurrentUserID();
+    const currentUser = await fetchUserData(currentUserID);
+    console.log(currentUser);
+
+    const userObject = {
+      user_id: currentUser.id,
+      event_id: event_id,
+    };
+
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .insert(userObject)
+      .select();
+    if (error) {
+      console.error("Error posting event attendee data:", error);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error posting event attendee data:", error);
+  }
+};
