@@ -103,10 +103,6 @@ const CreateVenue = ({ userId }) => {
         postcode,
       } = data;
       
-      console.log({address: `${data.house},${data.address},${data.city},${data.county},${data.postcode}`});
-      const results = await getGeocode({address: `${data.house},${data.address},${data.city},${data.county},${data.postcode}`})
-      console.log(results, "<<<<<<<<<<");
-      const {lat, lng} = getLatLng(results[0])
       const res = await supabaseAuth.from("venues").insert({
         name,
         price,
