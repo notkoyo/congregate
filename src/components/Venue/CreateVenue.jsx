@@ -81,7 +81,7 @@ const CreateVenue = ({ userId }) => {
   const handleVenueUpdateSuccess = () => {
     setShowSuccessMessage(true);
     setTimeout(() => {
-      router.push("/list-venue"); TODO
+      router.push("/list-venue");
     }, 2000);
   };
   const onSubmit = async (data) => {
