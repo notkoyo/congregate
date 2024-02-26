@@ -1,8 +1,16 @@
-import { fetchInterestsData } from "@/utils/api";
+import {
+  fetchCurrentUserID,
+  fetchInterestsData,
+  fetchUserData,
+} from "@/utils/api";
 import { useEffect, useState } from "react";
+import { Tooltip, Button, button, Select, SelectItem } from "@nextui-org/react";
+import React from "react";
 
-export default function Interests({ interests, setInterests }) {
-  const [selectedInterest, setSelectedInterest] = useState("");
+export default function Interests({
+  userInterestsArray,
+  setUserInterestsArray,
+}) {
   const [allInterests, setAllInterests] = useState([]);
 
   useEffect(() => {
@@ -12,65 +20,48 @@ export default function Interests({ interests, setInterests }) {
   }, []);
 
   const handleChange = (e) => {
-    e.preventDefault();
-    setSelectedInterest(e.target.value);
-    console.log(selectedInterest);
+    if (!userInterestsArray.includes(e.target.value) && e.target.value !== "") {
+      setUserInterestsArray((prev) => [...prev, e.target.value]);
+    }
   };
 
-  const handleInterest = (e) => {
-    e.preventDefault();
-    setInterests((prev) => [...prev, selectedInterest]);
-    console.log(interests);
+  const handleDeleteInterest = (interest) => {
+    setUserInterestsArray((prev) => {
+      const newArr = prev.filter((item) => item !== interest);
+      return newArr;
+    });
   };
 
   return (
-    <div className="mb-4 flex flex-col gap-10">
-      <div className="flex flex-col">
-        <label
-          htmlFor="interests"
-          className="mb-2 block text-sm font-bold text-gray-700"
-        >
-          Interests
-        </label>
-        <div className="flex gap-2">
-          {/* <input
-            type="text"
-            id="interests"
-            name="interests"
-            value={interestsText}
+    <div className="mb-4 flex w-80 flex-col gap-10">
+      <div className="flex w-80 flex-col">
+        <div className="flex w-80 flex-col gap-2">
+          <Select
+            label="Interests"
+            placeholder="Select an interest"
+            className="max-w-xs"
             onChange={handleChange}
-            className="w-half rounded border px-3 py-2"
-            placeholder="Enter your interests"
-          /> */}
-          <select
-            name="interests"
-            id="interests"
-            onChange={handleChange}
-            className=" rounded border"
           >
             {allInterests.map((interest) => (
-              <option key={interest.interest} value={interest.interest}>
+              <SelectItem key={interest.interest} value={interest.interest}>
                 {interest.interest}
-              </option>
+              </SelectItem>
             ))}
-          </select>
-          <button
-            type="button"
-            className="rounded bg-slate-200 px-4 py-2 text-black hover:bg-slate-300"
-            onClick={handleInterest}
-          >
-            Add Interest
-          </button>
+          </Select>
         </div>
       </div>
 
       <div>
-        <h2 className="mb-2 block text-sm font-bold text-gray-700">
-          Your Interests
-        </h2>
-        <ul>
-          {interests.map((interest) => (
-            <li key={`${interest}_${Math.random()}`}>{interest}</li>
+        <ul className="flex flex-wrap gap-2">
+          {userInterestsArray.map((interestName) => (
+            <div className="flex gap-4" key={interestName}>
+              <Button
+                onClick={() => handleDeleteInterest(interestName)}
+                className="hover:bg-red-600 hover:text-white"
+              >
+                <li>{interestName}</li>
+              </Button>
+            </div>
           ))}
         </ul>
       </div>
