@@ -35,7 +35,7 @@ export default function NavProfileSection() {
     };
 
     getSession();
-  }, [isLoggedIn])
+  }, [isLoggedIn, signedInUser])
 
   return (
     <NavbarItem key={signedInUser ? signedInUser.full_name : null}>
