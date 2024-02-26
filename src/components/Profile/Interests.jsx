@@ -20,35 +20,18 @@ export default function Interests({
     });
   }, []);
 
-  // const handleChange = (e) => {
-  //   if (userInterestsArray.includes(e.target.value)) {
-  //   } else {
-  //     setUserInterestsArray((prev) => [...prev, e.target.value]);
-  //   }
-  // };
-
   const handleChange = (e) => {
     if (userInterestsArray.includes(e.target.value)) {
     } else {
-      const updatedInterests = [...userInterestsArray, e.target.value];
-      setUserInterestsArray(updatedInterests);
-      onInterestsChange(updatedInterests);
+      setUserInterestsArray((prev) => [...prev, e.target.value]);
     }
   };
 
-  // const handleDeleteInterest = (interest) => {
-  //   setUserInterestsArray((prev) => {
-  //     const newArr = prev.filter((item) => item !== interest);
-  //     return newArr;
-  //   });
-  // };
-
   const handleDeleteInterest = (interest) => {
-    const updatedInterests = userInterestsArray.filter(
-      (item) => item !== interest,
-    );
-    setUserInterestsArray(updatedInterests);
-    onInterestsChange(updatedInterests);
+    setUserInterestsArray((prev) => {
+      const newArr = prev.filter((item) => item !== interest);
+      return newArr;
+    });
   };
 
   return (
