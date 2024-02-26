@@ -13,7 +13,7 @@ export const Events = () => {
   });
 
   const [selectedEvents, setSelectedEvents] = useState([]);
-  const [distance, setDistance] = useState(26000);
+  const [distance, setDistance] = useState(260000);
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [distanceSlider, setDistanceSlider] = useState(50);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
@@ -111,7 +111,7 @@ export const Events = () => {
         <div className="flex flex-1 flex-wrap justify-center gap-5">
           {selectedEvents.length > 0 ? (
             selectedEvents.map((item) => {
-              return <EventCards item={item} showDelete={false}></EventCards>;
+              return <EventCards item={item} showDelete={false} key={item.event_id}></EventCards>;
             })
           ) : (
             <h2>no events</h2>

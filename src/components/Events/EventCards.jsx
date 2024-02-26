@@ -32,9 +32,9 @@ export default function EventCards({ item, showDelete }) {
 
   return isDeleted ? null : (
     <>
-        <div className="flex-grow-1 " key={item.event_id}>
+        <div className="flex-grow-1 ">
           <Card
-            className="h-64 w-96"
+            className="w-96"
             isPressable={true}
             onPress={() => {
               setOpenedEvent(item);
@@ -43,7 +43,7 @@ export default function EventCards({ item, showDelete }) {
           >
             <CardBody>
               <Image
-                className="h-4/5 w-full object-cover "
+                className="w-dvw h-60 object-cover"
                 src={item.photos}
                 alt=""
               />
