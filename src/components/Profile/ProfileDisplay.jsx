@@ -86,7 +86,11 @@ export default function ProfileDisplay() {
             const userId = userData.id;
             setCurrentUser(userData);
             setEditableUser(userData);
-            await fetchUserInterests(userId);
+            const userInterestsArrayOfObjects =
+              await fetchUserInterests(userId);
+            const userInterestArrayOfInterests =
+              userInterestsArrayOfObjects.map((object) => object.interest);
+            setUserInterestsArray(userInterestArrayOfInterests);
           }
         }
       } catch (error) {
