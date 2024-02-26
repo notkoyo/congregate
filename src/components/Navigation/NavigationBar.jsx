@@ -19,7 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
 import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import { revalidatePath } from "next/cache";
 
@@ -30,9 +30,17 @@ export const NavigationBar = () => {
   const [rotation, setRotation] = useState(0);
   const [signedInUser, setSignedInUser] = useState(null);
 
+  const currentPath = usePathname();
+  
+  
+  
+  
   const router = useRouter();
-
+  
   useEffect(() => {
+    if (currentPath !== "/host/event" && currentPath !== "/venues") {
+      localStorage.clear();
+    }
     const fetchSignedInUser = async () => {
       try {
         const { data, error } = await supabaseAuth.auth.getUser();
@@ -45,13 +53,13 @@ export const NavigationBar = () => {
         console.error("Error fetching user:", error);
       }
     };
-
+    
     const fetchUserData = async (id) => {
       try {
         const { data, error } = await supabaseAuth
-          .from("users")
-          .select()
-          .eq("auth_id", id);
+        .from("users")
+        .select()
+        .eq("auth_id", id);
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
@@ -61,18 +69,18 @@ export const NavigationBar = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
+    
     fetchSignedInUser().then((res) => {
       fetchUserData(res);
     });
   }, [signedInUser]);
-
+  
   return (
     <Navbar
-      shouldHideOnScroll
-      maxWidth="xl"
-      onMenuOpenChange={setIsMenuOpen}
-      className="bg-cyan-600 text-white shadow-lg"
+    shouldHideOnScroll
+    maxWidth="xl"
+    onMenuOpenChange={setIsMenuOpen}
+    className="bg-cyan-600 text-white shadow-lg"
     >
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
