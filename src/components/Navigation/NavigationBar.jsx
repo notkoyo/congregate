@@ -147,7 +147,7 @@ export const NavigationBar = () => {
               description="Host a venue."
               className="font-satoshi font-medium"
               startContent={<VenueIcon />}
-              href="/create-venue"
+              href="/host/venue"
             >
               Venue
             </DropdownItem>
