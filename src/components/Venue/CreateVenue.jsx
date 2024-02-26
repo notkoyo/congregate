@@ -6,6 +6,7 @@ import { supabaseAuth } from "../../utils/supabaseClient";
 import UpdateSuccessMessage from "./Succes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getGeocode, getLatLng } from "use-places-autocomplete";
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
   price: z.number().refine((data) => !isNaN(data), {
@@ -101,6 +102,7 @@ const CreateVenue = ({ userId }) => {
         county,
         postcode,
       } = data;
+      
       const res = await supabaseAuth.from("venues").insert({
         name,
         price,
@@ -112,6 +114,8 @@ const CreateVenue = ({ userId }) => {
         county,
         postcode,
         founder_id: userId,
+        lat: latlng.lat,
+        lng: latlng.lng
       });
       console.log(res);
       if (res.status === 201) {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CreateVenue from "../../components/Venue/CreateVenue";
-import { supabaseAuth } from "../../utils/supabaseClient";
+import CreateVenue from "../../../components/Venue/CreateVenue";
+import { supabaseAuth } from "../../../utils/supabaseClient";
 function Page() {
   const [userId, setUserId] = useState();
   useEffect(() => {
