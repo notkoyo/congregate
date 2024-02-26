@@ -1,22 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { supabaseAuth } from "../../utils/supabaseClient";
-import ListVenue from "../../components/Venue/ListVenue";
 
+import React, { useState, useEffect } from "react";
+import HostedVenue from "../../../../components/Venue/HostedVenue";
+import ListVenue from "../../../../components/Venue/ListVenue";
+import { supabaseAuth } from "../../../../utils/supabaseClient";
 import "./listVenue.css";
-function Page() {
+
+function page() {
   const [venuesData, setVenuesData] = useState([]);
-  const [session, setSession] = useState({});
   const [userId, setUserId] = useState();
   const [venueHasBeenUpdate, setVenueHasBeenUpdate] = useState(false);
+
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
-        const { data, error } = await supabaseAuth.from("venues").select();
         const res = await supabaseAuth.auth.getSession();
-        setSession(res);
         let userId = res.data?.session?.user.id;
         setUserId(userId);
+        const { data, error } = await supabaseAuth
+          .from("venues")
+          .select()
+          .match({ founder_id: userId });
+        console.log(data);
+
         if (error) {
           console.error("Error fetching venues data:", error);
         } else {
@@ -30,7 +36,6 @@ function Page() {
 
     fetchVenuesData();
   }, [venueHasBeenUpdate]);
-
   const readyVenues = [];
 
   const filterUserVenue = () => {
@@ -48,8 +53,8 @@ function Page() {
       }
     }
   };
-
   filterUserVenue();
+
   return (
     <div className="venue_grid">
       <div className="venue_inside">
@@ -67,4 +72,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default page;

@@ -184,7 +184,7 @@ export default function EventForm() {
           {!formData.venue_id ? (
             <label>
               Venues
-              <Link href="/list-venue" prefetch={true}>
+              <Link href="/venues" prefetch={true}>
                 <Button onPress={handleVenueRedirect}>Choose Venue</Button>
               </Link>
             </label>
@@ -192,7 +192,7 @@ export default function EventForm() {
             <>
               <div className="flex justify-between">
                 <h1 className="font-bold">Your selected venue</h1>
-                <Link href="/list-venue" prefetch={true}>
+                <Link href="/venues" prefetch={true}>
                   <Button onPress={handleVenueRedirect}>Change Venue</Button>
                 </Link>
               </div>

@@ -35,7 +35,6 @@ export default function EventCards({ item, showDelete }) {
   }, [isDeleted]);
 
   const handleDelete = () => {
-    console.log(item.event_id);
     supabaseAuth.from("events").delete().eq("event_id", item.event_id).then();
     setIsDeleted(true);
   };

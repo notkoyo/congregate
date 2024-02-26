@@ -14,7 +14,7 @@ export const Events = () => {
   });
 
   const [selectedEvents, setSelectedEvents] = useState([]);
-  const [distance, setDistance] = useState(26000);
+  const [distance, setDistance] = useState(260000);
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [distanceSlider, setDistanceSlider] = useState(50);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
