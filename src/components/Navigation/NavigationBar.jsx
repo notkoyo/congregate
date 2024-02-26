@@ -29,15 +29,18 @@ export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [signedInUser, setSignedInUser] = useState(null);
+
+  const currentPath = usePathname();
   
-  const currentPath = usePathname()
-  if (currentPath !== "/host/event" && currentPath !== "/venues") {
-    localStorage.clear()
-  }
+  
+  
   
   const router = useRouter();
-
+  
   useEffect(() => {
+    if (currentPath !== "/host/event" && currentPath !== "/venues") {
+      localStorage.clear();
+    }
     const fetchSignedInUser = async () => {
       try {
         const { data, error } = await supabaseAuth.auth.getUser();
@@ -50,13 +53,13 @@ export const NavigationBar = () => {
         console.error("Error fetching user:", error);
       }
     };
-
+    
     const fetchUserData = async (id) => {
       try {
         const { data, error } = await supabaseAuth
-          .from("users")
-          .select()
-          .eq("auth_id", id);
+        .from("users")
+        .select()
+        .eq("auth_id", id);
         if (error) {
           console.error("Error fetching user data:", error);
         } else {
@@ -66,18 +69,18 @@ export const NavigationBar = () => {
         console.error("Error fetching user data:", error);
       }
     };
-
+    
     fetchSignedInUser().then((res) => {
       fetchUserData(res);
     });
   }, [signedInUser]);
-
+  
   return (
     <Navbar
-      shouldHideOnScroll
-      maxWidth="xl"
-      onMenuOpenChange={setIsMenuOpen}
-      className="bg-cyan-600 text-white shadow-lg"
+    shouldHideOnScroll
+    maxWidth="xl"
+    onMenuOpenChange={setIsMenuOpen}
+    className="bg-cyan-600 text-white shadow-lg"
     >
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
