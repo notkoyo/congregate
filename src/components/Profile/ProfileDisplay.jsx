@@ -12,15 +12,12 @@ export default function ProfileDisplay() {
   const [editableUser, setEditableUser] = useState(null);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
   const [userInterestsArray, setUserInterestsArray] = useState([]);
-  // const [showInterests, setShowInterests] = useState(false);
 
   const handleInterestsChange = (newInterests) => {
     setUserInterestsArray(newInterests);
-    console.log(newInterests, "<<< newInterests");
   };
 
   const fetchInterestsData = async (interestIds) => {
-    console.log("InterestIds:", interestIds);
     try {
       const { data, error } = await supabaseAuth
         .from("interests")
@@ -31,7 +28,6 @@ export default function ProfileDisplay() {
         console.error("Error fetching interests data:", error);
         return [];
       }
-      console.log(data, "<<< interests");
       return data;
     } catch (error) {
       console.error("Error fetching interests data:", error);
@@ -46,7 +42,6 @@ export default function ProfileDisplay() {
       return [];
     }
 
-    console.log("userId:", userId);
     try {
       const { data: interestIds, error: userError } = await supabaseAuth
         .from("user_interests")
@@ -58,28 +53,15 @@ export default function ProfileDisplay() {
         return [];
       }
 
-      // Log interestIds
-      console.log("Interest IDs from the database:", interestIds);
-
       const validInterestIds = interestIds.map(
         (interest) => interest.interest_id,
       );
-      console.log("Valid Interest IDs:", validInterestIds);
 
       const interestsData = await fetchInterestsData(validInterestIds);
 
-      // Log interest details from the 'interests' table
-      console.log(
-        "Interest details from the 'interests' table:",
-        interestsData,
-      );
-      // Create the string of interests to be set
       const interestsString = interestsData
         .map((interest) => interest.interest)
         .join(", ");
-
-      // Log the interests string before setting it
-      console.log("Interests string to set:", interestsString);
 
       setUserInterests(interestsString);
       return interestsData;
@@ -90,15 +72,9 @@ export default function ProfileDisplay() {
   };
 
   useEffect(() => {
-    console.log("Entering useEffect");
-
     const fetchCurrentUser = async () => {
-      console.log("Entering fetchUserData");
       try {
         const { data, error } = await supabaseAuth.auth.getUser();
-
-        console.log(data, "<<< UserData");
-        console.log(data.user.id, "<<< authId");
 
         if (error) {
           console.error("Error fetching user:", error);
@@ -113,14 +89,12 @@ export default function ProfileDisplay() {
             await fetchUserInterests(userId);
           }
         }
-        console.log("Exiting fetchCurrentUser");
       } catch (error) {
         console.error("Error fetching current user:", error);
       }
     };
 
     const fetchUserData = async (authId) => {
-      console.log("Inside fetchUserData, authId:", authId);
       try {
         const { data, error } = await supabaseAuth
           .from("users")
@@ -133,7 +107,6 @@ export default function ProfileDisplay() {
         }
 
         const user = data[0];
-        console.log(user.id, "userId, data[0].id");
         return user;
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -141,23 +114,17 @@ export default function ProfileDisplay() {
       }
     };
 
-    // Initial fetch
     fetchCurrentUser();
-    console.log("Exiting useEffect");
   }, []);
 
   const toggleUpdate = () => {
-    console.log("Toggling update");
-
     if (!isUpdating) {
-      console.log("Setting editable user:", { ...currentUser });
       setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
   };
 
   const clearUserInterests = async () => {
-    console.log(editableUser.id, "<<< userId");
     await supabaseAuth
       .from("user_interests")
       .delete()
@@ -165,13 +132,8 @@ export default function ProfileDisplay() {
   };
 
   const updateUserInterests = async (userId, interestsArray) => {
-    console.log("Updating user interests for userId:", userId);
-
-    // Fetch interest IDs first
     const interestIds = await Promise.all(
       interestsArray.map(async (interestDescription) => {
-        console.log(interestDescription, "<<< Fetching interest description");
-
         const { data: interest, error } = await supabaseAuth
           .from("interests")
           .select("interest_id")
@@ -187,14 +149,8 @@ export default function ProfileDisplay() {
       }),
     );
 
-    console.log("Interest IDs:", interestIds);
-
-    // Filter out any null values (in case of errors)
     const validInterestIds = interestIds.filter((id) => id !== null);
 
-    console.log("Valid Interest IDs:", validInterestIds);
-
-    // Create userInterestObjects array
     const userInterestObjects = validInterestIds.map((interestId) => {
       return {
         user_id: userId,
@@ -202,18 +158,13 @@ export default function ProfileDisplay() {
       };
     });
 
-    console.log("User Interest Objects:", userInterestObjects);
-
     try {
-      // Use upsert to insert or update based on interest_id
       const { data, error } = await supabaseAuth
         .from("user_interests")
         .upsert(userInterestObjects, { onConflict: "id" });
 
       if (error) {
         console.error("Error updating user interests:", error);
-      } else {
-        console.log("User interests updated");
       }
     } catch (error) {
       console.error("Error updating user interests:", error);
@@ -224,14 +175,7 @@ export default function ProfileDisplay() {
     if (!editableUser) return;
 
     try {
-      // await clearUserInterests();
-      const updatedInterests = await fetchUserInterests(currentUser.id); // last update editableUser.id
-
-      console.log("Fetched user interests:", updatedInterests);
-
-      if (updatedInterests !== null) {
-        console.log("Type of updated interests >>>", typeof updatedInterests);
-      }
+      const updatedInterests = await fetchUserInterests(currentUser.id);
 
       if (Array.isArray(updatedInterests)) {
         const interestsArray = updatedInterests.map(
@@ -239,9 +183,6 @@ export default function ProfileDisplay() {
         );
 
         setUserInterests(interestsArray.join(", "));
-        console.log(updatedInterests, "<<< updated Interests");
-        // console.log(updatedInterests[0].interest, "<<< updated Interests");
-        console.log("User interests updated successfully");
       } else {
         console.error(
           "Error fetching updated user interests. Data format is unexpected:",
