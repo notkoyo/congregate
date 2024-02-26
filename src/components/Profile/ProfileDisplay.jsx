@@ -230,8 +230,9 @@ export default function ProfileDisplay() {
 
       console.log("Fetched user interests:", updatedInterests);
 
-      // if (updatedInterests !== null) {
-      //   console.log("Type of updated interests:", typeof updatedInterests);
+      if (updatedInterests !== null) {
+        console.log("Type of updated interests >>>", typeof updatedInterests);
+      }
 
       if (Array.isArray(updatedInterests)) {
         const interestsArray = updatedInterests.map(
