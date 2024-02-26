@@ -51,6 +51,10 @@ const EditVenue = ({
   };
   const onSubmit = async (data) => {
     try {
+      if (!selectedFile) {
+        setErrorInputFile("No file selected");
+        return;
+      }
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const photoURL = await uploadImage().then((res) => {
         return res;
@@ -216,7 +220,6 @@ const EditVenue = ({
                       uploadImage(e);
                       handleFileChange(e);
                     }}
-                    required
                     accept=".jpeg, .jpg, .png"
                     className="hidden"
                   />

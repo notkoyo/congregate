@@ -27,6 +27,8 @@ const CreateVenue = ({ userId }) => {
   const [erroInputFile, setErrorInputFile] = useState("");
   const router = useRouter();
   const [urlPhoto, setUrlPhoto] = useState("");
+  console.log(selectedFile);
+  console.log(erroInputFile);
   async function uploadImage() {
     // const file = e?.target?.files?.[0];
     // console.log(typeof file);
@@ -81,6 +83,10 @@ const CreateVenue = ({ userId }) => {
   };
   const onSubmit = async (data) => {
     try {
+      if (!selectedFile) {
+        setErrorInputFile("No file selected");
+        return;
+      }
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const photoURL = await uploadImage().then((res) => {
         return res;
@@ -211,8 +217,6 @@ const CreateVenue = ({ userId }) => {
                       uploadImage(e);
                       handleFileChange(e);
                     }}
-                    required
-                    accept=".jpeg, .jpg, .png"
                     className="hidden"
                   />
                 </label>
