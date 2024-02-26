@@ -70,7 +70,7 @@ export const Events = () => {
               selectedPos={selectedPos}
               selectedEvents={selectedEvents}
             />
-            <GoogleMapAutocomplete setSelectedPos={setSelectedPos} />
+            <GoogleMapAutocomplete setSelectedPos={setSelectedPos} fillerText="Search near..."/>
           </section>
           <section>
             <Slider
