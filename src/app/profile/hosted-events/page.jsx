@@ -34,7 +34,7 @@ export default function myEvents() {
   return (
     <>
       {userEvents.length > 0 && userEvents.map((item) => (
-        <EventCards item={item} showDelete={true} />
+        <EventCards item={item} showDelete={true} key={item.event_id} />
       ))}
     </>
   );
