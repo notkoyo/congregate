@@ -4,15 +4,26 @@ import {
   Navbar,
   NavbarBrand,
   NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
   NavbarMenuToggle,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Link,
+  Button,
+  Avatar,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
+import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
-import NavLinks from "./NavLinks";
-import NavProfileSection from "./NavProfileSection";
-import MobileMenu from "./NavMobileMenu";
+import { revalidatePath } from "next/cache";
+
+const menuItems = ["Meet", "Host Events", "Host Venues"];
 
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,7 +31,6 @@ export const NavigationBar = () => {
   const [signedInUser, setSignedInUser] = useState(null);
 
   const router = useRouter();
-
 
   useEffect(() => {
     const fetchSignedInUser = async () => {
@@ -36,33 +46,33 @@ export const NavigationBar = () => {
       }
     };
 
+    const fetchUserData = async (id) => {
+      try {
+        const { data, error } = await supabaseAuth
+          .from("users")
+          .select()
+          .eq("auth_id", id);
+        if (error) {
+          console.error("Error fetching user data:", error);
+        } else {
+          setSignedInUser(data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-
-  const getSession = async () => {
-    const {
-      data: { session },
-    } = await supabaseAuth.auth.getSession();
-    if (session) {
-      const {
-        user: { user_metadata },
-      } = session;
-      setSignedInUser(user_metadata);
-      console.log(user_metadata);
-    } else {
-      setSignedInUser(null);
-    }
-  };
-
-  useEffect(() => {
-    getSession();
-  }, []);
+    fetchSignedInUser().then((res) => {
+      fetchUserData(res);
+    });
+  }, [signedInUser]);
 
   return (
     <Navbar
       shouldHideOnScroll
       maxWidth="xl"
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-cyan-600 font-satoshi text-white shadow-lg"
+      className="bg-cyan-600 text-white shadow-lg"
     >
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -72,12 +82,11 @@ export const NavigationBar = () => {
         <div className="scale-75 cursor-default md:scale-100">
           <CongregateLogo />
         </div>
-        <p className="ml-1 cursor-pointer text-lg font-bold text-inherit md:text-2xl">
+        <p className="ml-1 cursor-pointer font-satoshi text-lg font-bold text-inherit md:text-2xl">
           Congregate
         </p>
       </NavbarBrand>
       <NavbarContent className="hidden gap-4 md:flex" justify="center">
-
         <NavbarItem>
           <Link
             className="font-satoshi text-lg font-medium text-white"
@@ -241,13 +250,21 @@ export const NavigationBar = () => {
             </DropdownMenu>
           )}
         </Dropdown>
-
-        <NavLinks rotation={rotation} setRotation={setRotation} />
       </NavbarContent>
-      <NavbarContent justify="end">
-        <NavProfileSection signedInUser={signedInUser} />
-      </NavbarContent>
-      <MobileMenu />
+      <NavbarMenu className="scrollbar-hide">
+        {menuItems.map((item, i) => (
+          <NavbarMenuItem key={`${item}-${i}`} className="scrollbar-hide">
+            <Link
+              color="foreground"
+              className="w-full hover:bg-white/40"
+              href="#"
+              size="lg"
+            >
+              {item}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   );
 };
