@@ -4,24 +4,14 @@ import {
   Navbar,
   NavbarBrand,
   NavbarContent,
-  NavbarItem,
   NavbarMenu,
   NavbarMenuItem,
   NavbarMenuToggle,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
   Link,
-  Button,
-  Avatar,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
-import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
 import { usePathname, useRouter } from "next/navigation";
-import { supabaseAuth } from "../../utils/supabaseClient";
-import { revalidatePath } from "next/cache";
 import NavLinks from "./NavLinks";
 import NavProfileSection from "./NavProfileSection";
 
@@ -61,7 +51,7 @@ export const NavigationBar = () => {
         </p>
       </NavbarBrand>
       <NavbarContent className="hidden gap-4 md:flex" justify="center">
-        <NavLinks />
+        <NavLinks rotation={rotation} setRotation={setRotation} />
       </NavbarContent>
       <NavbarContent justify="end">
         <NavProfileSection />
