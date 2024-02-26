@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
 import { Button } from "@nextui-org/react";
-import moment from "moment";
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
   price: z.number().refine((data) => !isNaN(data), {
@@ -106,13 +105,13 @@ const CreateVenue = ({ userId }) => {
         postcode,
       } = data;
       let latlng;
-      
+
       if (locationInfo) {
         latlng = getLatLng(locationInfo);
       } else {
-        const description = `${house},${address}, ${city}, ${county}, ${postcode}`
-        const venueLocation = await getGeocode({ address: description })
-        latlng = getLatLng(venueLocation[0])
+        const description = `${house},${address}, ${city}, ${county}, ${postcode}`;
+        const venueLocation = await getGeocode({ address: description });
+        latlng = getLatLng(venueLocation[0]);
       }
 
       const res = await supabaseAuth.from("venues").insert({
@@ -127,7 +126,7 @@ const CreateVenue = ({ userId }) => {
         postcode,
         founder_id: userId,
         lat: latlng.lat,
-        lng: latlng.lng
+        lng: latlng.lng,
       });
       console.log(res);
       if (res.status === 201) {
@@ -251,7 +250,6 @@ const CreateVenue = ({ userId }) => {
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">Building number</label>
                 <input
-                  
                   {...register("house", { valueAsNumber: true })}
                   placeholder="Building number (optional)"
                   type="number"
