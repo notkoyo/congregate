@@ -31,7 +31,6 @@ export const NavigationBar = () => {
   const [signedInUser, setSignedInUser] = useState(null);
 
   const router = useRouter();
- 
 
   useEffect(() => {
     const fetchSignedInUser = async () => {
@@ -140,7 +139,7 @@ export const NavigationBar = () => {
               description="Host a venue."
               className="font-satoshi font-medium"
               startContent={<VenueIcon />}
-              href="/host/venue"
+              href="/create-venue"
             >
               Venue
             </DropdownItem>
@@ -178,8 +177,14 @@ export const NavigationBar = () => {
             </DropdownMenu>
           ) : (
             <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem textValue="is signed in?" key="details" className="h-14 gap-2">
-                <p className="font-semibold">Hello, {`${signedInUser.given_names} ${signedInUser.surname}`}</p>
+              <DropdownItem
+                textValue="is signed in?"
+                key="details"
+                className="h-14 gap-2"
+              >
+                <p className="font-semibold">
+                  Hello, {`${signedInUser.given_names} ${signedInUser.surname}`}
+                </p>
                 <p className="font-semibold text-white/35">
                   {signedInUser ? signedInUser.email : "Not signed in"}
                 </p>
@@ -232,7 +237,14 @@ export const NavigationBar = () => {
                 textValue="logout button"
               >
                 <form action="/auth/signout" method="post">
-                  <Button  onPress={() => setSignedInUser(null)} fullWidth type="submit" color="danger">Logout</Button>
+                  <Button
+                    onPress={() => setSignedInUser(null)}
+                    fullWidth
+                    type="submit"
+                    color="danger"
+                  >
+                    Logout
+                  </Button>
                 </form>
               </DropdownItem>
             </DropdownMenu>
