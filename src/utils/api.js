@@ -3,8 +3,9 @@ import { supabaseAuth } from "./supabaseClient";
 export const fetchCurrentUserID = async () => {
   try {
     const { data, error } = await supabaseAuth.auth.getUser();
-    if (error) {
-      console.error("Error fetching user:", error);
+
+    if (data.user === null) {
+      return null;
     } else if (data && data.user) {
       return data.user.id;
     }
@@ -28,6 +29,10 @@ export const fetchCurrentUserData = async () => {
 
 export const fetchUserData = async (auth_id) => {
   try {
+    if (!auth_id) {
+      return null;
+    }
+
     const { data, error } = await supabaseAuth
       .from("users")
       .select()
@@ -125,5 +130,78 @@ export const fetchVenueDataByID = async (venue_id) => {
     }
   } catch (error) {
     console.error("Error fetching venue data:", error);
+  }
+};
+
+export const postEventAttendee = async (event_id) => {
+  try {
+    const currentUserID = await fetchCurrentUserID();
+    const currentUser = await fetchUserData(currentUserID);
+
+    const userObject = {
+      user_id: currentUser.id,
+      event_id: event_id,
+    };
+
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .insert(userObject)
+      .select();
+    if (error) {
+      console.error("Error posting event attendee data:", error);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error posting event attendee data:", error);
+  }
+};
+
+export const deleteEventAttendee = async (event_id) => {
+  try {
+    const currentUserID = await fetchCurrentUserID();
+    const currentUser = await fetchUserData(currentUserID);
+
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .delete()
+      .eq("user_id", currentUser.id)
+      .eq("event_id", event_id)
+      .select();
+    if (error) {
+      console.error("Error deleting event attendee data:", error);
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error deleting event attendee data:", error);
+  }
+};
+
+export const isUserBookedOn = async (event_id) => {
+  try {
+    const currentUserID = await fetchCurrentUserID();
+
+    if (!currentUserID) {
+      return false;
+    }
+
+    const currentUser = await fetchUserData(currentUserID);
+
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .select()
+      .eq("user_id", currentUser.id)
+      .eq("event_id", event_id);
+
+    console.log(data);
+
+    if (data.length === 0) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    console.error("Error selecting event attendee data:", error);
   }
 };
