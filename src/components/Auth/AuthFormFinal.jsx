@@ -29,6 +29,7 @@ export default function AuthForm() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isProgressVisible, setIsProgressVisible] = useState(false);
   const [isPasswordModal, setIsPasswordModal] = useState(false);
+  const [isInfoIncorrect, setIsInfoIncorrect] = useState(false);
 
   const [isNewUser, setIsNewUser] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -75,6 +76,8 @@ export default function AuthForm() {
         router.push("/profile/create");
       }
     } else {
+      setIsInfoIncorrect(true);
+      setIsSigningIn(false);
       setIsSigningUp(false);
     }
   };
@@ -173,7 +176,7 @@ export default function AuthForm() {
         type="email"
         label="Email"
         variant="faded"
-        isInvalid={!isEmailValid}
+        isInvalid={isSigningUp && !isEmailValid ? true : false}
         color={
           !isNewUser
             ? "default"
@@ -183,7 +186,7 @@ export default function AuthForm() {
                 : "danger"
               : "default"
         }
-        errorMessage={!isEmailValid && "Please enter a valid email"}
+        errorMessage={isNewUser && !isEmailValid ? "Please enter a valid email" : ""}
         onValueChange={handleEmailChange}
         className="max-w-xs font-medium"
       />
@@ -209,7 +212,7 @@ export default function AuthForm() {
             </div>
           }
           type={isProgressVisible ? "text" : "password"}
-          isInvalid={!isPasswordValid}
+          isInvalid={isSigningUp && !isPasswordValid ? true : false}
           color={
             !isNewUser
               ? "default"
@@ -219,40 +222,42 @@ export default function AuthForm() {
                   : "danger"
                 : "default"
           }
-          errorMessage={!isPasswordValid && "Please enter a valid password"}
+          errorMessage={isNewUser && !isPasswordValid ? "Please enter a valid password" : ""}
           onValueChange={handlePasswordChange}
           className="max-w-xs font-medium"
         />
-        <Tooltip
-          isOpen={isPasswordModal}
-          onOpenChange={(open) => setIsPasswordModal(open)}
-          content={
-            <div className="p-2 text-center font-satoshi">
-              <h6 className="py-2 font-semibold">Password Requirements</h6>
-              <ul className="font-medium">
-                <li>
-                  3 Lowercase Characters{" "}
-                  <span className="font-bold">(a-z)</span>
-                </li>
-                <li>
-                  2 Uppercase Characters{" "}
-                  <span className="font-bold">(A-Z)</span>
-                </li>
-                <li>
-                  1 Special Character{" "}
-                  <span className="font-bold">(!,@,$,&,*)</span>
-                </li>
-                <li>
-                  2 Numbers <span className="font-bold">(0-9)</span>
-                </li>
-              </ul>
-            </div>
-          }
-        >
-          <Button isIconOnly>
-            <QuestionMarkIcon />
-          </Button>
-        </Tooltip>
+        {isNewUser && (
+          <Tooltip
+            isOpen={isPasswordModal}
+            onOpenChange={(open) => setIsPasswordModal(open)}
+            content={
+              <div className="p-2 text-center font-satoshi">
+                <h6 className="py-2 font-semibold">Password Requirements</h6>
+                <ul className="font-medium">
+                  <li>
+                    3 Lowercase Characters{" "}
+                    <span className="font-bold">(a-z)</span>
+                  </li>
+                  <li>
+                    2 Uppercase Characters{" "}
+                    <span className="font-bold">(A-Z)</span>
+                  </li>
+                  <li>
+                    1 Special Character{" "}
+                    <span className="font-bold">(!,@,$,&,*)</span>
+                  </li>
+                  <li>
+                    2 Numbers <span className="font-bold">(0-9)</span>
+                  </li>
+                </ul>
+              </div>
+            }
+          >
+            <Button isIconOnly>
+              <QuestionMarkIcon />
+            </Button>
+          </Tooltip>
+        )}
       </div>
       {isNewUser && (
         <Progress
@@ -321,6 +326,11 @@ export default function AuthForm() {
       >
         {signInMessage}
       </Button>
+      {isInfoIncorrect && (
+        <div className="max-w-xs">
+          <p className="text-tiny text-center text-red-500">Incorrect password or email, please try again.</p>
+        </div>
+      )}
       <Divider className="my-5" />
       <Button
         className="bg-white font-semibold text-black"
