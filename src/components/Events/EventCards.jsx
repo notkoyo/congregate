@@ -21,17 +21,25 @@ import {
 } from "@nextui-org/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useLogin } from "../loginContext";
+import BookedOnMessage from "./BookedOnMessage";
 
 export default function EventCards({ item, showDelete }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedEvent, setOpenedEvent] = useState();
   const [isDeleted, setIsDeleted] = useState(false);
   const [bookedOn, setBookedOn] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [messageBody, setMessageBody] = useState("");
+
+  const { isLoggedIn } = useLogin();
 
   useEffect(() => {
-    isUserBookedOn(item.event_id).then((res) => {
-      setBookedOn(res);
-    });
+    if (isLoggedIn) {
+      isUserBookedOn(item.event_id).then((res) => {
+        setBookedOn(res);
+      });
+    }
   }, [isDeleted]);
 
   const handleDelete = () => {
@@ -41,12 +49,20 @@ export default function EventCards({ item, showDelete }) {
 
   const handleBooking = () => {
     postEventAttendee(item.event_id);
+    setMessageBody("Success! You are going to this event!");
+    setShowMessage(true);
     setBookedOn((prev) => !prev);
   };
 
   const handleDropout = () => {
     deleteEventAttendee(item.event_id);
+    setMessageBody("You have been removed from this event");
+    setShowMessage(true);
     setBookedOn((prev) => !prev);
+  };
+
+  const handleHide = () => {
+    setShowMessage(false);
   };
 
   return isDeleted ? null : (
@@ -118,6 +134,12 @@ export default function EventCards({ item, showDelete }) {
                     <Button onPress={handleDropout}>Drop out</Button>
                   ) : (
                     <Button onPress={handleBooking}>Book now</Button>
+                  )}
+                  {showMessage && (
+                    <BookedOnMessage
+                      handleHide={handleHide}
+                      text={messageBody}
+                    />
                   )}
                 </ModalFooter>
               </>
