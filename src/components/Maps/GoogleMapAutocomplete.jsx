@@ -5,7 +5,7 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
-export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
+export const GoogleMapAutocomplete = ({ setSelectedPos, setLocationInfo, fillerText }) => {
 
   const {
     ready,
@@ -38,10 +38,17 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
       setValue(description, false);
       clearSuggestions();
 
-      // Get latitude and longitude via utility functions
+      
       getGeocode({ address: description }).then((results) => {
-        setSelectedPos({...setSelectedPos,center:getLatLng(results[0])})
+        if (setSelectedPos) {
+          setSelectedPos({...setSelectedPos,center:getLatLng(results[0])})
+        }
+        if (setLocationInfo) {
+          console.log(results);
+          setLocationInfo(results[0])
+        }
       });
+        
     };
 
   const renderSuggestions = () =>
@@ -65,7 +72,7 @@ export const GoogleMapAutocomplete = ({ setSelectedPos }) => {
           value={value}
           onChange={handleInput}
           disabled={!ready}
-          placeholder="Search near..."
+          placeholder={fillerText}
           className="border-solid border-black border-1"
         />
         {/* We can use the "status" to decide whether we should display the dropdown or not */}
