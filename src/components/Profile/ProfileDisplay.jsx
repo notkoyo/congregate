@@ -1,8 +1,9 @@
 "use client";
-
+// import { createClient } from "@supabase/supabase-js";
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Interests from "./Interests";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -10,94 +11,189 @@ export default function ProfileDisplay() {
   const [userInterests, setUserInterests] = useState(null);
   const [editableUser, setEditableUser] = useState(null);
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
+  const [userInterestsArray, setUserInterestsArray] = useState([]);
+
+  const handleInterestsChange = (newInterests) => {
+    setUserInterestsArray(newInterests);
+  };
+
+  const fetchInterestsData = async (interestIds) => {
+    try {
+      const { data, error } = await supabaseAuth
+        .from("interests")
+        .select("*")
+        .in("interest_id", interestIds);
+
+      if (error) {
+        console.error("Error fetching interests data:", error);
+        return [];
+      }
+      return data;
+    } catch (error) {
+      console.error("Error fetching interests data:", error);
+      return [];
+    }
+  };
+
+  const fetchUserInterests = async (userId) => {
+    // Check if userId is defined and not null
+    if (userId === undefined || userId === null) {
+      console.error("Error: userId is undefined or null");
+      return [];
+    }
+
+    try {
+      const { data: interestIds, error: userError } = await supabaseAuth
+        .from("user_interests")
+        .select("interest_id")
+        .eq("user_id", userId);
+
+      if (userError) {
+        console.error("Error fetching user interests:", userError);
+        return [];
+      }
+
+      const validInterestIds = interestIds.map(
+        (interest) => interest.interest_id,
+      );
+
+      const interestsData = await fetchInterestsData(validInterestIds);
+
+      const interestsString = interestsData
+        .map((interest) => interest.interest)
+        .join(", ");
+
+      setUserInterests(interestsString);
+      return interestsData;
+    } catch (error) {
+      console.error("Error fetching user interests:", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const { data, error } = await supabaseAuth.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-      } else if (data && data.user) {
-        return data.user.id;
-      }
-    };
-
-    const fetchUserData = async (id) => {
-      const { data, error } = await supabaseAuth
-        .from("users")
-        .select()
-        .eq("auth_id", id);
-      if (error) {
-        console.error("Error fetching user data:", error);
-      } else {
-        setCurrentUser(data[0]);
-        setEditableUser({ ...data[0] });
-      }
-    };
-
-    const fetchUserInterests = async (id) => {
       try {
-        const { data: user, error: userError } = await supabaseAuth
-          .from("users")
-          .select("id")
-          .eq("auth_id", id);
+        const { data, error } = await supabaseAuth.auth.getUser();
 
-        if (userError) {
-          console.error("Error fetching user:", userError);
-          return;
-        }
+        if (error) {
+          console.error("Error fetching user:", error);
+        } else if (data && data.user) {
+          const authUser = data.user;
+          const userData = await fetchUserData(authUser.id);
 
-        const userId = user[0].id;
-
-        const { data: interests, error: interestsError } = await supabaseAuth
-          .from("user_interests")
-          .select("*")
-          .eq("user_id", String(userId));
-
-        if (interestsError) {
-          console.error("Error fetching user interests:", interestsError);
-          return;
-        }
-
-        const interestIds = interests.map((interest) => interest.interest_id);
-
-        const { data: interestsData, error: interestsDataError } =
-          await supabaseAuth
-            .from("interests")
-            .select("*")
-            .in("interest_id", interestIds);
-
-        if (Array.isArray(interestsData) && interestsData.length > 0) {
-          setUserInterests(
-            interestsData.map((interest) => interest.interest).join(", "),
-          );
-        } else {
-          setUserInterests("");
+          if (userData) {
+            const userId = userData.id;
+            setCurrentUser(userData);
+            setEditableUser(userData);
+            const userInterestsArrayOfObjects =
+              await fetchUserInterests(userId);
+            const userInterestArrayOfInterests =
+              userInterestsArrayOfObjects.map((object) => object.interest);
+            setUserInterestsArray(userInterestArrayOfInterests);
+          }
         }
       } catch (error) {
-        console.error("Error fetching user interests:", error);
+        console.error("Error fetching current user:", error);
       }
     };
 
-    fetchCurrentUser().then((id) => {
-      fetchUserData(id).then(() => {
-        fetchUserInterests(id);
-      });
-    });
+    const fetchUserData = async (authId) => {
+      try {
+        const { data, error } = await supabaseAuth
+          .from("users")
+          .select("*")
+          .eq("auth_id", authId);
+
+        if (error) {
+          console.error("Error fetching user data:", error);
+          return null;
+        }
+
+        const user = data[0];
+        return user;
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        return null;
+      }
+    };
+
+    fetchCurrentUser();
   }, []);
 
-  function toggleUpdate() {
+  const toggleUpdate = () => {
     if (!isUpdating) {
-      setEditableUser({ ...currentUser });
-    } else {
       setEditableUser({ ...currentUser });
     }
     setIsUpdating((prevState) => !prevState);
-  }
+  };
+
+  const clearUserInterests = async () => {
+    await supabaseAuth
+      .from("user_interests")
+      .delete()
+      .eq("user_id", editableUser.id);
+  };
+
+  const updateUserInterests = async (userId, interestsArray) => {
+    const interestIds = await Promise.all(
+      interestsArray.map(async (interestDescription) => {
+        const { data: interest, error } = await supabaseAuth
+          .from("interests")
+          .select("interest_id")
+          .eq("interest", interestDescription);
+
+        if (error) {
+          console.error("Error fetching interest ID:", error);
+          return null;
+        }
+
+        console.log(interest, "<<< interest array of objects");
+        return interest?.[0]?.interest_id || null;
+      }),
+    );
+
+    const validInterestIds = interestIds.filter((id) => id !== null);
+
+    const userInterestObjects = validInterestIds.map((interestId) => {
+      return {
+        user_id: userId,
+        interest_id: interestId,
+      };
+    });
+
+    try {
+      const { data, error } = await supabaseAuth
+        .from("user_interests")
+        .upsert(userInterestObjects, { onConflict: "id" });
+
+      if (error) {
+        console.error("Error updating user interests:", error);
+      }
+    } catch (error) {
+      console.error("Error updating user interests:", error);
+    }
+  };
 
   const handleProfileUpdate = async () => {
     if (!editableUser) return;
 
     try {
+      const updatedInterests = await fetchUserInterests(currentUser.id);
+
+      if (Array.isArray(updatedInterests)) {
+        const interestsArray = updatedInterests.map(
+          (interest) => interest.interest,
+        );
+
+        setUserInterests(interestsArray.join(", "));
+      } else {
+        console.error(
+          "Error fetching updated user interests. Data format is unexpected:",
+          updatedInterests,
+        );
+      }
+
       const { data, error } = await supabaseAuth.from("users").upsert(
         [
           {
@@ -118,6 +214,10 @@ export default function ProfileDisplay() {
         setIsUpdating(false);
         setIsProfileUpdated(true);
         setTimeout(() => setIsProfileUpdated(false), 4000);
+
+        await updateUserInterests(currentUser.id, userInterestsArray);
+
+        setUserInterestsArray([]);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
@@ -169,7 +269,7 @@ export default function ProfileDisplay() {
                 <div className="flex justify-between">
                   <label htmlFor="email">Given Name</label>
                   <input
-                    id="name"
+                    id="given_names"
                     type="text"
                     defaultValue={editableUser.given_names}
                     onChange={(e) =>
@@ -214,16 +314,28 @@ export default function ProfileDisplay() {
                   />
                 </div>
 
-                <div className="flex justify-between">
-                  <label htmlFor="interests">Interests</label>
-                  <input
-                    id="interests"
-                    type="text"
-                    defaultValue={userInterests}
-                    disabled={!isUpdating}
-                    className={`${isUpdating ? "rounded border pl-2" : "bg-inherit pl-2"}`}
+                {isUpdating ? (
+                  <Interests
+                    userInterestsArray={userInterestsArray}
+                    setUserInterestsArray={setUserInterestsArray}
+                    onInterestsChange={handleInterestsChange}
                   />
-                </div>
+                ) : (
+                  <div>
+                    <div className="flex justify-between text-2xl font-bold">
+                      <p>Interests</p>
+                    </div>
+                    <div>
+                      {userInterests &&
+                        userInterests
+                          .split(",")
+                          .map((interest, index) => (
+                            <div key={index}>{interest.trim()}</div>
+                          ))}
+                    </div>
+                  </div>
+                )}
+
                 {isUpdating && (
                   <div className="flex justify-end">
                     <button
