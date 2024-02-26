@@ -5,6 +5,7 @@ import { supabaseAuth } from "../../utils/supabaseClient";
 
 import { useEffect, useState } from "react";
 import EventCards from "./EventCards";
+import CardSkeleton from "../CardSkeleton";
 
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
@@ -17,8 +18,10 @@ export const Events = () => {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [distanceSlider, setDistanceSlider] = useState(50);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     if (!selectedPos.center.lat && !selectedPos.center.lng) {
       navigator.geolocation.getCurrentPosition((pos) => {
         setSelectedPos({
@@ -39,6 +42,7 @@ export const Events = () => {
         .order("start_date", { descending: true })
         .then(({ data }) => {
           setSelectedEvents(data);
+          setIsLoading(false)
         })
         .catch((err) => console.log(err));
     }
@@ -109,12 +113,22 @@ export const Events = () => {
           </section>
         </div>
         <div className="flex flex-1 flex-wrap justify-center gap-5">
-          {selectedEvents.length > 0 ? (
+          {selectedEvents.length > 0 && !isLoading ? (
             selectedEvents.map((item) => {
               return <EventCards item={item} showDelete={false}></EventCards>;
             })
           ) : (
-            <h2>no events</h2>
+            <>
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton />
+              <CardSkeleton/>
+              <CardSkeleton/>
+            </>
           )}
         </div>
       </div>
