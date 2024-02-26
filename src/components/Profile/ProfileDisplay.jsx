@@ -17,6 +17,10 @@ export default function ProfileDisplay() {
     setUserInterestsArray(newInterests);
   };
 
+  useEffect(() => {
+    console.log(userInterestsArray, "<<< userInterestsArray");
+  }, [userInterestsArray]);
+
   const fetchInterestsData = async (interestIds) => {
     try {
       const { data, error } = await supabaseAuth
@@ -71,6 +75,63 @@ export default function ProfileDisplay() {
     }
   };
 
+  // code for updating Supabase with new interests
+
+  const clearUserInterests = async (userId) => {
+    try {
+      await supabaseAuth.from("user_interests").delete().eq("user_id", userId);
+    } catch (error) {
+      console.error("Error clearing user interests:", error);
+      throw error;
+    }
+  };
+
+  const addUserInterests = async (userId, interestsArray) => {
+    try {
+      const interestIds = await Promise.all(
+        interestsArray.map(async (interestDescription) => {
+          try {
+            const { data: interest, error } = await supabaseAuth
+              .from("interests")
+              .select("interest_id")
+              .eq("interest", interestDescription);
+
+            if (error) {
+              console.error("Error fetching interest ID:", error);
+              return null;
+            }
+
+            return interest?.[0]?.interest_id || null;
+          } catch (error) {
+            console.error("Error fetching interest ID:", error);
+            return null;
+          }
+        }),
+      );
+
+      const validInterestIds = interestIds.filter((id) => id !== null);
+
+      const userInterestObjects = validInterestIds.map((interestId) => {
+        return {
+          user_id: userId,
+          interest_id: interestId,
+        };
+      });
+
+      await supabaseAuth.from("user_interests").upsert(userInterestObjects, {
+        onConflict: "id",
+      });
+    } catch (error) {
+      console.error("Error adding user interests:", error);
+      throw error;
+    }
+  };
+
+  const clearAndAddUserInterests = async (userId, interestsArray) => {
+    await clearUserInterests(userId);
+    await addUserInterests(userId, interestsArray);
+  };
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
@@ -82,6 +143,7 @@ export default function ProfileDisplay() {
           const authUser = data.user;
           const userData = await fetchUserData(authUser.id);
 
+          // JM changed this section to setUserInterestsArray
           if (userData) {
             const userId = userData.id;
             setCurrentUser(userData);
@@ -90,6 +152,11 @@ export default function ProfileDisplay() {
               await fetchUserInterests(userId);
             const userInterestArrayOfInterests =
               userInterestsArrayOfObjects.map((object) => object.interest);
+            console.log(
+              userInterestArrayOfInterests,
+              "<<< userInterestsArrayOfInterests",
+            );
+
             setUserInterestsArray(userInterestArrayOfInterests);
           }
         }
@@ -128,53 +195,6 @@ export default function ProfileDisplay() {
     setIsUpdating((prevState) => !prevState);
   };
 
-  const clearUserInterests = async () => {
-    await supabaseAuth
-      .from("user_interests")
-      .delete()
-      .eq("user_id", editableUser.id);
-  };
-
-  const updateUserInterests = async (userId, interestsArray) => {
-    const interestIds = await Promise.all(
-      interestsArray.map(async (interestDescription) => {
-        const { data: interest, error } = await supabaseAuth
-          .from("interests")
-          .select("interest_id")
-          .eq("interest", interestDescription);
-
-        if (error) {
-          console.error("Error fetching interest ID:", error);
-          return null;
-        }
-
-        console.log(interest, "<<< interest array of objects");
-        return interest?.[0]?.interest_id || null;
-      }),
-    );
-
-    const validInterestIds = interestIds.filter((id) => id !== null);
-
-    const userInterestObjects = validInterestIds.map((interestId) => {
-      return {
-        user_id: userId,
-        interest_id: interestId,
-      };
-    });
-
-    try {
-      const { data, error } = await supabaseAuth
-        .from("user_interests")
-        .upsert(userInterestObjects, { onConflict: "id" });
-
-      if (error) {
-        console.error("Error updating user interests:", error);
-      }
-    } catch (error) {
-      console.error("Error updating user interests:", error);
-    }
-  };
-
   const handleProfileUpdate = async () => {
     if (!editableUser) return;
 
@@ -186,7 +206,12 @@ export default function ProfileDisplay() {
           (interest) => interest.interest,
         );
 
+        console.log("Updated Interests Array:", interestsArray);
+
         setUserInterests(interestsArray.join(", "));
+        // Set userInterestsArray without clearing it
+        setUserInterestsArray(interestsArray);
+        console.log("userInterestsArray after update:", userInterestsArray);
       } else {
         console.error(
           "Error fetching updated user interests. Data format is unexpected:",
@@ -215,9 +240,9 @@ export default function ProfileDisplay() {
         setIsProfileUpdated(true);
         setTimeout(() => setIsProfileUpdated(false), 4000);
 
-        await updateUserInterests(currentUser.id, userInterestsArray);
-
-        setUserInterestsArray([]);
+        // await clearAndAddUserInterests(currentUser.id, userInterestsArray);
+        // Clearing userInterestsArray after updating the database
+        // setUserInterestsArray([]);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
@@ -271,7 +296,7 @@ export default function ProfileDisplay() {
                   <input
                     id="given_names"
                     type="text"
-                    defaultValue={editableUser.given_names}
+                    value={editableUser.given_names}
                     onChange={(e) =>
                       setEditableUser({
                         ...editableUser,
@@ -287,7 +312,7 @@ export default function ProfileDisplay() {
                   <input
                     id="name"
                     type="text"
-                    defaultValue={editableUser.surname}
+                    value={editableUser.surname}
                     onChange={(e) =>
                       setEditableUser({
                         ...editableUser,
@@ -304,7 +329,7 @@ export default function ProfileDisplay() {
                   <input
                     id="dob"
                     type="date"
-                    defaultValue={editableUser.dob}
+                    value={editableUser.dob}
                     onChange={(e) =>
                       setEditableUser({ ...editableUser, dob: e.target.value })
                     }
@@ -326,12 +351,15 @@ export default function ProfileDisplay() {
                       <p>Interests</p>
                     </div>
                     <div>
-                      {userInterests &&
+                      {/* {userInterests &&
                         userInterests
                           .split(",")
                           .map((interest, index) => (
-                            <div key={index}>{interest.trim()}</div>
-                          ))}
+                            <div key={index}>{interest}</div>
+                          ))} */}
+                      {userInterestsArray.map((interest, index) => (
+                        <div key={index}>{interest}</div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -340,7 +368,6 @@ export default function ProfileDisplay() {
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      onClick={handleProfileUpdate}
                       className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
