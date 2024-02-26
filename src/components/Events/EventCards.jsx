@@ -1,6 +1,10 @@
 "use client";
 
-import { postEventAttendee } from "@/utils/api";
+import {
+  deleteEventAttendee,
+  isUserBookedOn,
+  postEventAttendee,
+} from "@/utils/api";
 import { supabaseAuth } from "@/utils/supabaseClient";
 import {
   Card,
@@ -22,8 +26,13 @@ export default function EventCards({ item, showDelete }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedEvent, setOpenedEvent] = useState();
   const [isDeleted, setIsDeleted] = useState(false);
+  const [bookedOn, setBookedOn] = useState(false);
 
-  useEffect(() => {}, [isDeleted]);
+  useEffect(() => {
+    isUserBookedOn(item.event_id).then((res) => {
+      setBookedOn(res);
+    });
+  }, [isDeleted]);
 
   const handleDelete = () => {
     console.log(item.event_id);
@@ -32,8 +41,13 @@ export default function EventCards({ item, showDelete }) {
   };
 
   const handleBooking = () => {
-    console.log("hello");
     postEventAttendee(item.event_id);
+    setBookedOn((prev) => !prev);
+  };
+
+  const handleDropout = () => {
+    deleteEventAttendee(item.event_id);
+    setBookedOn((prev) => !prev);
   };
 
   return isDeleted ? null : (
@@ -55,7 +69,14 @@ export default function EventCards({ item, showDelete }) {
             />
             <CardFooter>
               <div className="flex-grow px-2">
-                <h2 className="font-bold">{item.name}</h2>
+                <div className="flex justify-between">
+                  <h2 className="font-bold">{item.name}</h2>
+                  {bookedOn && (
+                    <p className="rounded border bg-green-400 px-2 py-1">
+                      You're Going!
+                    </p>
+                  )}
+                </div>
                 <p className="line-clamp-1">{item.description}</p>
                 <div className="flex font-medium">
                   <p className="flex-grow">
@@ -93,8 +114,9 @@ export default function EventCards({ item, showDelete }) {
                       ? `£${openedEvent.event_price}`
                       : "FREE"}
                   </p>
-                  {showDelete ? (
-                    <Button onPress={handleDelete}>Delete</Button>
+                  {showDelete && <Button onPress={handleDelete}>Delete</Button>}
+                  {bookedOn ? (
+                    <Button onPress={handleDropout}>Drop out</Button>
                   ) : (
                     <Button onPress={handleBooking}>Book now</Button>
                   )}
