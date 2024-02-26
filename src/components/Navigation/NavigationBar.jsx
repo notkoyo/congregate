@@ -28,12 +28,8 @@ const menuItems = ["Meet", "Host Events", "Host Venues"];
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
-  const [signedInUser, setSignedInUser] = useState(null);
 
   const currentPath = usePathname();
-  
-  
-  
   
   const router = useRouter();
   
@@ -155,109 +151,7 @@ export const NavigationBar = () => {
         </Dropdown>
       </NavbarContent>
       <NavbarContent justify="end">
-        <Dropdown
-          placement="bottom-end"
-          classNames={{ content: "bg-cyan-700 shadow-2xl text-white" }}
-        >
-          <DropdownTrigger>
-            <Avatar
-              isBordered
-              as="button"
-              radius="full"
-              className="transition-transform"
-              color="default"
-              size="sm"
-              src={signedInUser ? signedInUser.avatar_url : "#"}
-            />
-          </DropdownTrigger>
-          {!signedInUser ? (
-            <DropdownMenu aria-label="Login Menu" variant="flat">
-              <DropdownItem
-                as={Link}
-                href="/login"
-                key="login-signup"
-                color="default"
-                size="sm"
-                className="text-white hover:text-black"
-              >
-                Login / Signup
-              </DropdownItem>
-            </DropdownMenu>
-          ) : (
-            <DropdownMenu aria-label="Profile Actions" variant="flat">
-              <DropdownItem
-                textValue="is signed in?"
-                key="details"
-                className="h-14 gap-2"
-              >
-                <p className="font-semibold">
-                  Hello, {`${signedInUser.given_names} ${signedInUser.surname}`}
-                </p>
-                <p className="font-semibold text-white/35">
-                  {signedInUser ? signedInUser.email : "Not signed in"}
-                </p>
-              </DropdownItem>
-              <DropdownItem
-                as={Link}
-                href="/profile"
-                className="text-white"
-                key="profile"
-              >
-                Profile
-              </DropdownItem>
-              <DropdownItem
-                as={Link}
-                href="/profile/joined-events"
-                className="text-white"
-                key="joined_events"
-              >
-                Joined Events
-              </DropdownItem>
-              <DropdownItem
-                as={Link}
-                href="/profile/hosted-events"
-                className="text-white"
-                key="hosted_events"
-              >
-                Hosted Events
-              </DropdownItem>
-              <DropdownItem
-                as={Link}
-                href="/profile/hosted-venues"
-                className="text-white"
-                key="hosted_venues"
-              >
-                Hosted Venues
-              </DropdownItem>
-              <DropdownItem
-                showDivider
-                as={Link}
-                href="/profile/settings"
-                className="text-white"
-                key="settings"
-              >
-                Settings
-              </DropdownItem>
-              <DropdownItem
-                className="text-white"
-                key="logout"
-                color="danger"
-                textValue="logout button"
-              >
-                <form action="/auth/signout" method="post">
-                  <Button
-                    onPress={() => setSignedInUser(null)}
-                    fullWidth
-                    type="submit"
-                    color="danger"
-                  >
-                    Logout
-                  </Button>
-                </form>
-              </DropdownItem>
-            </DropdownMenu>
-          )}
-        </Dropdown>
+        <NavProfileSection />
       </NavbarContent>
       <NavbarMenu className="scrollbar-hide">
         {menuItems.map((item, i) => (
