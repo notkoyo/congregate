@@ -7,6 +7,9 @@ import UpdateSuccessMessage from "./Succes";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
+import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
+import { Button } from "@nextui-org/react";
+import moment from "moment";
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
   price: z.number().refine((data) => !isNaN(data), {
@@ -16,7 +19,7 @@ const schema = z.object({
   house: z.number(),
   address: z.string().min(6, { message: "At least 6 characters" }),
   city: z.string().min(6, { message: "At least 6 characters" }),
-  county: z.string().min(6, { message: "At least 6 characters" }),
+  // county: z.string().min(6, { message: "At least 6 characters" }),
   postcode: z.string().min(6, { message: "At least 6 characters" }),
 });
 
@@ -27,8 +30,8 @@ const CreateVenue = ({ userId }) => {
   const [erroInputFile, setErrorInputFile] = useState("");
   const router = useRouter();
   const [urlPhoto, setUrlPhoto] = useState("");
-  console.log(selectedFile);
-  console.log(erroInputFile);
+  const [locationInfo, setLocationInfo] = useState("");
+
   async function uploadImage() {
     // const file = e?.target?.files?.[0];
     // console.log(typeof file);
@@ -78,7 +81,7 @@ const CreateVenue = ({ userId }) => {
   const handleVenueUpdateSuccess = () => {
     setShowSuccessMessage(true);
     setTimeout(() => {
-      router.push("/list-venue");
+      router.push("/list-venue"); TODO
     }, 2000);
   };
   const onSubmit = async (data) => {
@@ -102,7 +105,16 @@ const CreateVenue = ({ userId }) => {
         county,
         postcode,
       } = data;
+      let latlng;
       
+      if (locationInfo) {
+        latlng = getLatLng(locationInfo);
+      } else {
+        const description = `${house},${address}, ${city}, ${county}, ${postcode}`
+        const venueLocation = await getGeocode({ address: description })
+        latlng = getLatLng(venueLocation[0])
+      }
+
       const res = await supabaseAuth.from("venues").insert({
         name,
         price,
@@ -232,12 +244,16 @@ const CreateVenue = ({ userId }) => {
               )}
             </div>
             <div className="flex  w-1/2 flex-col">
+              <GoogleMapAutocomplete
+                setLocationInfo={setLocationInfo}
+                fillerText="Search for location..."
+              />
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">House number</label>
+                <label className="mb-1 mt-1">Building number</label>
                 <input
-                  required
+                  
                   {...register("house", { valueAsNumber: true })}
-                  placeholder="House number"
+                  placeholder="Building number (optional)"
                   type="number"
                   className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
                 />
@@ -272,7 +288,6 @@ const CreateVenue = ({ userId }) => {
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">County</label>
                 <input
-                  required
                   {...register("county")}
                   placeholder="County"
                   className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
