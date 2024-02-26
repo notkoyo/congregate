@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SignOutButton from "@/components/SignOutButton";
-import { supabaseAuth } from "../../../utils/supabaseClient";
+import { supabaseAuth } from "@/utils/supabaseClient";
 import Link from "next/link";
 import ProfileCard from "@/components/Profile/ProfileCard";
 
