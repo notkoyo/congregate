@@ -154,9 +154,10 @@ export default function ProfileDisplay() {
               userInterestsArrayOfObjects.map((object) => object.interest);
             console.log(
               userInterestArrayOfInterests,
-              "<<< userInterestsArrayOfInterests",
+              "<<< userInterestsAoI inside useEffect",
             );
 
+            // Changes the userInterestArray to userInterestArrayOfInterests (line 153)
             setUserInterestsArray(userInterestArrayOfInterests);
           }
         }
@@ -209,8 +210,9 @@ export default function ProfileDisplay() {
         console.log("Updated Interests Array:", interestsArray);
 
         setUserInterests(interestsArray.join(", "));
-        // Set userInterestsArray without clearing it
+        // Update userInterestsArray with the new interests
         setUserInterestsArray(interestsArray);
+        // The log below might not reflect updated state immediately due to async nature of state updates.
         console.log("userInterestsArray after update:", userInterestsArray);
       } else {
         console.error(
@@ -240,7 +242,12 @@ export default function ProfileDisplay() {
         setIsProfileUpdated(true);
         setTimeout(() => setIsProfileUpdated(false), 4000);
 
-        // await clearAndAddUserInterests(currentUser.id, userInterestsArray);
+        await clearAndAddUserInterests(currentUser.id, userInterestsArray);
+        console.log(userInterestsArray, "<<< uIA line 247");
+
+        setUserInterestsArray(userInterestsArray); // This was the final change to fix the change in state
+        // after the the resolution of the asynchronous return from DB?
+
         // Clearing userInterestsArray after updating the database
         // setUserInterestsArray([]);
       }
@@ -351,15 +358,17 @@ export default function ProfileDisplay() {
                       <p>Interests</p>
                     </div>
                     <div>
-                      {/* {userInterests &&
-                        userInterests
-                          .split(",")
+                      <div className="mt-4">
+                        {userInterests &&
+                          userInterestsArray.map((interest, index) => (
+                            <div key={index}>{interest}</div>
+                          ))}
+
+                        {/* {userInterestsArray
                           .map((interest, index) => (
                             <div key={index}>{interest}</div>
                           ))} */}
-                      {userInterestsArray.map((interest, index) => (
-                        <div key={index}>{interest}</div>
-                      ))}
+                      </div>
                     </div>
                   </div>
                 )}
