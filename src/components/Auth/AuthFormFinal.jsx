@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,6 +19,7 @@ import GoogleIcon from "../Icons/GoogleIcon";
 import GitHubIcon from "../Icons/GitHubIcon";
 import { QuestionMarkIcon } from "../Icons/Icons";
 import { fetchUserData } from "@/utils/api";
+import { useLogin } from "../loginContext";
 // import FacebookIcon from "../Icons/FacebookIcon";
 
 export default function AuthForm() {
@@ -37,6 +38,8 @@ export default function AuthForm() {
   const [isSignupError, setIsSignupError] = useState(false);
 
   const router = useRouter();
+
+  const {setIsLoggedIn} = useLogin();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -70,6 +73,7 @@ export default function AuthForm() {
       const userPublic = await fetchUserData(data.user.id);
       if (userPublic) {
         // if yes
+        setIsLoggedIn(true);
         router.push("/profile");
       } else {
         // if no

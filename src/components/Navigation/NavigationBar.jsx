@@ -17,28 +17,8 @@ import MobileMenu from "./NavMobileMenu";
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
-  const [signedInUser, setSignedInUser] = useState(null);
 
   const router = useRouter();
-
-  const getSession = async () => {
-    const {
-      data: { session },
-    } = await supabaseAuth.auth.getSession();
-    if (session) {
-      const {
-        user: { user_metadata },
-      } = session;
-      setSignedInUser(user_metadata);
-      console.log(user_metadata);
-    } else {
-      setSignedInUser(null);
-    }
-  };
-
-  useEffect(() => {
-    getSession();
-  }, []);
 
   return (
     <Navbar
@@ -63,7 +43,7 @@ export const NavigationBar = () => {
         <NavLinks rotation={rotation} setRotation={setRotation} />
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavProfileSection signedInUser={signedInUser} />
+        <NavProfileSection />
       </NavbarContent>
       <MobileMenu />
     </Navbar>
