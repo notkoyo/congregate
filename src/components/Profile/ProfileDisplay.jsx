@@ -4,7 +4,6 @@ import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Interests from "./Interests";
-// import React from "react";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -21,7 +20,7 @@ export default function ProfileDisplay() {
   };
 
   const fetchInterestsData = async (interestIds) => {
-    console.log("Inside fetchInterestsData, interestIds:", interestIds);
+    console.log("InterestIds:", interestIds);
     try {
       const { data, error } = await supabaseAuth
         .from("interests")
@@ -214,7 +213,7 @@ export default function ProfileDisplay() {
       if (error) {
         console.error("Error updating user interests:", error);
       } else {
-        console.log("User interests updated successfully");
+        console.log("User interests updated");
       }
     } catch (error) {
       console.error("Error updating user interests:", error);
@@ -379,7 +378,7 @@ export default function ProfileDisplay() {
                   )}
                 </div>
 
-                <div className="flex justify-between">
+                <div className="flex justify-between text-2xl font-bold">
                   <p>Interests</p>
                 </div>
                 <div>
@@ -395,7 +394,7 @@ export default function ProfileDisplay() {
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      // onClick={handleProfileUpdate}
+                      onClick={handleProfileUpdate}
                       className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
                     >
                       Confirm
