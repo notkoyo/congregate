@@ -45,7 +45,6 @@ export default function EventForm() {
           return supabaseAuth.from("users").select("id").eq("auth_id", id);
         })
         .then(({ data }) => {
-          console.log({data});
           setFormData({ ...formData, founder_id: data[0].id });
         });
     }
@@ -77,7 +76,6 @@ export default function EventForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
 
     if (name === "name") {
       value === "" ? setIsNameValid(false) : setIsNameValid(true);
