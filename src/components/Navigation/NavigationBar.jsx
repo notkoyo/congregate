@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { CongregateLogo } from "./CongregateLogo";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import NavLinks from "./NavLinks";
 import NavProfileSection from "./NavProfileSection";
@@ -18,9 +18,14 @@ export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [signedInUser, setSignedInUser] = useState(null);
-
+  
+  const currentPath = usePathname()
+  if (currentPath !== "/host/event" && currentPath !== "/venues") {
+    localStorage.clear()
+  }
+  
   const router = useRouter();
-
+  
   const getSession = async () => {
     const {
       data: { session },
@@ -35,11 +40,11 @@ export const NavigationBar = () => {
       setSignedInUser(null);
     }
   };
-
+  
   useEffect(() => {
     getSession();
   }, []);
-
+  
   return (
     <Navbar
       shouldHideOnScroll
