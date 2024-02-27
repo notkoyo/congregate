@@ -1,4 +1,12 @@
+import { supabase } from "./supabase";
 import { supabaseAuth } from "./supabaseClient";
+
+export const checkUserLoggedIn = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  console.log(user);
+};
 
 export const fetchCurrentUserID = async () => {
   try {
