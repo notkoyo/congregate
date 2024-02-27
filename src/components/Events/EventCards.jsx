@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { useLogin } from "../loginContext";
 import BookedOnMessage from "./BookedOnMessage";
 
-export default function EventCards({ item, showDelete }) {
+export default function EventCards({ item, showDelete, setIsLoading }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedEvent, setOpenedEvent] = useState();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -32,7 +32,7 @@ export default function EventCards({ item, showDelete }) {
   const [showMessage, setShowMessage] = useState(false);
   const [messageBody, setMessageBody] = useState("");
 
-  const { isLoggedIn } = useLogin();
+  const { isLoggedIn, setIsLoggedIn } = useLogin();
 
   useEffect(() => {
     if (isLoggedIn) {
