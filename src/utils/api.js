@@ -1,24 +1,14 @@
 import { supabase } from "./supabase";
 import { supabaseAuth } from "./supabaseClient";
 
-export const checkUserLoggedIn = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  console.log(user);
-};
-
 export const fetchCurrentUserID = async () => {
-  try {
-    const { data, error } = await supabaseAuth.auth.getUser();
+  const res = await supabaseAuth.auth.getSession();
+  const id = res.data?.session?.user?.id;
 
-    if (data.user === null) {
-      return null;
-    } else if (data && data.user) {
-      return data.user.id;
-    }
-  } catch (error) {
-    console.error("Error fetching user:", error);
+  if (!id) {
+    return null;
+  } else {
+    return id;
   }
 };
 
@@ -40,7 +30,6 @@ export const fetchUserData = async (auth_id) => {
     if (!auth_id) {
       return null;
     }
-    console.log(auth_id);
     const { data, error } = await supabaseAuth
       .from("users")
       .select()
@@ -93,9 +82,7 @@ export const postUserInterests = async (userInterestArray) => {
   try {
     const authID = await fetchCurrentUserID();
     const { id } = await fetchUserData(authID);
-    // console.log(userData);
-    // const id = userData.id;
-    console.log(id);
+
     const interestsData = await fetchInterestsData();
 
     const userInterestObjects = [];
@@ -226,6 +213,30 @@ export const fetchIfUserExist = async () => {
       return "Profile have not been created";
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
+  }
+};
+
+export const fetchCurrentUserJoinedEvents = async () => {
+  try {
+    const auth_id = await fetchCurrentUserID();
+    const { id } = await fetchUserData(auth_id);
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .select("event_id(*, venue_id(*))")
+      .eq("user_id", id);
+    if (!error) {
+      const outputData = data.map((obj) => {
+        return {
+          ...obj.event_id,
+          ...obj.event_id.venue_id,
+        };
+      });
+      return outputData;
+    } else {
+      console.error("Error selecting event attendee data:", error);
+    }
+  } catch (error) {
+    console.error("Error selecting event attendee data:", error);
   }
 };
