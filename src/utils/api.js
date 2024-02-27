@@ -32,7 +32,7 @@ export const fetchUserData = async (auth_id) => {
     if (!auth_id) {
       return null;
     }
-
+    console.log(auth_id);
     const { data, error } = await supabaseAuth
       .from("users")
       .select()
@@ -194,6 +194,8 @@ export const isUserBookedOn = async (event_id) => {
       .eq("user_id", currentUser.id)
       .eq("event_id", event_id);
 
+    console.log(data);
+
     if (data.length === 0) {
       return false;
     } else {
@@ -204,29 +206,21 @@ export const isUserBookedOn = async (event_id) => {
   }
 };
 
-export const fetchCurrentUserJoinedEvents = async () => {
+export const fetchIfUserExist = async () => {
   try {
-    const auth_id = await fetchCurrentUserID();
-    const { id } = await fetchUserData(auth_id);
-
-    const { data, error } = await supabaseAuth
-      .from("event_attendees")
-      .select("event_id(*, venue_id(*))")
-      .eq("user_id", id);
-
-    if (!error) {
-      const outputData = data.map((obj) => {
-        return {
-          ...obj.event_id,
-          ...obj.event_id.venue_id,
-        };
-      });
-
-      return outputData;
+    const res = await supabaseAuth.auth.getSession();
+    const email = res.data?.session?.user.email;
+    console.log(email);
+    const response = await supabaseAuth
+      .from("users")
+      .select()
+      .eq("email", email);
+    if (response.data) {
+      return response.data[0];
     } else {
-      console.error("Error selecting event attendee data:", error);
+      return "Profile have not been created";
     }
-  } catch (error) {
-    console.error("Error selecting event attendee data:", error);
+  } catch (err) {
+    console.log(err);
   }
 };
