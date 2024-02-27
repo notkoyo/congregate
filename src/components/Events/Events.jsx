@@ -7,7 +7,7 @@ import { use, useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import CardSkeleton from "../CardSkeleton";
 import Heading from "../Header";
-
+import moment from "moment";
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
     zoom: 10,
@@ -137,7 +137,8 @@ export const Events = () => {
           <div className="flex flex-1 flex-wrap justify-center gap-5">
             {!isLoading ? (
               selectedEvents.map((item) => {
-                return (
+                return new Date(item.start_date) < Date.now() ? null :
+                (
                   <EventCards
                     item={item}
                     showDelete={false}
