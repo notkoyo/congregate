@@ -32,7 +32,7 @@ export const fetchUserData = async (auth_id) => {
     if (!auth_id) {
       return null;
     }
-
+    console.log(auth_id);
     const { data, error } = await supabaseAuth
       .from("users")
       .select()
@@ -203,5 +203,24 @@ export const isUserBookedOn = async (event_id) => {
     }
   } catch (error) {
     console.error("Error selecting event attendee data:", error);
+  }
+};
+
+export const fetchIfUserExist = async () => {
+  try {
+    const res = await supabaseAuth.auth.getSession();
+    const email = res.data?.session?.user.email;
+    console.log(email);
+    const response = await supabaseAuth
+      .from("users")
+      .select()
+      .eq("email", email);
+    if (response.data) {
+      return response.data[0];
+    } else {
+      return "Profile have not been created";
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
