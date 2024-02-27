@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { supabaseAuth } from "../../utils/supabaseClient";
 import UpdateSuccessMessage from "./Succes";
 import { useState } from "react";
+import { Button, Input, Switch, Textarea } from "@nextui-org/react";
 
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
@@ -160,38 +161,33 @@ const EditVenue = ({
             </button>
           </div>
           <div className="flex w-full ">
-            <div className="mr-4  flex w-1/2 flex-col">
+            <div className="mr-4   mt-4  flex w-1/2 flex-col">
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Name</label>
-                <input
-                  required
+                <Input
+                  name="name"
+                  isRequired
+                  label="Name"
                   {...register("name")}
-                  placeholder="Name"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={errors.name && <div>{errors.name.message}</div>}
                 />
-                {errors.name && (
-                  <div className="text-red-500">{errors.name.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Price</label>
-                <input
-                  required
+                <Input
+                  isRequired
                   type="number"
+                  name="price"
+                  label="Price"
                   {...register("price", { valueAsNumber: true })}
-                  placeholder="3423"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.price && <div>{errors.price.message}</div>
+                  }
                 />
-                {errors.price && (
-                  <div className="text-red-500">{errors.price.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1 block text-sm font-medium text-gray-700">
-                  Photo
-                </label>
                 <label
-                  className={`mt-1 flex w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                  className={`h-13 mt-1 flex  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
                     selectedFile ? "border-green-500" : "border-gray-300"
                   }`}
                 >
@@ -220,7 +216,6 @@ const EditVenue = ({
                       uploadImage(e);
                       handleFileChange(e);
                     }}
-                    accept=".jpeg, .jpg, .png"
                     className="hidden"
                   />
                 </label>
@@ -228,77 +223,82 @@ const EditVenue = ({
                   <div className="text-red-500">{erroInputFile}</div>
                 )}
               </div>
-              <label className="mb-1 mt-1">Description</label>
-              <textarea
-                required
+              <Textarea
+                label="Description"
+                isRequired
+                style={{ height: "100%", maxRows: "200px" }}
                 {...register("description")}
-                placeholder="Description"
-                className="h-107 resize-none rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
-              ></textarea>
-              {errors.description && (
-                <div className="text-red-500">{errors.description.message}</div>
-              )}
+                placeholder="Describe your venue"
+                classNames={{
+                  input: " min-h-[107px] max-h-[107px]",
+                }}
+                errorMessage={
+                  errors.description && <div>{errors.description.message}</div>
+                }
+              ></Textarea>
             </div>
-            <div className="flex  w-1/2 flex-col">
+            <div className="mt-4  flex   w-1/2 flex-col">
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">House number</label>
-                <input
-                  required
+                <Input
+                  label="Number of Building"
+                  name="NumberOfBuilding"
+                  isRequired
                   {...register("house", { valueAsNumber: true })}
-                  placeholder="House number"
                   type="number"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.house && <div>{errors.house.message}</div>
+                  }
                 />
-                {errors.house && (
-                  <div className="text-red-500">{errors.house?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Address</label>
-                <input
-                  required
+                <Input
+                  label="Address"
+                  name="Address"
+                  isRequired
                   {...register("address")}
                   placeholder="Address"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.address && <div>{errors.address.message}</div>
+                  }
                 />
-                {errors.address && (
-                  <div className="text-red-500">{errors.address?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">City</label>
-                <input
-                  required
+                <Input
+                  name="City"
+                  label="City"
+                  isRequired
                   {...register("city")}
                   placeholder="City"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={errors.city && <div>{errors.city.message}</div>}
                 />
-                {errors.city && (
-                  <div className="text-red-500">{errors.city?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">County</label>
-                <input
-                  required
+                <Input
+                  name="County"
+                  label="County"
+                  isRequired
                   {...register("county")}
                   placeholder="County"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.county && <div>{errors.county.message}</div>
+                  }
                 />
-                {errors.county && (
-                  <div className="text-red-500">{errors.county?.message}</div>
-                )}
               </div>
-              <label className="mb-1 mt-1">Post code</label>
-              <input
-                required
+              <Input
+                label="Post Code"
+                name="postcode"
+                isRequired
                 {...register("postcode")}
                 placeholder="Post code"
-                className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                className="max-w-xs font-medium"
+                errorMessage={
+                  errors.postcode && <div>{errors.postcode.message}</div>
+                }
               />
-              {errors.postcode && (
-                <div className="text-red-500">{errors.postcode?.message}</div>
-              )}
             </div>
             <div className="flex justify-center"></div>
           </div>
