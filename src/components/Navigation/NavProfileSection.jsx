@@ -35,7 +35,7 @@ export default function NavProfileSection() {
     };
 
     getSession();
-  }, [isLoggedIn, signedInUser])
+  }, [isLoggedIn])
 
   return (
     <NavbarItem key={signedInUser ? signedInUser.full_name : null}>
@@ -54,7 +54,7 @@ export default function NavProfileSection() {
             src={signedInUser ? signedInUser.avatar_url : "#"}
           />
         </DropdownTrigger>
-        {isLoggedIn && signedInUser ? (
+        {signedInUser ? (
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem
               textValue="is signed in?"
