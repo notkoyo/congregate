@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabaseAuth } from "../../utils/supabaseClient";
@@ -8,8 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
-import { Button } from "@nextui-org/react";
-import moment from "moment";
+
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
   price: z.number().refine((data) => !isNaN(data), {
@@ -31,6 +30,52 @@ const CreateVenue = ({ userId }) => {
   const router = useRouter();
   const [urlPhoto, setUrlPhoto] = useState("");
   const [locationInfo, setLocationInfo] = useState("");
+  const [venueForm, setVenueForm] = useState({
+    buildingNumber: undefined,
+    address: undefined,
+    city: undefined,
+    county: undefined,
+    postcode: undefined,
+  });
+
+  useEffect(() => {
+    if (locationInfo) {
+      formatAddressForm();
+
+
+    }
+  }, [locationInfo]);
+
+  const formatAddressForm = () => {
+    const formattedAddressSplit = locationInfo.formatted_address.split(",");
+    let addressStart = formattedAddressSplit[0].split(" ");
+    const addressNumber = addressStart[0]
+    if (addressNumber.match(/\d/)) {
+      addressStart.shift()
+      addressStart= [addressStart.join(' ')]
+      addressStart.unshift(addressNumber)
+      formattedAddressSplit.shift()
+      addressStart.reverse().forEach(x => formattedAddressSplit.unshift(x));
+      console.log(formattedAddressSplit);
+      setVenueForm({
+        buildingNumber: formattedAddressSplit[0],
+        address: formattedAddressSplit[1],
+        city: formattedAddressSplit[2],
+        county: formattedAddressSplit[3],
+        postcode: formattedAddressSplit[4],
+      });
+    } else {
+      setVenueForm({
+        buildingNumber: null,
+        address: formattedAddressSplit[1],
+        city: formattedAddressSplit[2],
+        county: formattedAddressSplit[3],
+        postcode: formattedAddressSplit[4],
+      });
+    }
+
+    // console.log(formattedAddressSplit, "<<<< 2");
+  };
 
   async function uploadImage() {
     // const file = e?.target?.files?.[0];
@@ -106,13 +151,13 @@ const CreateVenue = ({ userId }) => {
         postcode,
       } = data;
       let latlng;
-      
+
       if (locationInfo) {
         latlng = getLatLng(locationInfo);
       } else {
-        const description = `${house},${address}, ${city}, ${county}, ${postcode}`
-        const venueLocation = await getGeocode({ address: description })
-        latlng = getLatLng(venueLocation[0])
+        const description = `${house},${address}, ${city}, ${county}, ${postcode}`;
+        const venueLocation = await getGeocode({ address: description });
+        latlng = getLatLng(venueLocation[0]);
       }
 
       const res = await supabaseAuth.from("venues").insert({
@@ -127,7 +172,7 @@ const CreateVenue = ({ userId }) => {
         postcode,
         founder_id: userId,
         lat: latlng.lat,
-        lng: latlng.lng
+        lng: latlng.lng,
       });
       console.log(res);
       if (res.status === 201) {
@@ -159,6 +204,7 @@ const CreateVenue = ({ userId }) => {
   };
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center">
+    <button onClick={() => console.log(venueForm)}>XXXX</button>
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
@@ -247,13 +293,14 @@ const CreateVenue = ({ userId }) => {
               <GoogleMapAutocomplete
                 setLocationInfo={setLocationInfo}
                 fillerText="Search for location..."
-              />
+              /> {/* Comment out to disable address search */}
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">Building number</label>
                 <input
-                  
+                  value={venueForm.buildingNumber}
+                  onChange={(e) => setVenueForm.buildingNumber(e.target.value)}
                   {...register("house", { valueAsNumber: true })}
-                  placeholder="Building number (optional)"
+                  placeholder="Building number"
                   type="number"
                   className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
                 />
@@ -264,6 +311,8 @@ const CreateVenue = ({ userId }) => {
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">Address</label>
                 <input
+                  value={venueForm.address}
+                  onChange={(e) => setVenueForm.address(e.target.value)}
                   required
                   {...register("address")}
                   placeholder="Address"
@@ -276,6 +325,8 @@ const CreateVenue = ({ userId }) => {
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">City</label>
                 <input
+                  value={venueForm.city}
+                  onChange={(e) => setVenueForm.city(e.target.value)}
                   required
                   {...register("city")}
                   placeholder="City"
@@ -288,6 +339,8 @@ const CreateVenue = ({ userId }) => {
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">County</label>
                 <input
+                  value={venueForm.county}
+                  onChange={(e) => setVenueForm.county(e.target.value)}
                   {...register("county")}
                   placeholder="County"
                   className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
@@ -298,6 +351,8 @@ const CreateVenue = ({ userId }) => {
               </div>
               <label className="mb-1 mt-1">Post code</label>
               <input
+                value={venueForm.postcode}
+                onChange={(e) => setVenueForm.postcode(e.target.value)}
                 required
                 {...register("postcode")}
                 placeholder="Post code"
