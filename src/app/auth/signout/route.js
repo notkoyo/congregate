@@ -1,11 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { Router } from "next/router";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const cookieStore = cookies();
-  const router = Router();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
