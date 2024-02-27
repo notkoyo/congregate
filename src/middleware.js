@@ -56,15 +56,13 @@ export async function middleware(req) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  
-
   // if (user && req.nextURL.pathname === "/") {
   //   return NextResponse.redirect(new URL("/profile", req.url));
   // }
 
-  // if (!user && req.nextURL.pathname === "/profile") {
-  //   return NextResponse.redirect(new URL("/", req.url));
-  // }
+  if (!user && req.nextURL.pathname === "/host/event") {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
   return res;
 }
