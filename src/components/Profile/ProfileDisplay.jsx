@@ -1,5 +1,4 @@
 "use client";
-// import { createClient } from "@supabase/supabase-js";
 import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -40,7 +39,6 @@ export default function ProfileDisplay() {
   };
 
   const fetchUserInterests = async (userId) => {
-    // Check if userId is defined and not null
     if (userId === undefined || userId === null) {
       console.error("Error: userId is undefined or null");
       return [];
@@ -75,7 +73,7 @@ export default function ProfileDisplay() {
     }
   };
 
-  // code for updating Supabase with new interests
+  // Updating Supabase with new interests
 
   const clearUserInterests = async (userId) => {
     try {
@@ -143,7 +141,6 @@ export default function ProfileDisplay() {
           const authUser = data.user;
           const userData = await fetchUserData(authUser.id);
 
-          // JM changed this section to setUserInterestsArray
           if (userData) {
             const userId = userData.id;
             setCurrentUser(userData);
@@ -152,12 +149,7 @@ export default function ProfileDisplay() {
               await fetchUserInterests(userId);
             const userInterestArrayOfInterests =
               userInterestsArrayOfObjects.map((object) => object.interest);
-            console.log(
-              userInterestArrayOfInterests,
-              "<<< userInterestsAoI inside useEffect",
-            );
 
-            // Changes the userInterestArray to userInterestArrayOfInterests (line 153)
             setUserInterestsArray(userInterestArrayOfInterests);
           }
         }
@@ -207,13 +199,9 @@ export default function ProfileDisplay() {
           (interest) => interest.interest,
         );
 
-        console.log("Updated Interests Array:", interestsArray);
-
         setUserInterests(interestsArray.join(", "));
-        // Update userInterestsArray with the new interests
+
         setUserInterestsArray(interestsArray);
-        // The log below might not reflect updated state immediately due to async nature of state updates.
-        console.log("userInterestsArray after update:", userInterestsArray);
       } else {
         console.error(
           "Error fetching updated user interests. Data format is unexpected:",
@@ -243,13 +231,8 @@ export default function ProfileDisplay() {
         setTimeout(() => setIsProfileUpdated(false), 4000);
 
         await clearAndAddUserInterests(currentUser.id, userInterestsArray);
-        console.log(userInterestsArray, "<<< uIA line 247");
 
-        setUserInterestsArray(userInterestsArray); // This was the final change to fix the change in state
-        // after the the resolution of the asynchronous return from DB?
-
-        // Clearing userInterestsArray after updating the database
-        // setUserInterestsArray([]);
+        setUserInterestsArray(userInterestsArray);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
@@ -363,11 +346,6 @@ export default function ProfileDisplay() {
                           userInterestsArray.map((interest, index) => (
                             <div key={index}>{interest}</div>
                           ))}
-
-                        {/* {userInterestsArray
-                          .map((interest, index) => (
-                            <div key={index}>{interest}</div>
-                          ))} */}
                       </div>
                     </div>
                   </div>
