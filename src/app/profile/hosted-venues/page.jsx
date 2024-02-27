@@ -6,6 +6,7 @@ import ListVenue from "../../../components/Venue/ListVenue";
 import { supabaseAuth } from "../../../utils/supabaseClient";
 import "./listVenue.css";
 
+
 function page() {
   const [venuesData, setVenuesData] = useState([]);
   const [userId, setUserId] = useState();

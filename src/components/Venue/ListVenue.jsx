@@ -15,11 +15,14 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import EditVenue from "./EditVenue";
+import { usePathname } from "next/navigation";
 
 export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedVenue, setOpenedVenue] = useState();
+
+  const currentPath = usePathname();
 
   const handleEditClick = () => {
     setShowEditMenu(true);
@@ -62,7 +65,7 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
             <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
             <p className="text-tiny font-bold uppercase">{venue.city}</p>
             <div className="mt-3">
-              {venue.isUserVenue && (
+              {currentPath === "/profile/hosted-venues" && (
                 <Button
                   onClick={handleEditClick}
                   className="w-full"
@@ -84,44 +87,46 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
           </CardBody>
         </Card>
       </div>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpenChange={onOpenChange}
-        size="4xl"
-        backdrop="blur"
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>{openedVenue.name}</ModalHeader>
-              <ModalBody>
-                <img src={openedVenue.photos} alt="" />
-                <p>{openedVenue.description}</p>
-              </ModalBody>
-              <ModalFooter>
-                <p>{openedVenue.price ? `£${openedVenue.price}` : "FREE"}</p>
-                <Link href="/host/event">
-                  <Button
-                    onPress={() => {
-                      const eventForm = JSON.parse(
-                        localStorage.getItem("eventFormDetails"),
-                      );
-                      eventForm.venue_id = venue.venue_id;
-                      localStorage.setItem(
-                        "eventFormDetails",
-                        JSON.stringify(eventForm),
-                      );
-                    }}
-                  >
-                    Choose venue
-                  </Button>
-                </Link>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {currentPath !== "/profile/hosted-venues" && (
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          onOpenChange={onOpenChange}
+          size="4xl"
+          backdrop="blur"
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader>{openedVenue.name}</ModalHeader>
+                <ModalBody>
+                  <img src={openedVenue.photos} alt="" />
+                  <p>{openedVenue.description}</p>
+                </ModalBody>
+                <ModalFooter>
+                  <p>{openedVenue.price ? `£${openedVenue.price}` : "FREE"}</p>
+                  <Link href="/host/event">
+                    <Button
+                      onPress={() => {
+                        const eventForm = JSON.parse(
+                          localStorage.getItem("eventFormDetails"),
+                        );
+                        eventForm.venue_id = venue.venue_id;
+                        localStorage.setItem(
+                          "eventFormDetails",
+                          JSON.stringify(eventForm),
+                        );
+                      }}
+                    >
+                      Choose venue
+                    </Button>
+                  </Link>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 }
