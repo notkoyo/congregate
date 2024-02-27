@@ -145,6 +145,7 @@ export default function EventForm() {
             label="Cost per person"
             variant="faded"
             isInvalid={!isEventPriceValid}
+            startContent="£"
             color={
               formData.event_price !== ""
                 ? isEventPriceValid
@@ -183,12 +184,11 @@ export default function EventForm() {
 
         <div>
           {!formData.venue_id ? (
-            <label>
-              Venues
-              <Link href="/venues" prefetch={true}>
-                <Button onPress={handleVenueRedirect}>Choose Venue</Button>
-              </Link>
-            </label>
+            <Link href="/venues" prefetch={true}>
+              <Button label="Venues" onPress={handleVenueRedirect}>
+                Choose Venue
+              </Button>
+            </Link>
           ) : (
             <>
               <div className="flex justify-between">
