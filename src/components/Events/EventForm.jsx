@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { InputCustom } from "../Input";
 import Interests from "../Profile/Interests";
+import { useLogin } from "../loginContext";
 
 export default function EventForm() {
   //data states state
@@ -36,6 +37,8 @@ export default function EventForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [isSelected, setIsSelected] = useState(true);
+
+  const { isLoggedIn } = useLogin();
 
   useEffect(() => {
     const storedForm = localStorage.getItem("eventFormDetails");
