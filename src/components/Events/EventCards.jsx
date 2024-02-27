@@ -3,6 +3,7 @@
 import {
   checkUserLoggedIn,
   deleteEventAttendee,
+  fetchIfUserExist,
   isUserBookedOn,
   postEventAttendee,
 } from "@/utils/api";
@@ -34,7 +35,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [messageBody, setMessageBody] = useState("");
 
   useEffect(() => {
-    checkUserLoggedIn();
+    fetchIfUserExist();
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
