@@ -10,7 +10,6 @@ function page() {
   const [venuesData, setVenuesData] = useState([]);
   const [userId, setUserId] = useState();
   const [venueHasBeenUpdate, setVenueHasBeenUpdate] = useState(false);
-
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
@@ -21,7 +20,6 @@ function page() {
           .from("venues")
           .select()
           .match({ founder_id: userId });
-        console.log(data);
 
         if (error) {
           console.error("Error fetching venues data:", error);
@@ -58,14 +56,12 @@ function page() {
   return (
     <div className="venue_grid">
       <div className="venue_inside">
-        {readyVenues?.map((venue) => (
-          <div key={venue.id}>
-            <ListVenue
-              key={venue.id} // Add a key prop here
-              venue={venue}
-              setVenueHasBeenUpdate={setVenueHasBeenUpdate}
-            />
-          </div>
+        {readyVenues?.map((venue, index) => (
+          <ListVenue
+            key={index} // Add the key prop directly to ListVenue
+            venue={venue}
+            setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+          />
         ))}
       </div>
     </div>

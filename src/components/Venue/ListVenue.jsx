@@ -15,6 +15,7 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import EditVenue from "./EditVenue";
+
 export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -30,57 +31,59 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
 
   return (
     <>
-      <Card
+      {/* Use a div instead of Card with onPress */}
+      <div
         className="py-4"
-        isPressable={true}
-        onPress={() => {
+        onClick={() => {
           setOpenedVenue(venue);
           onOpen();
         }}
       >
-        <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
-          <p className="text-tiny font-bold uppercase">{venue.name}</p>
-          <small className="line-clamp-1 text-default-500">
-            {venue.description}
-          </small>
-          {venue.isUserVenue && (
-            <p className="text-tiny font-bold uppercase">Your Venue</p>
-          )}
-        </CardHeader>
-        <CardBody className="h-300 flex w-full flex-col items-center overflow-visible py-2 text-center">
-          <Image
-            alt="Card background"
-            className="h-260 w-400 rounded-xl object-cover"
-            src={venue.photos}
-          />
-        </CardBody>
-
-        <CardBody className="h-100 overflow-visible pb-2 pt-5">
-          <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
-          <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
-          <p className="text-tiny font-bold uppercase">{venue.city}</p>
-          <div className="mt-3">
+        <Card>
+          <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
+            <p className="text-tiny font-bold uppercase">{venue.name}</p>
+            <small className="line-clamp-1 text-default-500">
+              {venue.description}
+            </small>
             {venue.isUserVenue && (
-              <Button
-                onClick={handleEditClick}
-                className="w-full"
-                color="primary"
-                radius="lg"
-              >
-                Edit
-              </Button>
+              <p className="text-tiny font-bold uppercase">Your Venue</p>
             )}
-          </div>
-          {showEditMenu === true ? (
-            <EditVenue
-              setVenueHasBeenUpdate={setVenueHasBeenUpdate}
-              handleEditClose={handleEditClose}
-              userId={venue.founder_id}
-              venue_id={venue.venue_id}
+          </CardHeader>
+          <CardBody className="h-300 flex w-full flex-col items-center overflow-visible py-2 text-center">
+            <Image
+              alt="Card background"
+              className="h-260 w-400 rounded-xl object-cover"
+              src={venue.photos}
             />
-          ) : null}
-        </CardBody>
-      </Card>
+          </CardBody>
+
+          <CardBody className="h-100 overflow-visible pb-2 pt-5">
+            <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
+            <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
+            <p className="text-tiny font-bold uppercase">{venue.city}</p>
+            <div className="mt-3">
+              {venue.isUserVenue && (
+                <Button
+                  onClick={handleEditClick}
+                  className="w-full"
+                  color="primary"
+                  radius="lg"
+                >
+                  Edit
+                </Button>
+              )}
+            </div>
+            {showEditMenu === true ? (
+              <EditVenue
+                setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+                handleEditClose={handleEditClose}
+                userId={venue.founder_id}
+                venue_id={venue.venue_id}
+              />
+            ) : null}
+          </CardBody>
+        </Card>
+      </div>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
