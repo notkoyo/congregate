@@ -14,11 +14,12 @@ import {
 import { useEffect, useState } from "react";
 import { useLogin } from "../loginContext";
 import { fetchUserData } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 export default function NavProfileSection() {
   const [signedInUser, setSignedInUser] = useState(null);
-
   const { isLoggedIn, setIsLoggedIn } = useLogin();
+  const router = useRouter();
 
   useEffect(() => {
     const getSession = async () => {
@@ -112,6 +113,7 @@ export default function NavProfileSection() {
                 fullWidth
                 href="/"
                 onClick={() => {
+                  router.push("/");
                   supabaseAuth.auth.signOut();
                   setIsLoggedIn(false);
                   setSignedInUser(null);
