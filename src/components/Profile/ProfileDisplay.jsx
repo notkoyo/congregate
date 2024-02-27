@@ -12,14 +12,6 @@ export default function ProfileDisplay() {
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
   const [userInterestsArray, setUserInterestsArray] = useState([]);
 
-  const handleInterestsChange = (newInterests) => {
-    setUserInterestsArray(newInterests);
-  };
-
-  useEffect(() => {
-    console.log(userInterestsArray, "<<< userInterestsArray");
-  }, [userInterestsArray]);
-
   const fetchInterestsData = async (interestIds) => {
     try {
       const { data, error } = await supabaseAuth
@@ -243,11 +235,13 @@ export default function ProfileDisplay() {
     <div className="flex flex-col gap-4 font-satoshi">
       <div className="flex">
         <div className="flex flex-col items-center gap-10 p-6">
-          <img
-            width={200}
-            src="https://buffer.com/library/content/images/size/w1200/2023/10/free-images.jpg"
-            alt=""
-          />
+          {currentUser && (
+            <img
+              width={200}
+              src={`${currentUser.avatar_url}`}
+              alt="User Avatar"
+            />
+          )}
           {currentUser && <p>{`${currentUser.email}`}</p>}
         </div>
 
@@ -333,7 +327,6 @@ export default function ProfileDisplay() {
                   <Interests
                     userInterestsArray={userInterestsArray}
                     setUserInterestsArray={setUserInterestsArray}
-                    onInterestsChange={handleInterestsChange}
                   />
                 ) : (
                   <div>
