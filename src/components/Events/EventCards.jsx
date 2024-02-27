@@ -32,14 +32,10 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [showMessage, setShowMessage] = useState(false);
   const [messageBody, setMessageBody] = useState("");
 
-  const { isLoggedIn, setIsLoggedIn } = useLogin();
-
   useEffect(() => {
-    if (isLoggedIn) {
-      isUserBookedOn(item.event_id).then((res) => {
-        setBookedOn(res);
-      });
-    }
+    isUserBookedOn(item.event_id).then((res) => {
+      setBookedOn(res);
+    });
   }, [isDeleted]);
 
   const handleDelete = () => {
@@ -77,11 +73,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           }}
         >
           <CardBody>
-            <Image
-              className="h-60 w-dvw object-cover"
-              src={item.photos}
-              alt=""
-            />
+            <img className="h-60 w-dvw object-cover" src={item.photos} alt="" />
             <CardFooter>
               <div className="flex-grow px-2">
                 <div className="flex justify-between">
