@@ -32,8 +32,14 @@ export default function Hero() {
     supabaseAuth
       .from("events")
       .select("*, venues(photos, city)")
-      .order("start_date", {descending: true})
-      .then(({ data }) => setEvents(data));
+      .order("start_date", { descending: true })
+      .then(({ data }) => {
+        const currentEvents = data.filter(
+          (e) => new Date(e.start_date) >= Date.now(),
+        );
+        console.log(currentEvents);
+        setEvents(currentEvents);
+      });
   }, []);
 
   const defaultBio =
@@ -65,21 +71,27 @@ export default function Hero() {
             aria-label="Who we are section"
             title="Who we are"
           >
-            {"A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."}
+            {
+              "A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."
+            }
           </AccordionItem>
           <AccordionItem
             key="2"
             aria-label="What we do section"
             title="What we do"
           >
-            {"We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."}
+            {
+              "We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."
+            }
           </AccordionItem>
           <AccordionItem
             key="3"
             aria-label="Get started section"
             title="Get started"
           >
-            {"Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."}
+            {
+              "Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."
+            }
           </AccordionItem>
         </Accordion>
       </div>
@@ -100,7 +112,7 @@ export default function Hero() {
                   <div className="mx-auto my-auto text-center font-satoshi text-lg font-bold lg:text-lg xl:text-xl">
                     <h3>{event.name}</h3>
                     <h3>{event.venues.city}</h3>
-                    <h4>{`€ ${event.event_price}`}</h4>
+                    <h4>{event.event_price ? `£${event.event_price}` : "FREE"}</h4>
                   </div>
                 </CardBody>
               </Card>
@@ -118,8 +130,8 @@ export default function Hero() {
         )}
       </div>
       <footer>
-        <div className="flex min-h-36 items-center justify-center md:justify-between px-20">
-          <span className="font-satoshi font-semibold hidden md:block">
+        <div className="flex min-h-36 items-center justify-center px-20 md:justify-between">
+          <span className="hidden font-satoshi font-semibold md:block">
             © 2024 Congregate Ltd. All rights reserved.
           </span>
           <div>
@@ -216,7 +228,9 @@ export default function Hero() {
                                 linkedInHref="https://linkedin.com/in/anthonymmoran/"
                                 gitHubHref="https://github.com/tonymm55"
                                 bio={defaultBio}
-                                imageSrc={"https://avatars.githubusercontent.com/u/117123909?v=4"}
+                                imageSrc={
+                                  "https://avatars.githubusercontent.com/u/117123909?v=4"
+                                }
                               />
                             </PopoverContent>
                           </Popover>
@@ -266,7 +280,9 @@ export default function Hero() {
                                 linkedInHref="https://www.linkedin.com/in/dmytro-pen-a79988257/"
                                 gitHubHref="https://github.com/PENbDM"
                                 bio={defaultBio}
-                                imageSrc={"https://avatars.githubusercontent.com/u/102535430?v=4"}
+                                imageSrc={
+                                  "https://avatars.githubusercontent.com/u/102535430?v=4"
+                                }
                               />
                             </PopoverContent>
                           </Popover>
