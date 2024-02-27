@@ -9,6 +9,7 @@ import {
   DropdownTrigger,
   Avatar,
   Link,
+  Button,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useLogin } from "../loginContext";
@@ -105,18 +106,22 @@ export default function NavProfileSection() {
             >
               Settings
             </DropdownItem>
-            <DropdownItem
-              as={Link}
-              href="/"
-              onClick={() => {
-                supabaseAuth.auth.signOut();
-                setIsLoggedIn(false);
-              }}
-              className="bg-red-500 bg-opacity-90 text-center text-white hover:bg-red-600"
-              key="logout"
-              color="danger"
-            >
-              Logout
+            <DropdownItem>
+              <Link
+                as={Button}
+                fullWidth
+                href="/"
+                onClick={() => {
+                  supabaseAuth.auth.signOut();
+                  setIsLoggedIn(false);
+                  setSignedInUser(null);
+                }}
+                className="bg-red-500 bg-opacity-90 text-center text-white hover:bg-red-600"
+                key="logout"
+                color="danger"
+              >
+                Logout
+              </Link>
             </DropdownItem>
           </DropdownMenu>
         ) : (
