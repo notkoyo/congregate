@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { useLogin } from "../loginContext";
 import BookedOnMessage from "./BookedOnMessage";
 
-export default function EventCards({ item, showDelete }) {
+export default function EventCards({ item, showDelete, setIsLoading }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedEvent, setOpenedEvent] = useState();
   const [isDeleted, setIsDeleted] = useState(false);
@@ -32,14 +32,10 @@ export default function EventCards({ item, showDelete }) {
   const [showMessage, setShowMessage] = useState(false);
   const [messageBody, setMessageBody] = useState("");
 
-  const { isLoggedIn } = useLogin();
-
   useEffect(() => {
-    if (isLoggedIn) {
-      isUserBookedOn(item.event_id).then((res) => {
-        setBookedOn(res);
-      });
-    }
+    isUserBookedOn(item.event_id).then((res) => {
+      setBookedOn(res);
+    });
   }, [isDeleted]);
 
   const handleDelete = () => {
@@ -77,11 +73,7 @@ export default function EventCards({ item, showDelete }) {
           }}
         >
           <CardBody>
-            <Image
-              className="h-60 w-dvw object-cover"
-              src={item.photos}
-              alt=""
-            />
+            <img className="h-60 w-dvw object-cover" src={item.photos} alt="" />
             <CardFooter>
               <div className="flex-grow px-2">
                 <div className="flex justify-between">

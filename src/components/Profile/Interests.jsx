@@ -10,7 +10,6 @@ import React from "react";
 export default function Interests({
   userInterestsArray,
   setUserInterestsArray,
-  onInterestsChange,
 }) {
   const [allInterests, setAllInterests] = useState([]);
 

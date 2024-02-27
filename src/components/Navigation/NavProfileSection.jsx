@@ -9,36 +9,34 @@ import {
   DropdownTrigger,
   Avatar,
   Link,
-  Button,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useLogin } from "../loginContext";
+import { fetchUserData } from "@/utils/api";
 
 export default function NavProfileSection() {
   const [signedInUser, setSignedInUser] = useState(null);
 
-  const {isLoggedIn} = useLogin();
-  
+  const { isLoggedIn, setIsLoggedIn } = useLogin();
+
   useEffect(() => {
     const getSession = async () => {
       const {
         data: { session },
       } = await supabaseAuth.auth.getSession();
       if (session) {
-        const {
-          user: { user_metadata },
-        } = session;
-        setSignedInUser(user_metadata);
+        const userData = await fetchUserData(session.user.id);
+        setSignedInUser(userData);
       } else {
         setSignedInUser(null);
       }
     };
 
     getSession();
-  }, [isLoggedIn, signedInUser])
+  }, [isLoggedIn]);
 
   return (
-    <NavbarItem key={signedInUser ? signedInUser.full_name : null}>
+    <NavbarItem key={signedInUser ? signedInUser.id : null}>
       <Dropdown
         placement="bottom-end"
         classNames={{ content: "bg-cyan-700 shadow-2xl text-white" }}
@@ -54,14 +52,14 @@ export default function NavProfileSection() {
             src={signedInUser ? signedInUser.avatar_url : "#"}
           />
         </DropdownTrigger>
-        {isLoggedIn && signedInUser ? (
+        {signedInUser ? (
           <DropdownMenu aria-label="Profile Actions" variant="flat">
             <DropdownItem
               textValue="is signed in?"
               key="details"
               className="h-14 gap-2"
             >
-              <p className="font-semibold">Hello, {signedInUser.full_name}</p>
+              <p className="font-semibold">Hello, {signedInUser.given_names}</p>
               <p className="font-semibold text-white/35">
                 {signedInUser ? signedInUser.email : "Not signed in"}
               </p>
@@ -110,8 +108,11 @@ export default function NavProfileSection() {
             <DropdownItem
               as={Link}
               href="/"
-              onClick={() => supabaseAuth.auth.signOut()}
-              className="text-white bg-red-500 bg-opacity-90 text-center hover:bg-red-600"
+              onClick={() => {
+                supabaseAuth.auth.signOut();
+                setIsLoggedIn(false);
+              }}
+              className="bg-red-500 bg-opacity-90 text-center text-white hover:bg-red-600"
               key="logout"
               color="danger"
             >
