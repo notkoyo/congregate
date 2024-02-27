@@ -44,7 +44,6 @@ export const GoogleMapAutocomplete = ({ setSelectedPos, setLocationInfo, fillerT
           setSelectedPos({...setSelectedPos,center:getLatLng(results[0])})
         }
         if (setLocationInfo) {
-          console.log(results);
           setLocationInfo(results[0])
         }
       });
