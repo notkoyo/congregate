@@ -3,6 +3,7 @@
 import {
   checkUserLoggedIn,
   deleteEventAttendee,
+  fetchIfUserExist,
   isUserBookedOn,
   postEventAttendee,
 } from "@/utils/api";
@@ -34,7 +35,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [messageBody, setMessageBody] = useState("");
 
   useEffect(() => {
-    checkUserLoggedIn();
+    fetchIfUserExist();
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
@@ -75,7 +76,11 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           }}
         >
           <CardBody>
-            <img className="h-60 w-dvw object-cover" src={item.photos} alt="" />
+            <img
+              className="h-60 w-dvw object-cover"
+              src={item.photos}
+              alt=""
+            />
             <CardFooter>
               <div className="flex-grow px-2">
                 <div className="flex justify-between">

@@ -32,6 +32,7 @@ export default function Hero() {
     supabaseAuth
       .from("events")
       .select("*, venues(photos, city)")
+      .order("start_date", {descending: true})
       .then(({ data }) => setEvents(data));
   }, []);
 
