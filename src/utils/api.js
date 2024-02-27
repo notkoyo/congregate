@@ -194,8 +194,6 @@ export const isUserBookedOn = async (event_id) => {
       .eq("user_id", currentUser.id)
       .eq("event_id", event_id);
 
-    console.log(data);
-
     if (data.length === 0) {
       return false;
     } else {

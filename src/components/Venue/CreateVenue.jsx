@@ -290,10 +290,10 @@ const CreateVenue = ({ userId }) => {
               )}
             </div>
             <div className="flex  w-1/2 flex-col">
-              <GoogleMapAutocomplete
+              {/* <GoogleMapAutocomplete
                 setLocationInfo={setLocationInfo}
                 fillerText="Search for location..."
-              /> {/* Comment out to disable address search */}
+              /> uncomment to enable search */}
               <div className="flex h-101 flex-col">
                 <label className="mb-1 mt-1">Building number</label>
                 <input

@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { InputCustom } from "../Input";
 import Interests from "../Profile/Interests";
+import { useLogin } from "../loginContext";
 
 export default function EventForm() {
   //data states state
@@ -37,6 +38,8 @@ export default function EventForm() {
   const [error, setError] = useState(false);
   const [isSelected, setIsSelected] = useState(true);
 
+  const { isLoggedIn } = useLogin();
+
   useEffect(() => {
     const storedForm = localStorage.getItem("eventFormDetails");
     if (!formData.founder_id && !storedForm) {
@@ -45,7 +48,6 @@ export default function EventForm() {
           return supabaseAuth.from("users").select("id").eq("auth_id", id);
         })
         .then(({ data }) => {
-          console.log({data});
           setFormData({ ...formData, founder_id: data[0].id });
         });
     }
@@ -77,7 +79,6 @@ export default function EventForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
 
     if (name === "name") {
       value === "" ? setIsNameValid(false) : setIsNameValid(true);
