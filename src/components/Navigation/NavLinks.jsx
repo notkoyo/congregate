@@ -1,7 +1,31 @@
-import { NavbarItem, Dropdown, DropdownItem, DropdownTrigger, DropdownMenu, Button, Link, } from "@nextui-org/react";
-import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
+"use client";
 
-export default function NavLinks({rotation, setRotation}) {
+import {
+  NavbarItem,
+  Dropdown,
+  DropdownItem,
+  DropdownTrigger,
+  DropdownMenu,
+  Button,
+  Link,
+} from "@nextui-org/react";
+import { ChevronDown, CalendarIcon, VenueIcon } from "../Icons/Icons";
+import { useLogin } from "../loginContext";
+import { useEffect, useState } from "react";
+import { fetchIfUserExist } from "../../utils/api";
+
+export default function NavLinks({ rotation, setRotation }) {
+  // const [isUserCreatedProfile, setIsUserCreatedProfile] = useState(false);
+  const { isLoggedIn } = useLogin();
+  // useEffect(() => {
+  //   fetchIfUserExist().then((res) => {
+  //     if (res?.id) {
+  //       setIsUserCreatedProfile(true);
+  //     } else {
+  //       return "Profile have not been created";
+  //     }
+  //   });
+  // }, [isLoggedIn]);
   return (
     <>
       <NavbarItem>

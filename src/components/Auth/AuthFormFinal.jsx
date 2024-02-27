@@ -71,12 +71,13 @@ export default function AuthForm() {
     if (!error) {
       // check if user exists that satisfies auth.user.id === public.user.auth_id
       const userPublic = await fetchUserData(data.user.id);
-      setIsLoggedIn(true);
+      console.log(userPublic);
       if (userPublic) {
-        // if yes
+        console.log(userPublic);
+
+        setIsLoggedIn(true);
         router.push("/profile");
       } else {
-        // if no
         router.push("/profile/create");
       }
     } else {
