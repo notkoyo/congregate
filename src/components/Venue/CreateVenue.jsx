@@ -41,21 +41,19 @@ const CreateVenue = ({ userId }) => {
   useEffect(() => {
     if (locationInfo) {
       formatAddressForm();
-
-
     }
   }, [locationInfo]);
 
   const formatAddressForm = () => {
     const formattedAddressSplit = locationInfo.formatted_address.split(",");
     let addressStart = formattedAddressSplit[0].split(" ");
-    const addressNumber = addressStart[0]
+    const addressNumber = addressStart[0];
     if (addressNumber.match(/\d/)) {
-      addressStart.shift()
-      addressStart= [addressStart.join(' ')]
-      addressStart.unshift(addressNumber)
-      formattedAddressSplit.shift()
-      addressStart.reverse().forEach(x => formattedAddressSplit.unshift(x));
+      addressStart.shift();
+      addressStart = [addressStart.join(" ")];
+      addressStart.unshift(addressNumber);
+      formattedAddressSplit.shift();
+      addressStart.reverse().forEach((x) => formattedAddressSplit.unshift(x));
       console.log(formattedAddressSplit);
       setVenueForm({
         buildingNumber: formattedAddressSplit[0],
@@ -204,7 +202,6 @@ const CreateVenue = ({ userId }) => {
   };
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center">
-    <button onClick={() => console.log(venueForm)}>XXXX</button>
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
