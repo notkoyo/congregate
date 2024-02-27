@@ -155,7 +155,9 @@ const CreateVenue = ({ userId }) => {
         latlng = getLatLng(locationInfo);
       } else {
         const description = `${house},${address}, ${city}, ${county}, ${postcode}`;
+        console.log(1);
         const venueLocation = await getGeocode({ address: description });
+        console.log(2);
         latlng = getLatLng(venueLocation[0]);
       }
 
@@ -203,7 +205,6 @@ const CreateVenue = ({ userId }) => {
   };
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center">
-      <button onClick={() => console.log(venueForm)}>XXXX</button>
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
@@ -291,10 +292,12 @@ const CreateVenue = ({ userId }) => {
               </div>
             </div>
             <div className="mt-4 flex  w-1/2 flex-col">
-              {/* <GoogleMapAutocomplete
-                setLocationInfo={setLocationInfo}
-                fillerText="Search for location..."
-              /> uncomment to enable search */}
+              <div className="hidden">
+                <GoogleMapAutocomplete
+                  setLocationInfo={setLocationInfo}
+                  fillerText="Search for location..."
+                />
+              </div>
               <div className="flex h-101 flex-col">
                 <Input
                   label="Number of Building"
