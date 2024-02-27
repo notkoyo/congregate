@@ -178,6 +178,7 @@ const EditVenue = ({
                   type="number"
                   name="price"
                   label="Price"
+                  startContent="£"
                   {...register("price", { valueAsNumber: true })}
                   className="max-w-xs font-medium"
                   errorMessage={

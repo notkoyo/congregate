@@ -5,7 +5,7 @@ import HostedVenue from "../../../components/Venue/HostedVenue";
 import ListVenue from "../../../components/Venue/ListVenue";
 import { supabaseAuth } from "../../../utils/supabaseClient";
 import "./listVenue.css";
-
+import Link from "next/link";
 
 function page() {
   const [venuesData, setVenuesData] = useState([]);
@@ -55,8 +55,8 @@ function page() {
   filterUserVenue();
 
   return (
-    <div className="venue_grid">
-      <div className="venue_inside">
+    <div>
+      <div className="flex flex-wrap justify-center gap-8">
         {readyVenues?.map((venue, index) => (
           <ListVenue
             key={index} // Add the key prop directly to ListVenue
