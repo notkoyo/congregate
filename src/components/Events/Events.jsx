@@ -6,6 +6,7 @@ import { supabaseAuth } from "../../utils/supabaseClient";
 import { useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import CardSkeleton from "../CardSkeleton";
+import Heading from "../Header";
 
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
