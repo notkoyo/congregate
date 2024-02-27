@@ -1,7 +1,7 @@
-// user push to profile page, not a user push to homepage
-
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
+import { fetchUserData } from "./utils/api";
+import { supabaseAuth } from "./utils/supabaseClient";
 
 export async function middleware(req) {
   const res = NextResponse.next();
@@ -56,6 +56,12 @@ export async function middleware(req) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const userPublic = await fetchUserData(user?.id);
+
+  if (user && !userPublic && req.nextUrl.pathname !== "/profile/create") {
+    return NextResponse.redirect(new URL("/profile/create", req.url));
+  }
+
   if (!user && req.nextUrl.pathname === "/host/event") {
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -68,5 +74,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/host/:path*"],
+  matcher: ["/meet", "/", "/host/:path*", "/login"],
 };
