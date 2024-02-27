@@ -39,8 +39,10 @@ export default function AuthForm() {
 
   const router = useRouter();
 
-  const {setIsLoggedIn} = useLogin();
-
+  const { setIsLoggedIn } = useLogin();
+  const setLocalUserProfile = () => {
+    localStorage.setItem("isUserCreatedProfile", "true");
+  };
   const handleSignUp = async (e) => {
     e.preventDefault();
     const { data, error } = await supabaseAuth.auth.signUp({
@@ -71,8 +73,11 @@ export default function AuthForm() {
     if (!error) {
       // check if user exists that satisfies auth.user.id === public.user.auth_id
       const userPublic = await fetchUserData(data.user.id);
+      console.log(userPublic);
       if (userPublic) {
-        // if yes
+        console.log(userPublic);
+
+        setLocalUserProfile();
         setIsLoggedIn(true);
         router.push("/profile");
       } else {
@@ -190,7 +195,9 @@ export default function AuthForm() {
                 : "danger"
               : "default"
         }
-        errorMessage={isNewUser && !isEmailValid ? "Please enter a valid email" : ""}
+        errorMessage={
+          isNewUser && !isEmailValid ? "Please enter a valid email" : ""
+        }
         onValueChange={handleEmailChange}
         className="max-w-xs font-medium"
       />
@@ -226,7 +233,9 @@ export default function AuthForm() {
                   : "danger"
                 : "default"
           }
-          errorMessage={isNewUser && !isPasswordValid ? "Please enter a valid password" : ""}
+          errorMessage={
+            isNewUser && !isPasswordValid ? "Please enter a valid password" : ""
+          }
           onValueChange={handlePasswordChange}
           className="max-w-xs font-medium"
         />
@@ -332,7 +341,9 @@ export default function AuthForm() {
       </Button>
       {isInfoIncorrect && (
         <div className="max-w-xs">
-          <p className="text-tiny text-center text-red-500">Incorrect password or email, please try again.</p>
+          <p className="text-center text-tiny text-red-500">
+            Incorrect password or email, please try again.
+          </p>
         </div>
       )}
       <Divider className="my-5" />

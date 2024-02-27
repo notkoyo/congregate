@@ -20,7 +20,7 @@ export default function ProfileCreate() {
   });
   const [userInterestsArray, setUserInterestsArray] = useState([]);
   const [errorPosting, setErrorPosting] = useState(false);
-
+  console.log(errorPosting);
   // valid states
   const [isGivenNamesValid, setIsGivenNamesValid] = useState(true);
   const [isSurnameValid, setIsSurnameValid] = useState(true);
@@ -59,26 +59,66 @@ export default function ProfileCreate() {
     return true;
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   if (!isDobValid) {
+  //     setIsDobValid(false);
+  //   } else {
+  //     setErrorPosting(false);
+  //     postUserData(formData)
+  //       .then((res) => {
+  //         console.log("first res", res);
+  //         if (!res) {
+  //           throw Error;
+  //         }
+  //         setErrorPosting(false);
+
+  //         postUserInterests(userInterestsArray);
+  //       })
+  //       .then((res) => {
+  //         console.log("second res", res);
+  //         if (!res) {
+  //           throw Error;
+  //         }
+  //         setErrorPosting(false);
+
+  //         router.push("/profile");
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         setErrorPosting(true);
+  //       });
+  //   }
+  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!isDobValid) {
       setIsDobValid(false);
     } else {
+      setErrorPosting(false);
       postUserData(formData)
         .then((res) => {
+          console.log("first res", res);
           if (!res) {
             throw Error;
           }
-          postUserInterests(userInterestsArray);
-        })
-        .then((res) => {
-          if (!res) {
-            throw Error;
-          }
-          router.push("/profile");
+          setErrorPosting(false);
+
+          postUserInterests(userInterestsArray)
+            .then(() => {
+              setErrorPosting(false);
+              router.push("/profile");
+            })
+            .catch((err) => {
+              console.log(err);
+              setErrorPosting(true);
+            });
         })
         .catch((err) => {
+          console.log(err);
           setErrorPosting(true);
         });
     }
