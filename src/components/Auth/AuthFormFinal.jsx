@@ -40,7 +40,9 @@ export default function AuthForm() {
   const router = useRouter();
 
   const { setIsLoggedIn } = useLogin();
-
+  const setLocalUserProfile = () => {
+    localStorage.setItem("isUserCreatedProfile", "true");
+  };
   const handleSignUp = async (e) => {
     e.preventDefault();
     const { data, error } = await supabaseAuth.auth.signUp({
@@ -71,9 +73,12 @@ export default function AuthForm() {
     if (!error) {
       // check if user exists that satisfies auth.user.id === public.user.auth_id
       const userPublic = await fetchUserData(data.user.id);
-      setIsLoggedIn(true);
+      console.log(userPublic);
       if (userPublic) {
-        // if yes
+        console.log(userPublic);
+
+        setLocalUserProfile();
+        setIsLoggedIn(true);
         router.push("/profile");
       } else {
         // if no
