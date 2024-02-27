@@ -56,11 +56,13 @@ export async function middleware(req) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // if (user && req.nextURL.pathname === "/") {
-  //   return NextResponse.redirect(new URL("/profile", req.url));
-  // }
+  if (!user && req.nextUrl.pathname === "/host/event") {
+    console.log(user, "hi");
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
 
-  if (!user && req.nextURL.pathname === "/host/event") {
+  if (!user && req.nextUrl.pathname === "/host/venue") {
+    console.log(user, "hi");
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -68,5 +70,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/profile"],
+  matcher: ["/host/:path*"],
 };
