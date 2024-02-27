@@ -1,3 +1,5 @@
+import { supabaseAuth } from "./supabaseClient";
+
 export const fetchCurrentUserID = async () => {
   try {
     const { data, error } = await supabaseAuth.auth.getUser();
