@@ -77,7 +77,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           }}
         >
           <CardBody>
-            <Image
+            <img
               className="h-60 w-dvw object-cover"
               src={item.photos}
               alt=""
