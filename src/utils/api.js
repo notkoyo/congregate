@@ -1,5 +1,3 @@
-import { supabaseAuth } from "./supabaseClient";
-
 export const fetchCurrentUserID = async () => {
   try {
     const { data, error } = await supabaseAuth.auth.getUser();
@@ -198,6 +196,33 @@ export const isUserBookedOn = async (event_id) => {
       return false;
     } else {
       return true;
+    }
+  } catch (error) {
+    console.error("Error selecting event attendee data:", error);
+  }
+};
+
+export const fetchCurrentUserJoinedEvents = async () => {
+  try {
+    const auth_id = await fetchCurrentUserID();
+    const { id } = await fetchUserData(auth_id);
+
+    const { data, error } = await supabaseAuth
+      .from("event_attendees")
+      .select("event_id(*, venue_id(*))")
+      .eq("user_id", id);
+
+    if (!error) {
+      const outputData = data.map((obj) => {
+        return {
+          ...obj.event_id,
+          ...obj.event_id.venue_id,
+        };
+      });
+
+      return outputData;
+    } else {
+      console.error("Error selecting event attendee data:", error);
     }
   } catch (error) {
     console.error("Error selecting event attendee data:", error);
