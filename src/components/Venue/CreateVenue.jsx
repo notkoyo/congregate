@@ -125,7 +125,7 @@ const CreateVenue = ({ userId }) => {
   const handleVenueUpdateSuccess = () => {
     setShowSuccessMessage(true);
     setTimeout(() => {
-      router.push("/list-venue");
+      router.push("/profile/hosted-venues");
     }, 2000);
   };
   const onSubmit = async (data) => {
@@ -228,6 +228,7 @@ const CreateVenue = ({ userId }) => {
                   type="number"
                   name="price"
                   label="Price"
+                  startContent="£"
                   {...register("price", { valueAsNumber: true })}
                   className="max-w-xs font-medium"
                   errorMessage={
