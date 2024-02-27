@@ -64,21 +64,27 @@ export default function Hero() {
             aria-label="Who we are section"
             title="Who we are"
           >
-            {"A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."}
+            {
+              "A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."
+            }
           </AccordionItem>
           <AccordionItem
             key="2"
             aria-label="What we do section"
             title="What we do"
           >
-            {"We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."}
+            {
+              "We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."
+            }
           </AccordionItem>
           <AccordionItem
             key="3"
             aria-label="Get started section"
             title="Get started"
           >
-            {"Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."}
+            {
+              "Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."
+            }
           </AccordionItem>
         </Accordion>
       </div>
@@ -87,8 +93,8 @@ export default function Hero() {
           Current Events
         </h2>
         {events.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 px-20 py-10 pb-24 sm:px-40 md:grid-cols-3 md:px-10 lg:grid-cols-3 lg:px-40 xl:px-[18rem]">
-            {[events[0], events[1], events[2]].map((event) => (
+          <div className="font-satoshi grid grid-cols-1 gap-4 px-20 py-10 pb-24 sm:px-40 md:grid-cols-3 md:px-2 lg:grid-cols-3 lg:px-30 xl:px-[8rem]">
+            {[events[0], events[1], events[2]].map((event) => {console.log(event); return (
               <Card key={event.event_id} className="aspect-square max-w-sm">
                 <CardBody>
                   <Image
@@ -96,14 +102,17 @@ export default function Hero() {
                     src={event.venues.photos}
                     alt="venue image"
                   />
-                  <div className="mx-auto my-auto text-center font-satoshi text-lg font-bold lg:text-lg xl:text-xl">
-                    <h3>{event.name}</h3>
-                    <h3>{event.venues.city}</h3>
-                    <h4>{`€ ${event.event_price}`}</h4>
+                  <div className="flex justify-between items-center pt-2 px-1">
+                    <h3 className="text-xl md:text-lg font-bold">{event.name}</h3>
+                    <h6 className="text-small md:text-xs font-semibold">{`${event.start_date.slice(0,10)}`}</h6>
+                  </div>
+                  <div className="pt-1 md:pt-0 px-1 flex flex-col md:flex-row md:justify-between">
+                    <h3 className="text-lg md:text-medium font-semibold">{event.venues.city}</h3>
+                    <h3 className="text-lg md:text-medium font-semibold">Entry Fee: <span className="font-medium">€{event.event_price}</span></h3>
                   </div>
                 </CardBody>
               </Card>
-            ))}
+            )})}
           </div>
         ) : (
           <div className="grid min-h-96 place-items-center">
@@ -115,14 +124,19 @@ export default function Hero() {
             </div>
           </div>
         )}
+        {events.length > 0 ? (<div className="flex justify-center items-center py-5">
+            <Button as={Link} href="/meet" size="lg" className="font-semibold">
+                      View these events and more!
+                    </Button>
+            </div>) : undefined}
       </div>
       <footer>
-        <div className="flex min-h-36 items-center justify-center md:justify-between px-20">
-          <span className="font-satoshi font-semibold hidden md:block">
+        <div className="flex min-h-36 flex-col items-center justify-center px-20 md:flex-row md:justify-between">
+          <span className="hidden font-satoshi text-gray-400/40 font-semibold md:block">
             © 2024 Congregate Ltd. All rights reserved.
           </span>
           <div>
-            <ul className="flex gap-10">
+            <ul className="flex gap-x-10">
               <li>
                 <Popover>
                   <PopoverTrigger>
@@ -215,7 +229,9 @@ export default function Hero() {
                                 linkedInHref="https://linkedin.com/in/anthonymmoran/"
                                 gitHubHref="https://github.com/tonymm55"
                                 bio={defaultBio}
-                                imageSrc={"https://avatars.githubusercontent.com/u/117123909?v=4"}
+                                imageSrc={
+                                  "https://avatars.githubusercontent.com/u/117123909?v=4"
+                                }
                               />
                             </PopoverContent>
                           </Popover>
@@ -265,7 +281,9 @@ export default function Hero() {
                                 linkedInHref="https://www.linkedin.com/in/dmytro-pen-a79988257/"
                                 gitHubHref="https://github.com/PENbDM"
                                 bio={defaultBio}
-                                imageSrc={"https://avatars.githubusercontent.com/u/102535430?v=4"}
+                                imageSrc={
+                                  "https://avatars.githubusercontent.com/u/102535430?v=4"
+                                }
                               />
                             </PopoverContent>
                           </Popover>
@@ -305,6 +323,9 @@ export default function Hero() {
             </ul>
           </div>
         </div>
+        <span className="flex pb-10 text-gray-400/40 font-satoshi font-semibold justify-center items-center md:hidden">
+          © 2024 Congregate Ltd. All rights reserved.
+        </span>
       </footer>
     </>
   );
