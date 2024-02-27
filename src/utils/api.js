@@ -202,8 +202,6 @@ export const isUserBookedOn = async (event_id) => {
       .eq("user_id", currentUser.id)
       .eq("event_id", event_id);
 
-    console.log(data);
-
     if (data.length === 0) {
       return false;
     } else {
@@ -218,7 +216,6 @@ export const fetchIfUserExist = async () => {
   try {
     const res = await supabaseAuth.auth.getSession();
     const email = res.data?.session?.user.email;
-    console.log(email);
     const response = await supabaseAuth
       .from("users")
       .select()
