@@ -166,8 +166,7 @@ export const Events = () => {
                 </>
               )}
             </div>
-            {selectedEvents.length % 12 === 0 &&
-              selectedEvents.length !== 12 && (
+            {selectedEvents.length % 12 === 0 && (
                 <Button
                   className="w-3/5 align-middle"
                   onPress={() => setLoadedEventsNum((e) => e + 12)}
