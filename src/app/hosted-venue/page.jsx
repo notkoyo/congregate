@@ -21,7 +21,6 @@ function page() {
           .from("venues")
           .select()
           .match({ founder_id: userId });
-        console.log(data);
 
         if (error) {
           console.error("Error fetching venues data:", error);

@@ -14,17 +14,14 @@ export default function myEvents() {
         return supabaseAuth.from("users").select("id").eq("auth_id", id);
       })
       .then(({ data }) => {
-        console.log();
         return supabaseAuth
           .from("events")
           .select("*, venues(photos)")
           .eq(`founder_id`, data[0].id);
       })
       .then(({ data }) => {
-        console.log();
         setUserEvents(
           data.map((event) => {
-            console.log(event);
             return { ...event, ...event.venues };
           }),
         );
@@ -33,9 +30,10 @@ export default function myEvents() {
 
   return (
     <>
-      {userEvents.length > 0 && userEvents.map((item) => (
-        <EventCards item={item} showDelete={true} key={item.event_id} />
-      ))}
+      {userEvents.length > 0 &&
+        userEvents.map((item) => (
+          <EventCards item={item} showDelete={true} key={item.event_id} />
+        ))}
     </>
   );
 }

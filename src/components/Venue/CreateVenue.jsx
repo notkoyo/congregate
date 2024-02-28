@@ -55,7 +55,7 @@ const CreateVenue = ({ userId }) => {
       addressStart.unshift(addressNumber);
       formattedAddressSplit.shift();
       addressStart.reverse().forEach((x) => formattedAddressSplit.unshift(x));
-      console.log(formattedAddressSplit);
+
       setVenueForm({
         buildingNumber: formattedAddressSplit[0],
         address: formattedAddressSplit[1],
@@ -73,12 +73,12 @@ const CreateVenue = ({ userId }) => {
       });
     }
 
-    // console.log(formattedAddressSplit, "<<<< 2");
+    //
   };
 
   async function uploadImage() {
     // const file = e?.target?.files?.[0];
-    // console.log(typeof file);
+    //
     if (!selectedFile) {
       setErrorInputFile("No file selected");
       return;
@@ -104,7 +104,6 @@ const CreateVenue = ({ userId }) => {
       await setUrlPhoto(photoUrl);
       return photoUrl;
     } else {
-      console.log(error);
     }
   }
   const {
@@ -138,7 +137,7 @@ const CreateVenue = ({ userId }) => {
       const photoURL = await uploadImage().then((res) => {
         return res;
       });
-      console.log(photoURL);
+
       const {
         name,
         price,
@@ -155,9 +154,9 @@ const CreateVenue = ({ userId }) => {
         latlng = getLatLng(locationInfo);
       } else {
         const description = `${house},${address}, ${city}, ${county}, ${postcode}`;
-        console.log(1);
+
         const venueLocation = await getGeocode({ address: description });
-        console.log(2);
+
         latlng = getLatLng(venueLocation[0]);
       }
 
@@ -175,7 +174,7 @@ const CreateVenue = ({ userId }) => {
         lat: latlng.lat,
         lng: latlng.lng,
       });
-      console.log(res);
+
       if (res.status === 201) {
         handleVenueUpdateSuccess();
       }
@@ -185,7 +184,6 @@ const CreateVenue = ({ userId }) => {
   };
   const handleFileChange = (e) => {
     const file = e?.target?.files?.[0];
-    console.log(typeof file);
 
     if (!file) {
       setErrorInputFile("No file selected");
@@ -238,7 +236,7 @@ const CreateVenue = ({ userId }) => {
               </div>
               <div className="flex h-101 flex-col">
                 <label
-                  className={`h-13 mt-1 flex  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                  className={`mt-1 flex h-13  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
                     selectedFile ? "border-green-500" : "border-gray-300"
                   }`}
                 >

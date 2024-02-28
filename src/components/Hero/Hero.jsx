@@ -37,7 +37,7 @@ export default function Hero() {
         const currentEvents = data.filter(
           (e) => new Date(e.start_date) >= Date.now(),
         );
-        console.log(currentEvents);
+
         setEvents(currentEvents);
       });
   }, []);
@@ -112,7 +112,9 @@ export default function Hero() {
                   <div className="mx-auto my-auto text-center font-satoshi text-lg font-bold lg:text-lg xl:text-xl">
                     <h3>{event.name}</h3>
                     <h3>{event.venues.city}</h3>
-                    <h4>{event.event_price ? `£${event.event_price}` : "FREE"}</h4>
+                    <h4>
+                      {event.event_price ? `£${event.event_price}` : "FREE"}
+                    </h4>
                   </div>
                 </CardBody>
               </Card>
