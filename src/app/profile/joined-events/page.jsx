@@ -29,7 +29,7 @@ export default function JoinedEvents() {
       </div>
       {noEvents ? (
         <div className="flex flex-col items-center gap-8">
-          <p>You are not currently going to any events</p>
+          <p>Oh no! You are not currently going to any events</p>
           <Link href="/meet">
             <Button color="default">Find events near you</Button>
           </Link>
