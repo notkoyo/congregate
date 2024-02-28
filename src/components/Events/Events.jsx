@@ -69,9 +69,9 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 mt-8 flex h-full flex-col gap-8 sm:flex-row">
-        <div className="z-0 m-4 mt-8 flex h-full w-full  flex-col gap-8 md:flex-row">
-          <div className="flex h-fit flex-col gap-2 border-r-2 border-gray-300 pr-10">
+      <div className="z-0 m-4 md:mt-8 flex h-full flex-col gap-8 sm:flex-row">
+        <div className="z-0 flex h-full w-full  flex-col gap-8 md:m-4 md:flex-row">
+          <div className="flex h-fit flex-col gap-2 md:border-r-2 md:border-gray-300 md:pr-10">
             <section className="flex flex-col items-center gap-2">
               <GoogleMap
                 selectedPos={selectedPos}
@@ -171,11 +171,9 @@ export const Events = () => {
                   <CardSkeleton />
                 </>
               )}
-
             </div>
             {selectedEvents.length % 12 === 0 &&
               selectedEvents.length !== 0 && (
-
                 <Button
                   className="w-3/5 align-middle"
                   onPress={() => setLoadedEventsNum((e) => e + 12)}
@@ -183,7 +181,6 @@ export const Events = () => {
                   Load more
                 </Button>
               )}
-            </div>
           </div>
         </div>
       </div>
