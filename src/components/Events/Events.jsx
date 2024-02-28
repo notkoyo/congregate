@@ -171,9 +171,11 @@ export const Events = () => {
                   <CardSkeleton />
                 </>
               )}
+
             </div>
             {selectedEvents.length % 12 === 0 &&
               selectedEvents.length !== 0 && (
+
                 <Button
                   className="w-3/5 align-middle"
                   onPress={() => setLoadedEventsNum((e) => e + 12)}
@@ -181,6 +183,7 @@ export const Events = () => {
                   Load more
                 </Button>
               )}
+            </div>
           </div>
         </div>
       </div>
