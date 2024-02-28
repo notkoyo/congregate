@@ -77,6 +77,7 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
             </div>
             {showEditMenu === true ? (
               <EditVenue
+                key={venue}
                 setVenueHasBeenUpdate={setVenueHasBeenUpdate}
                 handleEditClose={handleEditClose}
                 userId={venue.founder_id}
