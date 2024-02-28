@@ -45,7 +45,8 @@ export const Events = () => {
         .order(orderBy, { descending: true })
         .range(0, loadedEventsNum)
         .then(({ data }) => {
-          setSelectedEvents(data);
+          const currentEvents = data.filter((e) => new Date(e.start_date) > Date.now())
+          setSelectedEvents(currentEvents);
           setIsLoading(false);
         })
         .catch((err) => console.log(err));
@@ -141,7 +142,7 @@ export const Events = () => {
           <div className="flex flex-1 flex-wrap justify-center gap-5">
             {!isLoading ? (
               selectedEvents.map((item) => {
-                return new Date(item.start_date) < Date.now() ? null : (
+                return (
                   <EventCards
                     item={item}
                     showDelete={false}
@@ -163,7 +164,7 @@ export const Events = () => {
               </>
             )}
           </div>
-          {selectedEvents.length % 12 === 0 && (
+          {selectedEvents.length % 12 === 0 && selectedEvents.length !== 12 &&(
             <Button
               className="w-3/5 align-middle"
               onPress={() => setLoadedEventsNum((e) => e + 12)}
