@@ -124,7 +124,9 @@ export const Events = () => {
                 value={orderBy}
                 onChange={(e) => setOrderBy(e.target.value)}
                 variant="underlined"
+
                 id="event-sort"
+
                 className="w-full rounded-lg p-2"
               >
                 <option key="start_date" value="start_date">
@@ -134,6 +136,7 @@ export const Events = () => {
                   Price
                 </option>
               </select>
+
             </div>
           </section>
         </div>
@@ -161,16 +164,9 @@ export const Events = () => {
                 <CardSkeleton />
                 <CardSkeleton />
               </>
+
             )}
           </div>
-          {selectedEvents.length % 12 === 0 && (
-            <Button
-              className="w-3/5 align-middle"
-              onPress={() => setLoadedEventsNum((e) => e + 12)}
-            >
-              Load more
-            </Button>
-          )}
         </div>
       </div>
     </>
