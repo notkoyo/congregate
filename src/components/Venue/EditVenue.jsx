@@ -31,7 +31,6 @@ const EditVenue = ({
   const [selectedFile, setSelectedFile] = useState(null);
   const text = "Your venue has been created successfully!";
   const [erroInputFile, setErrorInputFile] = useState("");
-  const [urlPhoto, setUrlPhoto] = useState("");
   const {
     register,
     handleSubmit,
@@ -91,9 +90,6 @@ const EditVenue = ({
       }
     } catch (err) {
       console.log(err);
-      // setError("root", {
-      //   message: "This  is already taken",
-      // });
     }
   };
   async function uploadImage() {
@@ -121,7 +117,6 @@ const EditVenue = ({
         "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
       const photoUrl = baseUrl + data.fullPath;
       // return photoUrl;
-      await setUrlPhoto(photoUrl);
       return photoUrl;
     } else {
       console.log(error);
