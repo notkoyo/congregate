@@ -3,6 +3,7 @@ import { supabaseAuth } from "@/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Interests from "./Interests";
+import { Avatar } from "@nextui-org/react";
 
 export default function ProfileDisplay() {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -236,13 +237,18 @@ export default function ProfileDisplay() {
       <div className="flex">
         <div className="flex flex-col items-center gap-10 p-6">
           {currentUser && (
-            <img
-              width={200}
-              src={`${currentUser.avatar_url}`}
-              alt="User Avatar"
-            />
+            <>
+              <Avatar
+                showFallback
+                isBordered
+                color="warning"
+                name={`${currentUser.given_names[0]}${currentUser.surname[0]}`}
+                src={currentUser.avatar_url}
+                alt="Default Avatar with Initials"
+              />
+              <p>{currentUser.email}</p>
+            </>
           )}
-          {currentUser && <p>{`${currentUser.email}`}</p>}
         </div>
 
         <div className="w-96 p-6">
