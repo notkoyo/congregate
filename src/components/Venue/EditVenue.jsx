@@ -104,7 +104,6 @@ const EditVenue = ({
       !selectedFile.type?.includes("jpg") &&
       !selectedFile.type?.includes("png")
     ) {
-      console.log("Invalid file type");
       return;
     }
     const uniqueName = `venue_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.png`;
@@ -113,6 +112,7 @@ const EditVenue = ({
       .from("venues")
       .upload(uniqueName, selectedFile);
     if (data) {
+      console.log(data);
       const baseUrl =
         "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
       const photoUrl = baseUrl + data.fullPath;

@@ -70,7 +70,7 @@ function page() {
       ) : (
         <div className="venue_inside">
           {readyVenues?.map((venue, index) => (
-            <div className="venue_item">
+            <div className="venue_item" key={index}>
               <ListVenue
                 key={index} // Add the key prop directly to ListVenue
                 venue={venue}
