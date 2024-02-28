@@ -204,7 +204,7 @@ const CreateVenue = ({ userId }) => {
     }
   };
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center">
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">

@@ -105,6 +105,8 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           onOpenChange={onOpenChange}
           size="4xl"
           backdrop="blur"
+          placement={window.innerWidth < 384 ? "bottom": "center"}
+      
         >
           <ModalContent>
             {(onClose) => (
