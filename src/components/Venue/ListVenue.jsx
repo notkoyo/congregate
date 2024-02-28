@@ -59,7 +59,6 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
               src={venue.photos}
             />
           </CardBody>
-
           <CardBody className="h-100 overflow-visible pb-2 pt-5">
             <p className="text-tiny font-bold uppercase">{venue.address_1}</p>
             <p className="text-tiny font-bold uppercase">{venue.postcode}</p>
