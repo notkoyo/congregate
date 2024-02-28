@@ -70,61 +70,6 @@ export const Events = () => {
   return (
     <>
       <div className="z-0 m-4 mt-8 flex flex-col gap-8 sm:flex-row">
-        <div className="flex flex-col gap-2">
-          <section className="flex flex-col items-center gap-2">
-            <GoogleMap
-              selectedPos={selectedPos}
-              selectedEvents={selectedEvents}
-            />
-            <GoogleMapAutocomplete
-              setSelectedPos={setSelectedPos}
-              fillerText="Search near..."
-            />
-          </section>
-        </div>
-
-        <section className="flex flex-col gap-6">
-          <Slider
-            label="Distance"
-            value={distanceSlider}
-            onChange={setDistanceSlider}
-            onChangeEnd={handleDistanceChange}
-            defaultValue={10}
-            minValue={1}
-            maxValue={50}
-            formatOptions={{ style: "unit", unit: "kilometer" }}
-            marks={[
-              {
-                value: 5,
-                label: "5km",
-              },
-              {
-                value: 15,
-                label: "15km",
-              },
-              {
-                value: 25,
-                label: "25km",
-              },
-              {
-                value: 50,
-                label: "50km",
-              },
-            ]}
-          />
-          <Slider
-            label="Price range"
-            formatOptions={{ style: "currency", currency: "GBP" }}
-            maxValue={100}
-            minValue={0}
-            value={priceRangeSlider}
-            onChange={setPriceRangeSlider}
-            onChangeEnd={handlePriceChange}
-          />
-        </section>
-        <div className="gap-2">
-          <label htmlFor="event-sort">Sort by:</label>
-        </div>
         <div className="z-0 m-4 mt-8 flex flex-col gap-8 md:flex-row">
           <div className="flex flex-col gap-2">
             <section className="flex flex-col items-center gap-2">
