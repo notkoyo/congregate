@@ -258,7 +258,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
+                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-cyan-700"
               >
                 Cancel
               </button>
@@ -266,7 +266,7 @@ export default function ProfileDisplay() {
               <button
                 type="button"
                 onClick={() => toggleUpdate()}
-                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
+                className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-cyan-700"
               >
                 Update
               </button>
@@ -354,7 +354,7 @@ export default function ProfileDisplay() {
                   <div className="flex justify-end">
                     <button
                       type="submit"
-                      className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-blue-600"
+                      className="rounded bg-cyan-600 px-4 py-2 text-white hover:bg-cyan-700"
                     >
                       Confirm
                     </button>

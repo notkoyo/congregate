@@ -176,7 +176,6 @@ export const deleteEventAttendee = async (event_id) => {
 export const isUserBookedOn = async (event_id) => {
   try {
     const currentUserID = await fetchCurrentUserID();
-    console.log(currentUserID);
     if (!currentUserID) {
       return false;
     }
