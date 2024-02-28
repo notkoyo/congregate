@@ -8,7 +8,7 @@ import { Card, CardBody } from "@nextui-org/react";
 export default function Profile() {
   return (
     <>
-      <div className="flex flex-col items-center md:h-screen md:pt-32">
+      <div className="flex flex-col items-center md:h-screen md:pt-32 ">
         <Card className="max-w-2xl p-4">
           <CardBody>
             <div className="flex justify-between">
