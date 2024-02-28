@@ -1,4 +1,11 @@
 import React from "react";
+import {
+  User,
+  Divider,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@nextui-org/react";
 
 export default function Footer() {
   return (
