@@ -117,28 +117,31 @@ export const Events = () => {
               onChange={setPriceRangeSlider}
               onChangeEnd={handlePriceChange}
             />
-            <select
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
-              variant="underlined"
-              label="Sort by"
-              className="w-full rounded-lg p-2"
-            >
-              <option key="start_date" value="start_date">
-                Date
-              </option>
-              <option key="event_price" value="event_price">
-                Price
-              </option>
-            </select>
+            <div className="gap-2">
+              <label htmlFor="event-sort">Sort by:</label>
+
+              <select
+                value={orderBy}
+                onChange={(e) => setOrderBy(e.target.value)}
+                variant="underlined"
+                id="event-sort"
+                className="w-full rounded-lg p-2"
+              >
+                <option key="start_date" value="start_date">
+                  Date
+                </option>
+                <option key="event_price" value="event_price">
+                  Price
+                </option>
+              </select>
+            </div>
           </section>
         </div>
         <div className="flex flex-col justify-center gap-16">
           <div className="flex flex-1 flex-wrap justify-center gap-5">
             {!isLoading ? (
               selectedEvents.map((item) => {
-                return new Date(item.start_date) < Date.now() ? null :
-                (
+                return new Date(item.start_date) < Date.now() ? null : (
                   <EventCards
                     item={item}
                     showDelete={false}
