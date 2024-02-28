@@ -63,32 +63,16 @@ function page() {
   filterUserVenue();
 
   return (
-
     <div>
       <Heading heading="Welcome to your venues 🏠" />
       <div className="venue_grid">
         {noVenues ? (
-          <>
-            {" "}
-            <div className=" text-center">
-              <p className="mb-4 text-2xl">You dont have your hosted venues</p>
-              <Link href="/host/venue">
-                <Button color="default">Host Venue</Button>
-              </Link>
+          <div className=" text-center">
+            <p className="mb-4 text-2xl">You don't have any hosted venues</p>
+            <Link href="/host/venue">
+              <Button color="default">Host Venue</Button>
+            </Link>
           </div>
-        </>
-      ) : (
-        <div className="venue_inside">
-          {readyVenues?.map((venue, index) => (
-            <div className="venue_item" key={index}>
-              <ListVenue
-                key={index} // Add the key prop directly to ListVenue
-                venue={venue}
-                setVenueHasBeenUpdate={setVenueHasBeenUpdate}
-              />
-
-            </div>
-          </>
         ) : (
           <div className="venue_inside">
             {readyVenues?.map((venue, index) => (
@@ -103,7 +87,6 @@ function page() {
         )}
       </div>
     </div>
-</div>
   );
 }
 
