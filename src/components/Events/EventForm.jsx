@@ -99,7 +99,7 @@ export default function EventForm() {
   return !formSubmitted ? (
     <form>
       <div className="flex flex-col justify-between gap-6 sm:flex-row">
-        <div className="flex flex-col gap-4 md:w-80">
+        <div className="flex w-96 flex-col gap-4">
           <Input
             name="name"
             isRequired
@@ -167,7 +167,7 @@ export default function EventForm() {
             className="max-w-xs font-medium"
           />
 
-          <Switch
+          {/* <Switch
             // value={formData.pay_on_booking}
             color="success"
             onValueChange={setIsSelected}
@@ -180,7 +180,7 @@ export default function EventForm() {
             }
           >
             Pay on booking
-          </Switch>
+          </Switch> */}
 
           <Interests
             userInterestsArray={userInterestsArray}
@@ -198,8 +198,8 @@ export default function EventForm() {
               </Link>
             </div>
           ) : (
-            <>
-              <div className="flex justify-between">
+            <div className="flex max-h-96 max-w-96 flex-col gap-2 overflow-scroll ">
+              <div className="flex justify-between ">
                 <h1 className="font-bold">Your selected venue</h1>
                 <Link href="/venues" prefetch={true}>
                   <Button onPress={handleVenueRedirect}>Change Venue</Button>
@@ -214,7 +214,7 @@ export default function EventForm() {
                 src={venueData.photos}
                 alt="Photo of the venue"
               />
-            </>
+            </div>
           )}
         </div>
       </div>
