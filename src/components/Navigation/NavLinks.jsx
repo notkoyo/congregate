@@ -22,7 +22,7 @@ export default function NavLinks({ rotation, setRotation }) {
   //     if (res?.id) {
   //       setIsUserCreatedProfile(true);
   //     } else {
-  //       return "Profile have not been created";
+  //       return "Profile has not been created";
   //     }
   //   });
   // }, [isLoggedIn]);
