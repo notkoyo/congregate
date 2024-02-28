@@ -250,7 +250,6 @@ export default function ProfileDisplay() {
             </>
           )}
         </div>
-        {/* w-96 p-6 */}
         <div className="w-96 p-6">
           <div className="flex justify-between">
             <h3 className="text-center text-2xl font-bold">Information</h3>
