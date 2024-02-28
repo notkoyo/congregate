@@ -64,7 +64,7 @@ export default function Hero() {
         </div>
       </div>
       <div className="grid min-h-96 place-items-center font-satoshi pb-12">
-        <h2 className="mt-16 text-5xl font-bold text-white">About Us</h2>
+        <h2 className="mt-16 text-5xl font-bold">About Us</h2>
         <Accordion variant="splitted" className="mx-20 mb-10 mt-16 max-w-xl">
           <AccordionItem
             className="font-bold"
@@ -203,7 +203,7 @@ export default function Hero() {
                                 emoji={"🚀"}
                                 linkedInHref="https://linkedin.com/in/kaiden-riley"
                                 gitHubHref="https://github.com/notkoyo"
-                                bio={defaultBio}
+                                bio={"Junior Software Developer | React & TypeScript Enjoyer | Northcoders Graduate | Travelling"}
                                 imageSrc={
                                   "https://media.licdn.com/dms/image/D4E03AQFGntLsoNhW4Q/profile-displayphoto-shrink_200_200/0/1708263153007?e=1714003200&v=beta&t=M6PS1qWGGQ5pmEr1NPfm68hco8DUwqGC4XpX1wj_-cA"
                                 }
@@ -230,7 +230,7 @@ export default function Hero() {
                                 emoji={"🧠"}
                                 linkedInHref="https://linkedin.com/in/joe-man-60b792194/"
                                 gitHubHref="https://github.com/joe-man"
-                                bio={defaultBio}
+                                bio={"Junior Software Developer | RPA Developer | BSc Mathematics"}
                                 imageSrc={
                                   "https://media.licdn.com/dms/image/D4E35AQHTq_8idxygmQ/profile-framedphoto-shrink_200_200/0/1705660145251?e=1709222400&v=beta&t=359Yh0ZgQfaK0zxAFrWHxCU-XTEWIHyIsxqQsk0PUlw"
                                 }
@@ -257,7 +257,7 @@ export default function Hero() {
                                 emoji={"🐛"}
                                 linkedInHref="https://linkedin.com/in/anthonymmoran/"
                                 gitHubHref="https://github.com/tonymm55"
-                                bio={defaultBio}
+                                bio={"Junior Software Developer, Northcoders software development bootcamp graduate. BEng(Hons) Mechanical Engineering, MBA Chemical Engineering."}
                                 imageSrc={
                                   "https://avatars.githubusercontent.com/u/117123909?v=4"
                                 }
