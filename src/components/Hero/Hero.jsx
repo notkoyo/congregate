@@ -17,6 +17,8 @@ import {
   PopoverContent,
   Button,
   User,
+  CardHeader,
+  CardFooter,
 } from "@nextui-org/react";
 import { UserCard } from "./UserCard";
 import { supabaseAuth } from "@/utils/supabaseClient";
@@ -63,7 +65,7 @@ export default function Hero() {
           </p>
         </div>
       </div>
-      <div className="grid min-h-96 place-items-center font-satoshi pb-12">
+      <div className="grid min-h-96 place-items-center pb-12 font-satoshi">
         <h2 className="mt-16 text-5xl font-bold">About Us</h2>
         <Accordion variant="splitted" className="mx-20 mb-10 mt-16 max-w-xl">
           <AccordionItem
@@ -113,30 +115,36 @@ export default function Hero() {
               console.log(event);
               return (
                 <Card key={event.event_id} className="aspect-square max-w-sm">
+                  <CardHeader>
+                    <div className="flex w-full flex-col">
+                      <h3 className="text-xl font-bold md:text-lg">
+                        {event.name}
+                      </h3>
+                      <div className="flex items-center justify-between">
+                        <h6 className="text-small font-semibold md:text-medium">
+                          {event.venues.city}
+                        </h6>
+                        <h6 className="text-small font-semibold md:text-xs">{`${event.start_date.slice(0, 10)}`}</h6>
+                      </div>
+                    </div>
+                  </CardHeader>
                   <CardBody>
                     <Image
                       className="aspect-video max-h-64 w-full"
                       src={event.venues.photos}
                       alt="venue image"
                     />
-                    <div className="flex items-center justify-between px-1 pt-2">
-                      <h3 className="text-xl font-bold md:text-lg">
-                        {event.name}
-                      </h3>
-                      <h6 className="text-small font-semibold md:text-xs">{`${event.start_date.slice(0, 10)}`}</h6>
-                    </div>
-                    <div className="flex flex-col px-1 pt-1 md:flex-row md:justify-between md:pt-0">
-                      <h3 className="text-lg font-semibold md:text-medium">
-                        {event.venues.city}
-                      </h3>
-                      <h3 className="text-lg font-semibold md:text-medium">
+                  </CardBody>
+                  <CardFooter>
+                    <div className="flex justify-center w-full items-center">
+                      <h3 className="text-lg font-semibold md:text-lg">
                         Entry Fee:{" "}
                         <span className="font-medium">
                           €{event.event_price}
                         </span>
                       </h3>
                     </div>
-                  </CardBody>
+                  </CardFooter>
                 </Card>
               );
             })}
@@ -203,7 +211,9 @@ export default function Hero() {
                                 emoji={"🚀"}
                                 linkedInHref="https://linkedin.com/in/kaiden-riley"
                                 gitHubHref="https://github.com/notkoyo"
-                                bio={"Junior Software Developer | React & TypeScript Enjoyer | Northcoders Graduate | Travelling"}
+                                bio={
+                                  "Junior Software Developer | React & TypeScript Enjoyer | Northcoders Graduate | Travelling"
+                                }
                                 imageSrc={
                                   "https://media.licdn.com/dms/image/D4E03AQFGntLsoNhW4Q/profile-displayphoto-shrink_200_200/0/1708263153007?e=1714003200&v=beta&t=M6PS1qWGGQ5pmEr1NPfm68hco8DUwqGC4XpX1wj_-cA"
                                 }
@@ -230,7 +240,9 @@ export default function Hero() {
                                 emoji={"🧠"}
                                 linkedInHref="https://linkedin.com/in/joe-man-60b792194/"
                                 gitHubHref="https://github.com/joe-man"
-                                bio={"Junior Software Developer | RPA Developer | BSc Mathematics"}
+                                bio={
+                                  "Junior Software Developer | RPA Developer | BSc Mathematics"
+                                }
                                 imageSrc={
                                   "https://media.licdn.com/dms/image/D4E35AQHTq_8idxygmQ/profile-framedphoto-shrink_200_200/0/1705660145251?e=1709222400&v=beta&t=359Yh0ZgQfaK0zxAFrWHxCU-XTEWIHyIsxqQsk0PUlw"
                                 }
@@ -257,7 +269,9 @@ export default function Hero() {
                                 emoji={"🐛"}
                                 linkedInHref="https://linkedin.com/in/anthonymmoran/"
                                 gitHubHref="https://github.com/tonymm55"
-                                bio={"Junior Software Developer, Northcoders software development bootcamp graduate. BEng(Hons) Mechanical Engineering, MBA Chemical Engineering."}
+                                bio={
+                                  "Junior Software Developer, Northcoders software development bootcamp graduate. BEng(Hons) Mechanical Engineering, MBA Chemical Engineering."
+                                }
                                 imageSrc={
                                   "https://avatars.githubusercontent.com/u/117123909?v=4"
                                 }
