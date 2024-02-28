@@ -259,7 +259,7 @@ const CreateVenue = ({ userId }) => {
                   <span
                     className={`${selectedFile ? "text-green-500" : "text-blue-500"}`}
                   >
-                    {selectedFile ? selectedFile.name : "Choose File"}
+                    {selectedFile ? selectedFile.name : "Choose Venue Image"}
                   </span>{" "}
                   <input
                     type="file"
