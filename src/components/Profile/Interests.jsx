@@ -1,11 +1,6 @@
-import {
-  fetchCurrentUserID,
-  fetchInterestsData,
-  fetchUserData,
-} from "@/utils/api";
+import { fetchInterestsData } from "@/utils/api";
 import { useEffect, useState } from "react";
-import { Tooltip, Button, button, Select, SelectItem } from "@nextui-org/react";
-import React from "react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 
 export default function Interests({
   userInterestsArray,
