@@ -43,9 +43,6 @@ export default function Hero() {
       });
   }, []);
 
-  const defaultBio =
-    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, quod.";
-
   return (
     <>
       <div

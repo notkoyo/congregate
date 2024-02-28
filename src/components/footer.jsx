@@ -5,7 +5,17 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  Link
 } from "@nextui-org/react";
+
+import DiamondIcon from "./Icons/DiamondIcon";
+import GitHubIcon from "./Icons/GitHubIcon";
+import FacebookIcon from "./Icons/FacebookIcon";
+import TwitterIcon from "./Icons/TwitterIcon";
+import { UserCard } from "./Hero/UserCard";
+
+const defaultBio =
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, quod.";
 
 export default function Footer() {
   return (
