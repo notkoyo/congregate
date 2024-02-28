@@ -165,7 +165,7 @@ export default function ProfileCreate() {
             className="max-w-xs font-medium"
           />
         </div>
-        <div>
+        <div className="w-80">
           <Interests
             userInterestsArray={userInterestsArray}
             setUserInterestsArray={setUserInterestsArray}
