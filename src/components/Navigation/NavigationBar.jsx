@@ -19,7 +19,7 @@ import toast, { Toaster } from "react-hot-toast";
 const menuItems = [
   {
     itemName: "Meet",
-    href: "/meet"
+    href: "/meet",
   },
   {
     itemName: "Host Events",
@@ -47,46 +47,47 @@ export const NavigationBar = () => {
   }, []);
 
   return (
-    <div>
-      <Navbar
-        shouldHideOnScroll
-        maxWidth="xl"
-        onMenuOpenChange={setIsMenuOpen}
-        className="bg-cyan-600 text-white shadow-lg"
-      >
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          className="md:hidden"
-        />
-        <NavbarBrand onClick={() => router.push("/")}>
-          <div className="scale-75 cursor-default md:scale-100">
-            <CongregateLogo />
-          </div>
-          <p className="ml-1 cursor-pointer font-satoshi text-lg font-bold text-inherit md:text-2xl">
-            Congregate
-          </p>
-        </NavbarBrand>
-        <NavbarContent className="hidden gap-4 md:flex" justify="center">
-          <NavLinks rotation={rotation} setRotation={setRotation} />
-        </NavbarContent>
-        <NavbarContent justify="end">
-          <NavProfileSection />
-        </NavbarContent>
-        <NavbarMenu className="scrollbar-hide">
-          {menuItems.map((item, i) => (
-            <NavbarMenuItem key={`${i} - ${item} - MobileMenu`} className="scrollbar-hide">
-              <Link
-                color="foreground"
-                className="rounded-full w-[9rem] bg-white/40 px-5 py-3 hover:bg-white/70 transition-all duration-300"
-                href={item.href}
-                size="lg"
-              >
-                {item.itemName}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </NavbarMenu>
-      </Navbar>
-    </div>
+    <Navbar
+      shouldHideOnScroll
+      maxWidth="xl"
+      onMenuOpenChange={setIsMenuOpen}
+      className="bg-cyan-600 text-white shadow-lg"
+    >
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        className="md:hidden"
+      />
+      <NavbarBrand onClick={() => router.push("/")}>
+        <div className="scale-75 cursor-default md:scale-100">
+          <CongregateLogo />
+        </div>
+        <p className="ml-1 cursor-pointer font-satoshi text-lg font-bold text-inherit md:text-2xl">
+          Congregate
+        </p>
+      </NavbarBrand>
+      <NavbarContent className="hidden gap-4 md:flex" justify="center">
+        <NavLinks rotation={rotation} setRotation={setRotation} />
+      </NavbarContent>
+      <NavbarContent justify="end">
+        <NavProfileSection />
+      </NavbarContent>
+      <NavbarMenu className="scrollbar-hide">
+        {menuItems.map((item, i) => (
+          <NavbarMenuItem
+            key={`${i} - ${item} - MobileMenu`}
+            className="scrollbar-hide"
+          >
+            <Link
+              color="foreground"
+              className="w-[9rem] rounded-full bg-white/40 px-5 py-3 transition-all duration-300 hover:bg-white/70"
+              href={item.href}
+              size="lg"
+            >
+              {item.itemName}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
+    </Navbar>
   );
 };
