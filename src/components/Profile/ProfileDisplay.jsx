@@ -241,10 +241,11 @@ export default function ProfileDisplay() {
               <Avatar
                 showFallback
                 isBordered
-                color="warning"
+                color="primary"
                 src={currentUser.avatar_url}
                 alt="Avatar"
-                size="large"
+                size="extra-large"
+                className="h-20 w-20"
               />
               <p>{currentUser.email}</p>
             </>
