@@ -47,7 +47,7 @@ export const NavigationBar = () => {
           className="md:hidden"
         />
         <NavbarBrand onClick={() => router.push("/")}>
-          <div className="scale-75 cursor-default md:scale-100">
+          <div className="scale-75 md:scale-100">
             <CongregateLogo />
           </div>
           <p className="ml-1 cursor-pointer font-satoshi text-lg font-bold text-inherit md:text-2xl">
