@@ -8,9 +8,9 @@ import ProfileCard from "@/components/Profile/ProfileCard";
 
 export default function Profile() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center space-y-6">
+    <div className="flex min-h-screen flex-col items-center justify-center space-y-6 overscroll-none">
       <div>
-        <p className="mb-6 font-satoshi text-3xl font-bold">
+        <p className="mb-6 p-8 font-satoshi text-3xl font-bold">
           Welcome to Your Profile Page 👋
         </p>
       </div>
