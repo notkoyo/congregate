@@ -93,7 +93,7 @@ export default function ProfileCreate() {
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
       <div></div>
-      <div className="flex justify-center gap-10">
+      <div className="flex flex-col justify-center gap-10 md:flex-row">
         <div className="flex w-80 flex-col gap-6">
           <Input
             name="given_names"
