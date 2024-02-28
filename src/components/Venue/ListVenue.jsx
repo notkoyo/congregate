@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import EditVenue from "./EditVenue";
 import { usePathname } from "next/navigation";
-import AreYouSure from "./areYouSure";
+import AreYouSure from "./AreYouSure";
 import { deleteVenu } from "../../utils/api";
 export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
   const [showEditMenu, setShowEditMenu] = useState(false);
@@ -55,7 +55,7 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
           onOpen();
         }}
       >
-        <Card className="h-600">
+        <Card className="h-fit">
           <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
             <p className="text-tiny font-bold uppercase">{venue.name}</p>
             <small className="line-clamp-1 text-default-500">
@@ -78,14 +78,24 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
             <p className="text-tiny font-bold uppercase">{venue.city}</p>
             <div className="mt-3">
               {currentPath === "/profile/hosted-venues" && (
-                <Button
-                  onClick={handleEditClick}
-                  className="w-full"
-                  color="primary"
-                  radius="lg"
-                >
-                  Edit
-                </Button>
+                <div className="mt-2 flex text-center">
+                  <Button
+                    onClick={handleEditClick}
+                    className="w-full"
+                    color="primary"
+                    radius="lg"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    radius="lg"
+                    className="w-full"
+                    color="danger"
+                    onClick={handleDeleteClick}
+                  >
+                    Delete
+                  </Button>
+                </div>
               )}
             </div>
             {showEditMenu === true ? (
@@ -103,16 +113,6 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
                 handleDeleteVenue={() => handleDeleteVenue(venue.venue_id)}
               />
             ) : null}
-            <div className="mt-2 text-center">
-              <Button
-                radius="lg"
-                className="w-full"
-                color="danger"
-                onClick={handleDeleteClick}
-              >
-                Delete
-              </Button>
-            </div>
           </CardBody>
         </Card>
       </div>
