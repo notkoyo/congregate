@@ -14,10 +14,11 @@ function page() {
   const [userId, setUserId] = useState();
   const [venueHasBeenUpdate, setVenueHasBeenUpdate] = useState(false);
   const [noVenues, setNoVenues] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
+        setIsLoading(false);
         const res = await supabaseAuth.auth.getSession();
         let userId = res.data?.session?.user.id;
         setUserId(userId);
@@ -29,6 +30,7 @@ function page() {
         if (error) {
           console.error("Error fetching venues data:", error);
         } else {
+          setIsLoading(true);
           setVenuesData(data);
           setVenueHasBeenUpdate(false);
         }
@@ -65,12 +67,17 @@ function page() {
   return (
     <div>
       <Heading heading="Welcome to your venues 🏠" />
-      <div className="venue_grid">
+      <div className="venue_grid h-screen">
+        {isLoading === false ? (
+          <div className="text-center">
+            <p className="mb-4 text-2xl">Loading...</p>
+          </div>
+        ) : null}
         {noVenues ? (
-          <div className=" text-center">
+          <div className="text-center">
             <p className="mb-4 text-2xl">You don't have any hosted venues</p>
             <Link href="/host/venue">
-              <Button color="default">Host Venue</Button>
+              <Button color="primary">Host Venue</Button>
             </Link>
           </div>
         ) : (
