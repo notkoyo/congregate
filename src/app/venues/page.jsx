@@ -28,7 +28,7 @@ function Page() {
     <div className="venue_grid">
       <div className="venue_inside">
         {venuesData?.map((venue) => (
-          <div key={venue.venue_id}>
+          <div className="venue_item" key={venue.venue_id}>
             <ListVenue
               venue={venue}
               setVenueHasBeenUpdate={setVenueHasBeenUpdate}

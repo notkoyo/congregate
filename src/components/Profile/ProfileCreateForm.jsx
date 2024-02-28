@@ -8,6 +8,7 @@ import { useState } from "react";
 import SubmitButton from "../SubmitButton";
 import Interests from "./Interests";
 import { Input } from "@nextui-org/react";
+import SignOutButton from "../SignOutButton";
 
 export default function ProfileCreate() {
   const [formData, setFormData] = useState({
@@ -20,7 +21,6 @@ export default function ProfileCreate() {
   });
   const [userInterestsArray, setUserInterestsArray] = useState([]);
   const [errorPosting, setErrorPosting] = useState(false);
-  console.log(errorPosting);
   // valid states
   const [isGivenNamesValid, setIsGivenNamesValid] = useState(true);
   const [isSurnameValid, setIsSurnameValid] = useState(true);
@@ -59,39 +59,6 @@ export default function ProfileCreate() {
     return true;
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   if (!isDobValid) {
-  //     setIsDobValid(false);
-  //   } else {
-  //     setErrorPosting(false);
-  //     postUserData(formData)
-  //       .then((res) => {
-  //         console.log("first res", res);
-  //         if (!res) {
-  //           throw Error;
-  //         }
-  //         setErrorPosting(false);
-
-  //         postUserInterests(userInterestsArray);
-  //       })
-  //       .then((res) => {
-  //         console.log("second res", res);
-  //         if (!res) {
-  //           throw Error;
-  //         }
-  //         setErrorPosting(false);
-
-  //         router.push("/profile");
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         setErrorPosting(true);
-  //       });
-  //   }
-  // };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -101,7 +68,6 @@ export default function ProfileCreate() {
       setErrorPosting(false);
       postUserData(formData)
         .then((res) => {
-          console.log("first res", res);
           if (!res) {
             throw Error;
           }
@@ -113,12 +79,12 @@ export default function ProfileCreate() {
               router.push("/profile");
             })
             .catch((err) => {
-              console.log(err);
+              console.error(err);
               setErrorPosting(true);
             });
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           setErrorPosting(true);
         });
     }
@@ -126,7 +92,8 @@ export default function ProfileCreate() {
 
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
-      <div className="flex justify-center gap-10">
+      <div></div>
+      <div className="flex flex-col justify-center gap-10 md:flex-row">
         <div className="flex w-80 flex-col gap-6">
           <Input
             name="given_names"
@@ -198,7 +165,7 @@ export default function ProfileCreate() {
             className="max-w-xs font-medium"
           />
         </div>
-        <div>
+        <div className="w-80">
           <Interests
             userInterestsArray={userInterestsArray}
             setUserInterestsArray={setUserInterestsArray}

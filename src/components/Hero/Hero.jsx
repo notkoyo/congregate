@@ -32,7 +32,14 @@ export default function Hero() {
     supabaseAuth
       .from("events")
       .select("*, venues(photos, city)")
-      .then(({ data }) => setEvents(data));
+      .order("start_date", { descending: true })
+      .then(({ data }) => {
+        const currentEvents = data.filter(
+          (e) => new Date(e.start_date) >= Date.now(),
+        );
+        console.log(currentEvents);
+        setEvents(currentEvents);
+      });
   }, []);
 
   const defaultBio =

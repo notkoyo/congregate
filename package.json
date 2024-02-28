@@ -22,6 +22,7 @@
     "react-cool-onclickoutside": "^1.7.0",
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
+    "react-hot-toast": "^2.4.1",
     "use-places-autocomplete": "^4.0.1",
     "zod": "^3.22.4"
   },

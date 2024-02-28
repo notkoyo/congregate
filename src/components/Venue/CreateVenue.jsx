@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getGeocode, getLatLng } from "use-places-autocomplete";
 import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
+import { Button, Input, Switch, Textarea } from "@nextui-org/react";
 
 const schema = z.object({
   name: z.string().min(6, { message: "At least 6 characters" }),
@@ -18,7 +19,7 @@ const schema = z.object({
   house: z.number(),
   address: z.string().min(6, { message: "At least 6 characters" }),
   city: z.string().min(6, { message: "At least 6 characters" }),
-  // county: z.string().min(6, { message: "At least 6 characters" }),
+  county: z.string().min(6, { message: "At least 6 characters" }),
   postcode: z.string().min(6, { message: "At least 6 characters" }),
 });
 
@@ -41,21 +42,19 @@ const CreateVenue = ({ userId }) => {
   useEffect(() => {
     if (locationInfo) {
       formatAddressForm();
-
-
     }
   }, [locationInfo]);
 
   const formatAddressForm = () => {
     const formattedAddressSplit = locationInfo.formatted_address.split(",");
     let addressStart = formattedAddressSplit[0].split(" ");
-    const addressNumber = addressStart[0]
+    const addressNumber = addressStart[0];
     if (addressNumber.match(/\d/)) {
-      addressStart.shift()
-      addressStart= [addressStart.join(' ')]
-      addressStart.unshift(addressNumber)
-      formattedAddressSplit.shift()
-      addressStart.reverse().forEach(x => formattedAddressSplit.unshift(x));
+      addressStart.shift();
+      addressStart = [addressStart.join(" ")];
+      addressStart.unshift(addressNumber);
+      formattedAddressSplit.shift();
+      addressStart.reverse().forEach((x) => formattedAddressSplit.unshift(x));
       console.log(formattedAddressSplit);
       setVenueForm({
         buildingNumber: formattedAddressSplit[0],
@@ -126,7 +125,7 @@ const CreateVenue = ({ userId }) => {
   const handleVenueUpdateSuccess = () => {
     setShowSuccessMessage(true);
     setTimeout(() => {
-      router.push("/list-venue");
+      router.push("/profile/hosted-venues");
     }, 2000);
   };
   const onSubmit = async (data) => {
@@ -156,7 +155,9 @@ const CreateVenue = ({ userId }) => {
         latlng = getLatLng(locationInfo);
       } else {
         const description = `${house},${address}, ${city}, ${county}, ${postcode}`;
+        console.log(1);
         const venueLocation = await getGeocode({ address: description });
+        console.log(2);
         latlng = getLatLng(venueLocation[0]);
       }
 
@@ -204,45 +205,40 @@ const CreateVenue = ({ userId }) => {
   };
   return (
     <div className="fixed inset-0 z-30 flex items-center justify-center">
-    <button onClick={() => console.log(venueForm)}>XXXX</button>
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
             <h2 className="text-xl font-bold">Create Venue</h2>
           </div>
           <div className="flex w-full ">
-            <div className="mr-4  flex w-1/2 flex-col">
+            <div className="mr-4  mt-4 flex w-1/2 flex-col">
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Name</label>
-                <input
-                  required
+                <Input
+                  name="name"
+                  isRequired
+                  label="Name"
                   {...register("name")}
-                  placeholder="Name"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={errors.name && <div>{errors.name.message}</div>}
                 />
-                {errors.name && (
-                  <div className="text-red-500">{errors.name.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Price</label>
-                <input
-                  required
+                <Input
+                  isRequired
                   type="number"
+                  name="price"
+                  label="Price"
+                  startContent="£"
                   {...register("price", { valueAsNumber: true })}
-                  placeholder="3423"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.price && <div>{errors.price.message}</div>
+                  }
                 />
-                {errors.price && (
-                  <div className="text-red-500">{errors.price.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1 block text-sm font-medium text-gray-700">
-                  Photo
-                </label>
                 <label
-                  className={`mt-1 flex w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                  className={`h-13 mt-1 flex  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
                     selectedFile ? "border-green-500" : "border-gray-300"
                   }`}
                 >
@@ -263,7 +259,7 @@ const CreateVenue = ({ userId }) => {
                   <span
                     className={`${selectedFile ? "text-green-500" : "text-blue-500"}`}
                   >
-                    {selectedFile ? selectedFile.name : "Choose File"}
+                    {selectedFile ? selectedFile.name : "Choose Venue Image"}
                   </span>{" "}
                   <input
                     type="file"
@@ -278,89 +274,102 @@ const CreateVenue = ({ userId }) => {
                   <div className="text-red-500">{erroInputFile}</div>
                 )}
               </div>
-              <label className="mb-1 mt-1">Description</label>
-              <textarea
-                required
-                {...register("description")}
-                placeholder="Description"
-                className="h-107 resize-none rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
-              ></textarea>
-              {errors.description && (
-                <div className="text-red-500">{errors.description.message}</div>
-              )}
+              <div>
+                <Textarea
+                  label="Description"
+                  isRequired
+                  style={{ height: "100%", maxRows: "200px" }}
+                  {...register("description")}
+                  placeholder="Describe your venue"
+                  classNames={{
+                    input: " min-h-[107px] max-h-[107px]",
+                  }}
+                  errorMessage={
+                    errors.description && (
+                      <div>{errors.description.message}</div>
+                    )
+                  }
+                ></Textarea>
+              </div>
             </div>
-            <div className="flex  w-1/2 flex-col">
-              {/* <GoogleMapAutocomplete
-                setLocationInfo={setLocationInfo}
-                fillerText="Search for location..."
-              /> uncomment to enable search */}
+            <div className="mt-4 flex  w-1/2 flex-col">
+              <div className="hidden">
+                <GoogleMapAutocomplete
+                  setLocationInfo={setLocationInfo}
+                  fillerText="Search for location..."
+                />
+              </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Building number</label>
-                <input
+                <Input
+                  label="Number of Building"
+                  name="NumberOfBuilding"
+                  isRequired
                   value={venueForm.buildingNumber}
                   onChange={(e) => setVenueForm.buildingNumber(e.target.value)}
                   {...register("house", { valueAsNumber: true })}
-                  placeholder="Building number"
                   type="number"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.house && <div>{errors.house.message}</div>
+                  }
                 />
-                {errors.house && (
-                  <div className="text-red-500">{errors.house?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">Address</label>
-                <input
+                <Input
+                  label="Address"
+                  name="Address"
                   value={venueForm.address}
                   onChange={(e) => setVenueForm.address(e.target.value)}
-                  required
+                  isRequired
                   {...register("address")}
                   placeholder="Address"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.address && <div>{errors.address.message}</div>
+                  }
                 />
-                {errors.address && (
-                  <div className="text-red-500">{errors.address?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">City</label>
-                <input
+                <Input
+                  name="City"
+                  label="City"
                   value={venueForm.city}
                   onChange={(e) => setVenueForm.city(e.target.value)}
-                  required
+                  isRequired
                   {...register("city")}
                   placeholder="City"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={errors.city && <div>{errors.city.message}</div>}
                 />
-                {errors.city && (
-                  <div className="text-red-500">{errors.city?.message}</div>
-                )}
               </div>
               <div className="flex h-101 flex-col">
-                <label className="mb-1 mt-1">County</label>
-                <input
+                <Input
+                  name="County"
+                  label="County"
+                  isRequired
                   value={venueForm.county}
                   onChange={(e) => setVenueForm.county(e.target.value)}
                   {...register("county")}
                   placeholder="County"
-                  className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                  className="max-w-xs font-medium"
+                  errorMessage={
+                    errors.county && <div>{errors.county.message}</div>
+                  }
                 />
-                {errors.county && (
-                  <div className="text-red-500">{errors.county?.message}</div>
-                )}
               </div>
-              <label className="mb-1 mt-1">Post code</label>
-              <input
+              <Input
+                label="Post Code"
+                name="postcode"
                 value={venueForm.postcode}
                 onChange={(e) => setVenueForm.postcode(e.target.value)}
-                required
+                isRequired
                 {...register("postcode")}
                 placeholder="Post code"
-                className="rounded-md border border-gray-300 px-2 py-1 focus:border-blue-500 focus:outline-none"
+                className="max-w-xs font-medium"
+                errorMessage={
+                  errors.postcode && <div>{errors.postcode.message}</div>
+                }
               />
-              {errors.postcode && (
-                <div className="text-red-500">{errors.postcode?.message}</div>
-              )}
             </div>
             <div className="flex justify-center"></div>
           </div>

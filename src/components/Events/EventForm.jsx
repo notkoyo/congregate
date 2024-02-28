@@ -36,7 +36,7 @@ export default function EventForm() {
   //misc states
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [isSelected, setIsSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState(false);
 
   const { isLoggedIn } = useLogin();
 
@@ -84,6 +84,12 @@ export default function EventForm() {
       value === "" ? setIsNameValid(false) : setIsNameValid(true);
     }
 
+    if (name === "event_price") {
+      value > 100 || value < 0
+        ? setEventPriceValid(false)
+        : setEventPriceValid(true);
+    }
+
     setFormData({
       ...formData,
       [name]: value,
@@ -92,8 +98,8 @@ export default function EventForm() {
 
   return !formSubmitted ? (
     <form>
-      <div className="flex justify-between gap-6">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col justify-between gap-6 sm:flex-row">
+        <div className="flex flex-col gap-4 md:w-80">
           <Input
             name="name"
             isRequired
@@ -142,9 +148,10 @@ export default function EventForm() {
             isRequired
             type="number"
             value={formData.event_price}
-            label="Cost per person"
+            label="Cost per person (Max £100)"
             variant="faded"
             isInvalid={!isEventPriceValid}
+            startContent="£"
             color={
               formData.event_price !== ""
                 ? isEventPriceValid
@@ -183,12 +190,13 @@ export default function EventForm() {
 
         <div>
           {!formData.venue_id ? (
-            <label>
-              Venues
+            <div>
               <Link href="/venues" prefetch={true}>
-                <Button onPress={handleVenueRedirect}>Choose Venue</Button>
+                <Button label="Venues" onPress={handleVenueRedirect}>
+                  Choose Venue
+                </Button>
               </Link>
-            </label>
+            </div>
           ) : (
             <>
               <div className="flex justify-between">
@@ -229,7 +237,9 @@ export default function EventForm() {
   ) : (
     <>
       <h2>Event successfully created!</h2>
-      <Link href={"/"}>Return to home page</Link>
+      <Link href={"/"} className="w-fit border-b-2 border-black">
+        Return to home page
+      </Link>
     </>
   );
 }
