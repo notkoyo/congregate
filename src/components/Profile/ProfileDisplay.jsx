@@ -233,8 +233,8 @@ export default function ProfileDisplay() {
   };
 
   return (
-    <div className="flex flex-col gap-4 font-satoshi">
-      <div className="flex">
+    <div className="flex flex-col px-4 py-4 font-satoshi sm:px-6 sm:py-6 md:px-8 md:py-8 lg:px-10 lg:py-10 xl:px-20">
+      <div>
         <div className="flex flex-col items-center gap-10 p-6">
           {currentUser && (
             <>
@@ -242,15 +242,15 @@ export default function ProfileDisplay() {
                 showFallback
                 isBordered
                 color="warning"
-                name={`${currentUser.given_names[0]}${currentUser.surname[0]}`}
                 src={currentUser.avatar_url}
-                alt="Default Avatar with Initials"
+                alt="Avatar"
+                size="large"
               />
               <p>{currentUser.email}</p>
             </>
           )}
         </div>
-
+        {/* w-96 p-6 */}
         <div className="w-96 p-6">
           <div className="flex justify-between">
             <h3 className="text-center text-2xl font-bold">Information</h3>
