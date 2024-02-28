@@ -98,15 +98,6 @@ export default function NavProfileSection() {
             >
               Hosted Venues
             </DropdownItem>
-            <DropdownItem
-              showDivider
-              as={Link}
-              href="/profile/settings"
-              className="text-white"
-              key="settings"
-            >
-              Settings
-            </DropdownItem>
             <DropdownItem>
               <Link
                 as={Button}
