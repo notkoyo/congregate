@@ -16,12 +16,24 @@ import NavLinks from "./NavLinks";
 import NavProfileSection from "./NavProfileSection";
 import toast, { Toaster } from "react-hot-toast";
 
-const menuItems = ["Meet", "Host Events", "Host Venues"];
+const menuItems = [
+  {
+    itemName: "Meet",
+    href: "/meet"
+  },
+  {
+    itemName: "Host Events",
+    href: "/host/event",
+  },
+  {
+    itemName: "Host Venues",
+    href: "/host/venue",
+  },
+];
 
 export const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [rotation, setRotation] = useState(0);
-  const [renderNavbar, setRenderNavbar] = useState(true);
 
   const currentPath = usePathname();
   const router = useRouter();
@@ -62,14 +74,14 @@ export const NavigationBar = () => {
         </NavbarContent>
         <NavbarMenu className="scrollbar-hide">
           {menuItems.map((item, i) => (
-            <NavbarMenuItem key={`${item}-${i}`} className="scrollbar-hide">
+            <NavbarMenuItem key={`${i} - ${item} - MobileMenu`} className="scrollbar-hide">
               <Link
                 color="foreground"
-                className="w-full hover:bg-white/40"
-                href="#"
+                className="rounded-full w-[9rem] bg-white/40 px-5 py-3 hover:bg-white/70 transition-all duration-300"
+                href={item.href}
                 size="lg"
               >
-                {item}
+                {item.itemName}
               </Link>
             </NavbarMenuItem>
           ))}
