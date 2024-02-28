@@ -103,9 +103,9 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           isOpen={isOpen}
           onClose={onClose}
           onOpenChange={onOpenChange}
-          size="4xl"
+          size="lg"
           backdrop="blur"
-          placement="center"
+          placement="bottom"
         >
           <ModalContent>
             {(onClose) => (
@@ -127,9 +127,13 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                   </p>
                   {showDelete && <Button onPress={handleDelete}>Delete</Button>}
                   {bookedOn ? (
-                    <Button onPress={handleDropout}>Drop out</Button>
+                    <Button color="danger" onPress={handleDropout}>
+                      Drop out
+                    </Button>
                   ) : (
-                    <Button onPress={handleBooking}>Book now</Button>
+                    <Button color="success" onPress={handleBooking}>
+                      Book now
+                    </Button>
                   )}
                   {showMessage && (
                     <BookedOnMessage

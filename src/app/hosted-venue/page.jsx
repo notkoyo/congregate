@@ -59,7 +59,7 @@ function page() {
     <div className="venue_grid">
       <div className="venue_inside">
         {readyVenues?.map((venue) => (
-          <div key={venue.id}>
+          <div className="venue_item" key={venue.id}>
             <ListVenue
               key={venue.id} // Add a key prop here
               venue={venue}

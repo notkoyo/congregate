@@ -33,9 +33,9 @@ export default function Interests({
   };
 
   return (
-    <div className="mb-4 flex w-80 flex-col gap-10">
-      <div className="flex w-80 flex-col">
-        <div className="flex w-80 flex-col gap-2">
+    <div className="mb-4 flex max-w-80 flex-col gap-10">
+      <div className="flex max-w-80 flex-col">
+        <div className="flex max-w-80 flex-col gap-2">
           <Select
             label="Interests"
             placeholder="Select an interest"
