@@ -239,3 +239,23 @@ export const fetchCurrentUserJoinedEvents = async () => {
     console.error("Error selecting event attendee data:", error);
   }
 };
+
+export const deleteVenu = async (venue_id) => {
+  try {
+    const auth_id = await fetchCurrentUserID();
+    console.log(auth_id);
+
+    const { data, error } = await supabaseAuth
+      .from("venues")
+      .delete()
+      .match({ venue_id: venue_id, founder_id: auth_id });
+    console.log(data);
+    if (error) {
+      console.error("Error deleting venue:", error);
+    } else {
+      console.log(`Venue with ID ${venue_id} has been deleted`);
+    }
+  } catch (err) {
+    console.error("Error in deleteVenu:", err);
+  }
+};

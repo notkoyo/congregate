@@ -29,7 +29,6 @@ const CreateVenue = ({ userId }) => {
   const text = "Your venue has been created successfully!";
   const [erroInputFile, setErrorInputFile] = useState("");
   const router = useRouter();
-  const [urlPhoto, setUrlPhoto] = useState("");
   const [locationInfo, setLocationInfo] = useState("");
   const [venueForm, setVenueForm] = useState({
     buildingNumber: undefined,
@@ -77,8 +76,6 @@ const CreateVenue = ({ userId }) => {
   };
 
   async function uploadImage() {
-    // const file = e?.target?.files?.[0];
-    // console.log(typeof file);
     if (!selectedFile) {
       setErrorInputFile("No file selected");
       return;
@@ -88,7 +85,6 @@ const CreateVenue = ({ userId }) => {
       !selectedFile.type?.includes("jpg") &&
       !selectedFile.type?.includes("png")
     ) {
-      console.log("Invalid file type");
       return;
     }
     const uniqueName = `venue_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.png`;
@@ -100,8 +96,6 @@ const CreateVenue = ({ userId }) => {
       const baseUrl =
         "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
       const photoUrl = baseUrl + data.fullPath;
-      // return photoUrl;
-      await setUrlPhoto(photoUrl);
       return photoUrl;
     } else {
       console.log(error);
@@ -185,7 +179,6 @@ const CreateVenue = ({ userId }) => {
   };
   const handleFileChange = (e) => {
     const file = e?.target?.files?.[0];
-    console.log(typeof file);
 
     if (!file) {
       setErrorInputFile("No file selected");
@@ -204,7 +197,7 @@ const CreateVenue = ({ userId }) => {
     }
   };
   return (
-    <div className="fixed inset-0 z-30 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center">
       <div className="w-650 rounded bg-white p-8 shadow-md">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-row items-center justify-between ">
@@ -238,7 +231,7 @@ const CreateVenue = ({ userId }) => {
               </div>
               <div className="flex h-101 flex-col">
                 <label
-                  className={`h-13 mt-1 flex  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                  className={`mt-1 flex h-13  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
                     selectedFile ? "border-green-500" : "border-gray-300"
                   }`}
                 >
