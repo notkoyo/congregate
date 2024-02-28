@@ -35,10 +35,10 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [messageBody, setMessageBody] = useState("");
 
   useEffect(() => {
-    fetchIfUserExist();
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
+    console.log(item);
   }, [isDeleted]);
 
   const handleDelete = () => {
@@ -111,7 +111,6 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           backdrop="blur"
           scrollBehavior="inside"
           placement={window.innerWidth < 384 ? "bottom" : "bottom-center"}
-          
         >
           <ModalContent className="mb-20">
             {(onClose) => (
