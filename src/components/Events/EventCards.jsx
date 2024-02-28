@@ -38,7 +38,6 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
-    console.log(item);
   }, [isDeleted]);
 
   const handleDelete = () => {
