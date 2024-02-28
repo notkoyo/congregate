@@ -67,107 +67,109 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 mt-8 flex">
-        <div className="flex flex-col gap-2">
-          <section className="flex flex-col gap-2">
-            <GoogleMap
-              selectedPos={selectedPos}
-              selectedEvents={selectedEvents}
-            />
-            <GoogleMapAutocomplete
-              setSelectedPos={setSelectedPos}
-              fillerText="Search near..."
-            />
-          </section>
-          <section className="flex flex-col gap-6">
-            <Slider
-              label="Distance"
-              value={distanceSlider}
-              onChange={setDistanceSlider}
-              onChangeEnd={handleDistanceChange}
-              defaultValue={10}
-              minValue={1}
-              maxValue={50}
-              formatOptions={{ style: "unit", unit: "kilometer" }}
-              marks={[
-                {
-                  value: 5,
-                  label: "5km",
-                },
-                {
-                  value: 15,
-                  label: "15km",
-                },
-                {
-                  value: 25,
-                  label: "25km",
-                },
-                {
-                  value: 50,
-                  label: "50km",
-                },
-              ]}
-            />
-            <Slider
-              label="Price range"
-              formatOptions={{ style: "currency", currency: "GBP" }}
-              maxValue={100}
-              minValue={0}
-              value={priceRangeSlider}
-              onChange={setPriceRangeSlider}
-              onChangeEnd={handlePriceChange}
-            />
-            <select
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
-              variant="underlined"
-              label="Sort by"
-              className="w-full rounded-lg p-2"
-            >
-              <option key="start_date" value="start_date">
-                Date
-              </option>
-              <option key="event_price" value="event_price">
-                Price
-              </option>
-            </select>
-          </section>
-        </div>
-        <div className="flex flex-col justify-center gap-16">
-          <div className="flex flex-1 flex-wrap justify-center gap-5">
-            {!isLoading ? (
-              selectedEvents.map((item) => {
-                return new Date(item.start_date) < Date.now() ? null :
-                (
-                  <EventCards
-                    item={item}
-                    showDelete={false}
-                    key={item.event_id}
-                  ></EventCards>
-                );
-              })
-            ) : (
-              <>
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-                <CardSkeleton />
-              </>
+      <div>
+        <Heading heading="Events near you! &#128131;" />
+        <div className="z-0 m-4 mt-8 flex flex-col gap-8 sm:flex-row">
+          <div className="flex flex-col gap-2">
+            <section className="flex flex-col items-center gap-2">
+              <GoogleMap
+                selectedPos={selectedPos}
+                selectedEvents={selectedEvents}
+              />
+              <GoogleMapAutocomplete
+                setSelectedPos={setSelectedPos}
+                fillerText="Search near..."
+              />
+            </section>
+            <section className="flex flex-col gap-6">
+              <Slider
+                label="Distance"
+                value={distanceSlider}
+                onChange={setDistanceSlider}
+                onChangeEnd={handleDistanceChange}
+                defaultValue={10}
+                minValue={1}
+                maxValue={50}
+                formatOptions={{ style: "unit", unit: "kilometer" }}
+                marks={[
+                  {
+                    value: 5,
+                    label: "5km",
+                  },
+                  {
+                    value: 15,
+                    label: "15km",
+                  },
+                  {
+                    value: 25,
+                    label: "25km",
+                  },
+                  {
+                    value: 50,
+                    label: "50km",
+                  },
+                ]}
+              />
+              <Slider
+                label="Price range"
+                formatOptions={{ style: "currency", currency: "GBP" }}
+                maxValue={100}
+                minValue={0}
+                value={priceRangeSlider}
+                onChange={setPriceRangeSlider}
+                onChangeEnd={handlePriceChange}
+              />
+              <select
+                value={orderBy}
+                onChange={(e) => setOrderBy(e.target.value)}
+                variant="underlined"
+                label="Sort by"
+                className="w-full rounded-lg p-2"
+              >
+                <option key="start_date" value="start_date">
+                  Date
+                </option>
+                <option key="event_price" value="event_price">
+                  Price
+                </option>
+              </select>
+            </section>
+          </div>
+          <div className="flex flex-col justify-center gap-16">
+            <div className="flex flex-1 flex-wrap justify-center gap-5">
+              {!isLoading ? (
+                selectedEvents.map((item) => {
+                  return new Date(item.start_date) < Date.now() ? null : (
+                    <EventCards
+                      item={item}
+                      showDelete={false}
+                      key={item.event_id}
+                    ></EventCards>
+                  );
+                })
+              ) : (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              )}
+            </div>
+            {selectedEvents.length % 12 === 0 && (
+              <Button
+                className="w-3/5 align-middle"
+                onPress={() => setLoadedEventsNum((e) => e + 12)}
+              >
+                Load more
+              </Button>
             )}
           </div>
-          {selectedEvents.length % 12 === 0 && (
-            <Button
-              className="w-3/5 align-middle"
-              onPress={() => setLoadedEventsNum((e) => e + 12)}
-            >
-              Load more
-            </Button>
-          )}
         </div>
       </div>
     </>

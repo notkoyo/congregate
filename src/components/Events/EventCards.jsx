@@ -76,11 +76,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           }}
         >
           <CardBody>
-            <img
-              className="h-60 w-dvw object-cover"
-              src={item.photos}
-              alt=""
-            />
+            <img className="h-60 w-dvw object-cover" src={item.photos} alt="" />
             <CardFooter>
               <div className="flex-grow px-2">
                 <div className="flex justify-between">
@@ -130,9 +126,13 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                   </p>
                   {showDelete && <Button onPress={handleDelete}>Delete</Button>}
                   {bookedOn ? (
-                    <Button onPress={handleDropout}>Drop out</Button>
+                    <Button color="danger" onPress={handleDropout}>
+                      Drop out
+                    </Button>
                   ) : (
-                    <Button onPress={handleBooking}>Book now</Button>
+                    <Button color="success" onPress={handleBooking}>
+                      Book now
+                    </Button>
                   )}
                   {showMessage && (
                     <BookedOnMessage
