@@ -4,7 +4,7 @@ import { Card, CardBody } from "@nextui-org/react";
 export default function CreateEvent() {
   return (
     <div className="flex justify-center sm:pt-24">
-      <Card className="w-screen max-w-screen-md p-4 sm:w-fit">
+      <Card className="w-screen max-w-screen-md p-4">
         <CardBody>
           <h1 className="pb-6 text-xl font-bold">Create an Event</h1>
           <EventForm />
