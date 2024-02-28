@@ -45,7 +45,9 @@ export const Events = () => {
         .order(orderBy, { descending: true })
         .range(0, loadedEventsNum)
         .then(({ data }) => {
-          const currentEvents = data.filter((e) => new Date(e.start_date) > Date.now())
+          const currentEvents = data.filter(
+            (e) => new Date(e.start_date) > Date.now(),
+          );
           setSelectedEvents(currentEvents);
           setIsLoading(false);
         })
@@ -68,9 +70,10 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 mt-8 flex">
+      <Heading heading="Events near you! &#128131;" />
+      <div className="z-0 m-4 mt-8 flex flex-col gap-8 sm:flex-row">
         <div className="flex flex-col gap-2">
-          <section className="flex flex-col gap-2">
+          <section className="flex flex-col items-center gap-2">
             <GoogleMap
               selectedPos={selectedPos}
               selectedEvents={selectedEvents}
@@ -164,7 +167,7 @@ export const Events = () => {
               </>
             )}
           </div>
-          {selectedEvents.length % 12 === 0 && selectedEvents.length !== 12 &&(
+          {selectedEvents.length % 12 === 0 && selectedEvents.length !== 12 && (
             <Button
               className="w-3/5 align-middle"
               onPress={() => setLoadedEventsNum((e) => e + 12)}
