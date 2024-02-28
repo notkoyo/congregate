@@ -16,12 +16,13 @@ import {
 import Link from "next/link";
 import EditVenue from "./EditVenue";
 import { usePathname } from "next/navigation";
-
+import AreYouSure from "./areYouSure";
+import { deleteVenu } from "../../utils/api";
 export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
   const [showEditMenu, setShowEditMenu] = useState(false);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [openedVenue, setOpenedVenue] = useState();
-
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
   const currentPath = usePathname();
 
   const handleEditClick = () => {
@@ -32,17 +33,29 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
     setShowEditMenu(false);
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteMenu(true);
+  };
+
+  const handleDeleteClose = () => {
+    setShowDeleteMenu(false);
+  };
+
+  const handleDeleteVenue = (venue_id) => {
+    deleteVenu(venue_id);
+    setVenueHasBeenUpdate(true);
+  };
   return (
     <>
       {/* Use a div instead of Card with onPress */}
       <div
-        className="py-4"
+        className=" py-4"
         onClick={() => {
           setOpenedVenue(venue);
           onOpen();
         }}
       >
-        <Card>
+        <Card className="h-600">
           <CardHeader className="h-20 flex-col items-start overflow-hidden px-4 pb-0 pt-2">
             <p className="text-tiny font-bold uppercase">{venue.name}</p>
             <small className="line-clamp-1 text-default-500">
@@ -84,6 +97,22 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
                 venue_id={venue.venue_id}
               />
             ) : null}
+            {showDeleteMenu === true ? (
+              <AreYouSure
+                handleDeleteClose={handleDeleteClose}
+                handleDeleteVenue={() => handleDeleteVenue(venue.venue_id)}
+              />
+            ) : null}
+            <div className="mt-2 text-center">
+              <Button
+                radius="lg"
+                className="w-full"
+                color="danger"
+                onClick={handleDeleteClick}
+              >
+                Delete
+              </Button>
+            </div>
           </CardBody>
         </Card>
       </div>
