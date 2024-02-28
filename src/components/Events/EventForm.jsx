@@ -92,8 +92,8 @@ export default function EventForm() {
 
   return !formSubmitted ? (
     <form>
-      <div className="flex justify-between gap-6">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col justify-between gap-6 sm:flex-row">
+        <div className="flex flex-col gap-4 md:w-80">
           <Input
             name="name"
             isRequired
@@ -184,11 +184,13 @@ export default function EventForm() {
 
         <div>
           {!formData.venue_id ? (
-            <Link href="/venues" prefetch={true}>
-              <Button label="Venues" onPress={handleVenueRedirect}>
-                Choose Venue
-              </Button>
-            </Link>
+            <div>
+              <Link href="/venues" prefetch={true}>
+                <Button label="Venues" onPress={handleVenueRedirect}>
+                  Choose Venue
+                </Button>
+              </Link>
+            </div>
           ) : (
             <>
               <div className="flex justify-between">
