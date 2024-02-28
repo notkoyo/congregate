@@ -124,7 +124,6 @@ const EditVenue = ({
   }
   const handleFileChange = (e) => {
     const file = e?.target?.files?.[0];
-    console.log(typeof file);
 
     if (!file) {
       setErrorInputFile("No file selected");
