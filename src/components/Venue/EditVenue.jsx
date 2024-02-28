@@ -188,7 +188,7 @@ const EditVenue = ({
               </div>
               <div className="flex h-101 flex-col">
                 <label
-                  className={`h-13 mt-1 flex  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
+                  className={`mt-1 flex h-13  w-full cursor-pointer items-center justify-center rounded-md border bg-white px-3 py-1 hover:bg-blue-100 focus:border-blue-500 focus:outline-none ${
                     selectedFile ? "border-green-500" : "border-gray-300"
                   }`}
                 >
@@ -209,7 +209,7 @@ const EditVenue = ({
                   <span
                     className={`${selectedFile ? "text-green-500" : "text-blue-500"}`}
                   >
-                    {selectedFile ? selectedFile.name : "Choose File"}
+                    {selectedFile ? selectedFile.name : "Choose Venue Image"}
                   </span>{" "}
                   <input
                     type="file"
