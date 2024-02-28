@@ -6,7 +6,6 @@ import { supabaseAuth } from "../../utils/supabaseClient";
 import { use, useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import CardSkeleton from "../CardSkeleton";
-import Heading from "../Header";
 import moment from "moment";
 export const Events = () => {
   const [selectedPos, setSelectedPos] = useState({
@@ -67,9 +66,9 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 mt-8 flex">
+      <div className="z-0 m-4 mt-8 flex flex-col gap-8 md:flex-row">
         <div className="flex flex-col gap-2">
-          <section className="flex flex-col gap-2">
+          <section className="flex flex-col items-center gap-2">
             <GoogleMap
               selectedPos={selectedPos}
               selectedEvents={selectedEvents}
@@ -117,28 +116,31 @@ export const Events = () => {
               onChange={setPriceRangeSlider}
               onChangeEnd={handlePriceChange}
             />
-            <select
-              value={orderBy}
-              onChange={(e) => setOrderBy(e.target.value)}
-              variant="underlined"
-              label="Sort by"
-              className="w-full rounded-lg p-2"
-            >
-              <option key="start_date" value="start_date">
-                Date
-              </option>
-              <option key="event_price" value="event_price">
-                Price
-              </option>
-            </select>
+            <div className="gap-2">
+              <label htmlFor="event-sort">Sort by:</label>
+
+              <select
+                value={orderBy}
+                onChange={(e) => setOrderBy(e.target.value)}
+                variant="underlined"
+                id="event-sort"
+                className="w-full rounded-lg p-2"
+              >
+                <option key="start_date" value="start_date">
+                  Date
+                </option>
+                <option key="event_price" value="event_price">
+                  Price
+                </option>
+              </select>
+            </div>
           </section>
         </div>
         <div className="flex flex-col justify-center gap-16">
           <div className="flex flex-1 flex-wrap justify-center gap-5">
             {!isLoading ? (
               selectedEvents.map((item) => {
-                return new Date(item.start_date) < Date.now() ? null :
-                (
+                return new Date(item.start_date) < Date.now() ? null : (
                   <EventCards
                     item={item}
                     showDelete={false}
@@ -160,14 +162,6 @@ export const Events = () => {
               </>
             )}
           </div>
-          {selectedEvents.length % 12 === 0 && (
-            <Button
-              className="w-3/5 align-middle"
-              onPress={() => setLoadedEventsNum((e) => e + 12)}
-            >
-              Load more
-            </Button>
-          )}
         </div>
       </div>
     </>

@@ -7,11 +7,14 @@ import { supabaseAuth } from "../../../utils/supabaseClient";
 import "./listVenue.css";
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
+import Heading from "@/components/Header";
 
 function page() {
   const [venuesData, setVenuesData] = useState([]);
   const [userId, setUserId] = useState();
   const [venueHasBeenUpdate, setVenueHasBeenUpdate] = useState(false);
+  const [noVenues, setNoVenues] = useState(false);
+
   useEffect(() => {
     const fetchVenuesData = async () => {
       try {
@@ -28,6 +31,10 @@ function page() {
         } else {
           setVenuesData(data);
           setVenueHasBeenUpdate(false);
+        }
+
+        if (data.length === 0) {
+          setNoVenues(true);
         }
       } catch (error) {
         console.error("Error fetching venues data:", error);
@@ -56,15 +63,18 @@ function page() {
   filterUserVenue();
 
   return (
-    <div className="venue_grid">
-      {venuesData.length === 0 ? (
-        <>
-          {" "}
-          <div className=" text-center">
-            <p className="mb-4 text-2xl">You dont have your hosted venues</p>
-            <Link href="/host/venue">
-              <Button color="primary">Host Venue</Button>
-            </Link>
+
+    <div>
+      <Heading heading="Welcome to your venues 🏠" />
+      <div className="venue_grid">
+        {noVenues ? (
+          <>
+            {" "}
+            <div className=" text-center">
+              <p className="mb-4 text-2xl">You dont have your hosted venues</p>
+              <Link href="/host/venue">
+                <Button color="default">Host Venue</Button>
+              </Link>
           </div>
         </>
       ) : (
@@ -76,11 +86,24 @@ function page() {
                 venue={venue}
                 setVenueHasBeenUpdate={setVenueHasBeenUpdate}
               />
+
             </div>
-          ))}
-        </div>
-      )}
+          </>
+        ) : (
+          <div className="venue_inside">
+            {readyVenues?.map((venue, index) => (
+              <div className="venue_item" key={index}>
+                <ListVenue
+                  venue={venue}
+                  setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
+</div>
   );
 }
 
