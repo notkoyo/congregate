@@ -66,7 +66,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
 
   return isDeleted ? null : (
     <>
-      <div className="flex-grow-1 ">
+      <div className="flex-grow-1 font-satoshi">
         <Card
           className="w-96"
           isPressable={true}
@@ -80,7 +80,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
             <CardFooter>
               <div className="flex-grow px-2">
                 <div className="flex justify-between">
-                  <h2 className="font-bold">{item.name}</h2>
+                  <h2 className="font-satoshi font-bold">{item.name}</h2>
                   {bookedOn && (
                     <p className="rounded border bg-green-400 px-2 py-1">
                       You're Going!

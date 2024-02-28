@@ -36,7 +36,7 @@ export default function EventForm() {
   //misc states
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState(false);
-  const [isSelected, setIsSelected] = useState(true);
+  const [isSelected, setIsSelected] = useState(false);
 
   const { isLoggedIn } = useLogin();
 
@@ -82,6 +82,12 @@ export default function EventForm() {
 
     if (name === "name") {
       value === "" ? setIsNameValid(false) : setIsNameValid(true);
+    }
+
+    if (name === "event_price") {
+      value > 100 || value < 0
+        ? setEventPriceValid(false)
+        : setEventPriceValid(true);
     }
 
     setFormData({
@@ -142,7 +148,7 @@ export default function EventForm() {
             isRequired
             type="number"
             value={formData.event_price}
-            label="Cost per person"
+            label="Cost per person (Max £100)"
             variant="faded"
             isInvalid={!isEventPriceValid}
             startContent="£"
@@ -231,7 +237,9 @@ export default function EventForm() {
   ) : (
     <>
       <h2>Event successfully created!</h2>
-      <Link href={"/"}>Return to home page</Link>
+      <Link href={"/"} className="w-fit border-b-2 border-black">
+        Return to home page
+      </Link>
     </>
   );
 }
