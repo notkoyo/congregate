@@ -15,17 +15,8 @@ import { useEffect, useState } from "react";
 import { fetchIfUserExist } from "../../utils/api";
 
 export default function NavLinks({ rotation, setRotation }) {
-  // const [isUserCreatedProfile, setIsUserCreatedProfile] = useState(false);
   const { isLoggedIn } = useLogin();
-  // useEffect(() => {
-  //   fetchIfUserExist().then((res) => {
-  //     if (res?.id) {
-  //       setIsUserCreatedProfile(true);
-  //     } else {
-  //       return "Profile have not been created";
-  //     }
-  //   });
-  // }, [isLoggedIn]);
+  
   return (
     <>
       <NavbarItem>

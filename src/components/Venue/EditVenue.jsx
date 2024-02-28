@@ -31,7 +31,6 @@ const EditVenue = ({
   const [selectedFile, setSelectedFile] = useState(null);
   const text = "Your venue has been created successfully!";
   const [erroInputFile, setErrorInputFile] = useState("");
-  const [urlPhoto, setUrlPhoto] = useState("");
   const {
     register,
     handleSubmit,
@@ -91,9 +90,6 @@ const EditVenue = ({
       }
     } catch (err) {
       console.log(err);
-      // setError("root", {
-      //   message: "This  is already taken",
-      // });
     }
   };
   async function uploadImage() {
@@ -108,7 +104,6 @@ const EditVenue = ({
       !selectedFile.type?.includes("jpg") &&
       !selectedFile.type?.includes("png")
     ) {
-      console.log("Invalid file type");
       return;
     }
     const uniqueName = `venue_${userId}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.png`;
@@ -117,11 +112,11 @@ const EditVenue = ({
       .from("venues")
       .upload(uniqueName, selectedFile);
     if (data) {
+      console.log(data);
       const baseUrl =
         "https://gaxzmldisxcnswaawnda.supabase.co/storage/v1/object/public/";
       const photoUrl = baseUrl + data.fullPath;
       // return photoUrl;
-      await setUrlPhoto(photoUrl);
       return photoUrl;
     } else {
       console.log(error);
@@ -129,7 +124,6 @@ const EditVenue = ({
   }
   const handleFileChange = (e) => {
     const file = e?.target?.files?.[0];
-    console.log(typeof file);
 
     if (!file) {
       setErrorInputFile("No file selected");

@@ -17,6 +17,8 @@ import {
   PopoverContent,
   Button,
   User,
+  CardHeader,
+  CardFooter,
 } from "@nextui-org/react";
 import { UserCard } from "./UserCard";
 import { supabaseAuth } from "@/utils/supabaseClient";
@@ -37,13 +39,9 @@ export default function Hero() {
         const currentEvents = data.filter(
           (e) => new Date(e.start_date) >= Date.now(),
         );
-        console.log(currentEvents);
         setEvents(currentEvents);
       });
   }, []);
-
-  const defaultBio =
-    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, quod.";
 
   return (
     <>
@@ -63,60 +61,89 @@ export default function Hero() {
           </p>
         </div>
       </div>
-      <div className="grid min-h-96 place-items-center">
-        <h2 className="mt-16 font-satoshi text-5xl font-bold ">About</h2>
+      <div className="grid min-h-96 place-items-center pb-12 font-satoshi">
+        <h2 className="mt-16 text-5xl font-bold">About Us</h2>
         <Accordion variant="splitted" className="mx-20 mb-10 mt-16 max-w-xl">
           <AccordionItem
+            className="font-bold"
             key="1"
             aria-label="Who we are section"
             title="Who we are"
           >
-            {
-              "A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."
-            }
+            <p className="font-medium">
+              A dynamic event platform connecting hosts and attendees globally,
+              dedicated to creating unforgettable experiences.
+            </p>
           </AccordionItem>
           <AccordionItem
+            className="font-bold"
             key="2"
             aria-label="What we do section"
             title="What we do"
           >
-            {
-              "We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."
-            }
+            <p className="font-medium">
+              We provide comprehensive event management solutions, from planning
+              to execution, ensuring seamless coordination and memorable
+              outcomes.
+            </p>
           </AccordionItem>
           <AccordionItem
+            className="font-bold"
             key="3"
             aria-label="Get started section"
             title="Get started"
           >
-            {
-              "Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."
-            }
+            <p className="font-medium">
+              Dive into our user-friendly platform to effortlessly host or join
+              a diverse array of events, tailored to your preferences and
+              interests.
+            </p>
           </AccordionItem>
         </Accordion>
       </div>
       <div className="min-h-full bg-cyan-600">
-        <h2 className="mb-12 mt-12 pt-16 text-center font-satoshi text-5xl font-bold text-white">
+        <h2 className="mb-12 pt-16 text-center font-satoshi text-5xl font-bold text-white">
           Current Events
         </h2>
         {events.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 px-20 py-10 pb-24 sm:px-40 md:grid-cols-3 md:px-10 lg:grid-cols-3 lg:px-40 xl:px-[18rem]">
-            {[events[0], events[1], events[2]].map((event) => (
-              <Card key={event.event_id} className="aspect-square max-w-sm">
-                <CardBody>
-                  <Image
-                    className="aspect-video max-h-64 w-full"
-                    src={event.venues.photos}
-                    alt="venue image"
-                  />
-                  <div className="mx-auto my-auto text-center font-satoshi text-lg font-bold lg:text-lg xl:text-xl">
-                    <h3>{event.name}</h3>
-                    <h3>{event.venues.city}</h3>
-                    <h4>{event.event_price ? `£${event.event_price}` : "FREE"}</h4>
-                  </div>
-                </CardBody>
-              </Card>
-            ))}
+          <div className="font-satoshi flex justify-center items-center gap-[2rem] flex-col xl:flex-row">
+            {[events[0], events[1], events[2]].map((event) => {
+              console.log(event);
+              return (
+                <Card key={event.event_id} className="aspect-square max-w-sm">
+                  <CardHeader>
+                    <div className="flex w-full flex-col">
+                      <h3 className="text-xl font-bold md:text-lg">
+                        {event.name}
+                      </h3>
+                      <div className="flex items-center justify-between">
+                        <h6 className="text-small font-semibold md:text-medium">
+                          {event.venues.city}
+                        </h6>
+                        <h6 className="text-small font-semibold md:text-xs">{`${event.start_date.slice(0, 10)}`}</h6>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <Image
+                      className="aspect-video max-h-64 w-full"
+                      src={event.venues.photos}
+                      alt="venue image"
+                    />
+                  </CardBody>
+                  <CardFooter>
+                    <div className="flex justify-center w-full items-center">
+                      <h3 className="text-lg font-semibold md:text-lg">
+                        Entry Fee:{" "}
+                        <span className="font-medium">
+                          €{event.event_price}
+                        </span>
+                      </h3>
+                    </div>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <div className="grid min-h-96 place-items-center">
@@ -128,201 +155,14 @@ export default function Hero() {
             </div>
           </div>
         )}
-      </div>
-      <footer>
-        <div className="flex min-h-36 items-center justify-center px-20 md:justify-between">
-          <span className="hidden font-satoshi font-semibold md:block">
-            © 2024 Congregate Ltd. All rights reserved.
-          </span>
-          <div>
-            <ul className="flex gap-10">
-              <li>
-                <Popover>
-                  <PopoverTrigger>
-                    <Link
-                      as="button"
-                      className="text-black transition duration-300 hover:text-black/40"
-                    >
-                      <DiamondIcon />
-                    </Link>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="p-5 font-satoshi font-semibold">
-                      <h3 className="cursor-default text-xl text-black">
-                        Check out the developers!
-                      </h3>
-                      <Divider className="my-4" />
-                      <ul className="flex flex-col gap-2">
-                        <li>
-                          <Popover showArrow placement="bottom">
-                            <PopoverTrigger>
-                              <User
-                                isFocusable
-                                as="button"
-                                name="Kaiden Riley"
-                                description="Junior Fullstack Developer"
-                                className="transition-transform"
-                                avatarProps={{
-                                  src: "https://media.licdn.com/dms/image/D4E03AQFGntLsoNhW4Q/profile-displayphoto-shrink_200_200/0/1708263153007?e=1714003200&v=beta&t=M6PS1qWGGQ5pmEr1NPfm68hco8DUwqGC4XpX1wj_-cA",
-                                }}
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                              <UserCard
-                                name={"Kaiden Riley"}
-                                emoji={"🚀"}
-                                linkedInHref="https://linkedin.com/in/kaiden-riley"
-                                gitHubHref="https://github.com/notkoyo"
-                                bio={defaultBio}
-                                imageSrc={
-                                  "https://media.licdn.com/dms/image/D4E03AQFGntLsoNhW4Q/profile-displayphoto-shrink_200_200/0/1708263153007?e=1714003200&v=beta&t=M6PS1qWGGQ5pmEr1NPfm68hco8DUwqGC4XpX1wj_-cA"
-                                }
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </li>
-                        <li>
-                          <Popover showArrow placement="bottom">
-                            <PopoverTrigger>
-                              <User
-                                as="button"
-                                name="Joe Man"
-                                description="Junior Fullstack Developer"
-                                className="transition-transform"
-                                avatarProps={{
-                                  src: "https://media.licdn.com/dms/image/D4E35AQHTq_8idxygmQ/profile-framedphoto-shrink_200_200/0/1705660145251?e=1709222400&v=beta&t=359Yh0ZgQfaK0zxAFrWHxCU-XTEWIHyIsxqQsk0PUlw",
-                                }}
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                              <UserCard
-                                name={"Joe Man"}
-                                emoji={"🧠"}
-                                linkedInHref="https://linkedin.com/in/joe-man-60b792194/"
-                                gitHubHref="https://github.com/joe-man"
-                                bio={defaultBio}
-                                imageSrc={
-                                  "https://media.licdn.com/dms/image/D4E35AQHTq_8idxygmQ/profile-framedphoto-shrink_200_200/0/1705660145251?e=1709222400&v=beta&t=359Yh0ZgQfaK0zxAFrWHxCU-XTEWIHyIsxqQsk0PUlw"
-                                }
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </li>
-                        <li>
-                          <Popover showArrow placement="bottom">
-                            <PopoverTrigger>
-                              <User
-                                as="button"
-                                name="Anthony Moran"
-                                description="Junior Fullstack Developer"
-                                className="transition-transform"
-                                avatarProps={{
-                                  src: "https://avatars.githubusercontent.com/u/117123909?v=4",
-                                }}
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                              <UserCard
-                                name={"Anthony Moran"}
-                                emoji={"🐛"}
-                                linkedInHref="https://linkedin.com/in/anthonymmoran/"
-                                gitHubHref="https://github.com/tonymm55"
-                                bio={defaultBio}
-                                imageSrc={
-                                  "https://avatars.githubusercontent.com/u/117123909?v=4"
-                                }
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </li>
-                        <li>
-                          <Popover showArrow placement="bottom">
-                            <PopoverTrigger>
-                              <User
-                                as="button"
-                                name="Joe Adams"
-                                description="Junior Fullstack Developer"
-                                className="transition-transform"
-                                avatarProps={{
-                                  src: "",
-                                }}
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                              <UserCard
-                                name={"Joe Adams"}
-                                emoji={"🌍"}
-                                linkedInHref="https://linkedin.com/in/joe-adams-7592621b5/"
-                                gitHubHref="https://github.com/JoeAAdams"
-                                bio={defaultBio}
-                                imageSrc={""}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </li>
-                        <li>
-                          <Popover showArrow placement="bottom">
-                            <PopoverTrigger>
-                              <User
-                                as="button"
-                                name="Dmytro Pen"
-                                description="Junior Fullstack Developer"
-                                className="transition-transform"
-                                avatarProps={{
-                                  src: "https://avatars.githubusercontent.com/u/102535430?v=4",
-                                }}
-                              />
-                            </PopoverTrigger>
-                            <PopoverContent className="p-1">
-                              <UserCard
-                                name={"Dmytro Pen"}
-                                emoji={"🎧"}
-                                linkedInHref="https://www.linkedin.com/in/dmytro-pen-a79988257/"
-                                gitHubHref="https://github.com/PENbDM"
-                                bio={defaultBio}
-                                imageSrc={
-                                  "https://avatars.githubusercontent.com/u/102535430?v=4"
-                                }
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </li>
-                      </ul>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </li>
-              <li>
-                <Link
-                  className="text-black transition duration-300 hover:text-black/40"
-                  showAnchorIcon
-                  anchorIcon={<GitHubIcon />}
-                  href="https://github.com/notkoyo/congregate-app"
-                  target="_blank"
-                />
-              </li>
-              <li>
-                <Link
-                  className="text-black transition duration-300 hover:text-black/40"
-                  showAnchorIcon
-                  anchorIcon={<FacebookIcon />}
-                  href="https://facebook.com"
-                  target="_blank"
-                />
-              </li>
-              <li>
-                <Link
-                  className="text-black transition duration-300 hover:text-black/40"
-                  showAnchorIcon
-                  anchorIcon={<TwitterIcon />}
-                  href="https://x.com"
-                  target="_blank"
-                />
-              </li>
-            </ul>
+        {events.length > 0 ? (
+          <div className="flex items-center justify-center py-20">
+            <Button as={Link} href="/meet" size="lg" className="font-semibold">
+              View these events and more!
+            </Button>
           </div>
-        </div>
-      </footer>
+        ) : undefined}
+      </div>
     </>
   );
 }

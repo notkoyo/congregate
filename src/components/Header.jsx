@@ -1,7 +1,7 @@
 export default function Heading({ heading }) {
   return (
-    <div className="flex justify-center items-center h-[9rem]">
-      <h1 className="text-4xl sm:text-5xl font-bold font-satoshi">{heading}</h1>
+    <div className="flex h-[9rem] items-center justify-center p-8">
+      <h1 className="font-satoshi text-4xl font-bold sm:text-5xl">{heading}</h1>
     </div>
   );
 }
