@@ -12,5 +12,3 @@ export default function ProfileCard() {
     </Card>
   );
 }
-
-// "flex flex-col px-20 py-10 font-satoshi shadow-2xl"
