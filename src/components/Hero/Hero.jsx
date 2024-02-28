@@ -56,63 +56,83 @@ export default function Hero() {
           </p>
         </div>
       </div>
-      <div className="grid min-h-96 place-items-center">
-        <h2 className="mt-16 font-satoshi text-5xl font-bold ">About</h2>
+      <div className="grid min-h-96 place-items-center font-satoshi pb-12">
+        <h2 className="mt-16 text-5xl font-bold text-white">About Us</h2>
         <Accordion variant="splitted" className="mx-20 mb-10 mt-16 max-w-xl">
           <AccordionItem
+            className="font-bold"
             key="1"
             aria-label="Who we are section"
             title="Who we are"
           >
-            {
-              "A dynamic event platform connecting hosts and attendees globally, dedicated to creating unforgettable experiences."
-            }
+            <p className="font-medium">
+              A dynamic event platform connecting hosts and attendees globally,
+              dedicated to creating unforgettable experiences.
+            </p>
           </AccordionItem>
           <AccordionItem
+            className="font-bold"
             key="2"
             aria-label="What we do section"
             title="What we do"
           >
-            {
-              "We provide comprehensive event management solutions, from planning to execution, ensuring seamless coordination and memorable outcomes."
-            }
+            <p className="font-medium">
+              We provide comprehensive event management solutions, from planning
+              to execution, ensuring seamless coordination and memorable
+              outcomes.
+            </p>
           </AccordionItem>
           <AccordionItem
+            className="font-bold"
             key="3"
             aria-label="Get started section"
             title="Get started"
           >
-            {
-              "Dive into our user-friendly platform to effortlessly host or join a diverse array of events, tailored to your preferences and interests."
-            }
+            <p className="font-medium">
+              Dive into our user-friendly platform to effortlessly host or join
+              a diverse array of events, tailored to your preferences and
+              interests.
+            </p>
           </AccordionItem>
         </Accordion>
       </div>
       <div className="min-h-full bg-cyan-600">
-        <h2 className="mb-12 mt-12 pt-16 text-center font-satoshi text-5xl font-bold text-white">
+        <h2 className="mb-12 pt-16 text-center font-satoshi text-5xl font-bold text-white">
           Current Events
         </h2>
         {events.length > 0 ? (
-          <div className="font-satoshi grid grid-cols-1 gap-4 px-20 py-10 pb-24 sm:px-40 md:grid-cols-3 md:px-2 lg:grid-cols-3 lg:px-30 xl:px-[8rem]">
-            {[events[0], events[1], events[2]].map((event) => {console.log(event); return (
-              <Card key={event.event_id} className="aspect-square max-w-sm">
-                <CardBody>
-                  <Image
-                    className="aspect-video max-h-64 w-full"
-                    src={event.venues.photos}
-                    alt="venue image"
-                  />
-                  <div className="flex justify-between items-center pt-2 px-1">
-                    <h3 className="text-xl md:text-lg font-bold">{event.name}</h3>
-                    <h6 className="text-small md:text-xs font-semibold">{`${event.start_date.slice(0,10)}`}</h6>
-                  </div>
-                  <div className="pt-1 md:pt-0 px-1 flex flex-col md:flex-row md:justify-between">
-                    <h3 className="text-lg md:text-medium font-semibold">{event.venues.city}</h3>
-                    <h3 className="text-lg md:text-medium font-semibold">Entry Fee: <span className="font-medium">€{event.event_price}</span></h3>
-                  </div>
-                </CardBody>
-              </Card>
-            )})}
+          <div className="lg:px-30 grid grid-cols-1 gap-4 px-20 py-10 pb-24 font-satoshi sm:px-40 md:grid-cols-3 md:px-2 lg:grid-cols-3 xl:px-[8rem]">
+            {[events[0], events[1], events[2]].map((event) => {
+              console.log(event);
+              return (
+                <Card key={event.event_id} className="aspect-square max-w-sm">
+                  <CardBody>
+                    <Image
+                      className="aspect-video max-h-64 w-full"
+                      src={event.venues.photos}
+                      alt="venue image"
+                    />
+                    <div className="flex items-center justify-between px-1 pt-2">
+                      <h3 className="text-xl font-bold md:text-lg">
+                        {event.name}
+                      </h3>
+                      <h6 className="text-small font-semibold md:text-xs">{`${event.start_date.slice(0, 10)}`}</h6>
+                    </div>
+                    <div className="flex flex-col px-1 pt-1 md:flex-row md:justify-between md:pt-0">
+                      <h3 className="text-lg font-semibold md:text-medium">
+                        {event.venues.city}
+                      </h3>
+                      <h3 className="text-lg font-semibold md:text-medium">
+                        Entry Fee:{" "}
+                        <span className="font-medium">
+                          €{event.event_price}
+                        </span>
+                      </h3>
+                    </div>
+                  </CardBody>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <div className="grid min-h-96 place-items-center">
@@ -124,15 +144,17 @@ export default function Hero() {
             </div>
           </div>
         )}
-        {events.length > 0 ? (<div className="flex justify-center items-center py-5">
+        {events.length > 0 ? (
+          <div className="flex items-center justify-center pb-20">
             <Button as={Link} href="/meet" size="lg" className="font-semibold">
-                      View these events and more!
-                    </Button>
-            </div>) : undefined}
+              View these events and more!
+            </Button>
+          </div>
+        ) : undefined}
       </div>
       <footer>
         <div className="flex min-h-36 flex-col items-center justify-center px-20 md:flex-row md:justify-between">
-          <span className="hidden font-satoshi text-gray-400/40 font-semibold md:block">
+          <span className="hidden font-satoshi font-semibold text-gray-400/40 md:block">
             © 2024 Congregate Ltd. All rights reserved.
           </span>
           <div>
@@ -323,7 +345,7 @@ export default function Hero() {
             </ul>
           </div>
         </div>
-        <span className="flex pb-10 text-gray-400/40 font-satoshi font-semibold justify-center items-center md:hidden">
+        <span className="flex items-center justify-center pb-10 font-satoshi font-semibold text-gray-400/40 md:hidden">
           © 2024 Congregate Ltd. All rights reserved.
         </span>
       </footer>
