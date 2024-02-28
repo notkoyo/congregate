@@ -49,9 +49,9 @@ export const NavigationBar = () => {
   return (
     <Navbar
       shouldHideOnScroll
-      maxWidth="xl"
+      maxWidth="2xl"
       onMenuOpenChange={setIsMenuOpen}
-      className="bg-cyan-600 text-white shadow-lg"
+      className="bg-cyan-600 text-white shadow-lg min-w-screen"
     >
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}

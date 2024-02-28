@@ -14,7 +14,7 @@ export const Events = () => {
   });
 
   const [selectedEvents, setSelectedEvents] = useState([]);
-  const [distance, setDistance] = useState(260000);
+  const [distance, setDistance] = useState(50);
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [distanceSlider, setDistanceSlider] = useState(50);
   const [priceRangeSlider, setPriceRangeSlider] = useState([0, 100]);
@@ -69,9 +69,9 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 mt-8 flex flex-col gap-8 sm:flex-row">
-        <div className="z-0 m-4 mt-8 flex flex-col gap-8 md:flex-row">
-          <div className="flex flex-col gap-2">
+      <div className="z-0 m-4 mt-8 flex h-full flex-col gap-8 sm:flex-row">
+        <div className="z-0 m-4 mt-8 flex h-full w-full  flex-col gap-8 md:flex-row">
+          <div className="flex h-fit flex-col gap-2 border-r-2 border-gray-300 pr-10">
             <section className="flex flex-col items-center gap-2">
               <GoogleMap
                 selectedPos={selectedPos}
@@ -82,7 +82,7 @@ export const Events = () => {
                 fillerText="Search near..."
               />
             </section>
-            <section className="flex flex-col gap-6">
+            <section className="gap- flex flex-col">
               <Slider
                 label="Distance"
                 value={distanceSlider}
@@ -140,18 +140,24 @@ export const Events = () => {
               </div>
             </section>
           </div>
-          <div className="flex flex-col justify-center gap-16">
-            <div className="flex flex-1 flex-wrap justify-center gap-5">
+          <div className="flex w-full flex-col justify-center gap-16">
+            <div className="flex w-full flex-1 flex-wrap justify-center gap-5">
               {!isLoading ? (
-                selectedEvents.map((item) => {
-                  return (
-                    <EventCards
-                      item={item}
-                      showDelete={false}
-                      key={item.event_id}
-                    ></EventCards>
-                  );
-                })
+                selectedEvents.length > 0 ? (
+                  selectedEvents.map((item) => {
+                    return (
+                      <EventCards
+                        item={item}
+                        showDelete={false}
+                        key={item.event_id}
+                      ></EventCards>
+                    );
+                  })
+                ) : (
+                  <h2 className="flex w-full items-center justify-center">
+                    Sorry, no events near you right now...
+                  </h2>
+                )
               ) : (
                 <>
                   <CardSkeleton />
@@ -166,7 +172,8 @@ export const Events = () => {
                 </>
               )}
             </div>
-            {selectedEvents.length % 12 === 0 && (
+            {selectedEvents.length % 12 === 0 &&
+              selectedEvents.length !== 0 && (
                 <Button
                   className="w-3/5 align-middle"
                   onPress={() => setLoadedEventsNum((e) => e + 12)}
