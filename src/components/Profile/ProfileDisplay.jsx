@@ -248,11 +248,6 @@ export default function ProfileDisplay() {
               />
               <p>{currentUser.email}</p>
             </>
-            // <img
-            //   width={200}
-            //   src={`${currentUser.avatar_url}`}
-            //   alt="User Avatar"
-            // />
           )}
         </div>
 
