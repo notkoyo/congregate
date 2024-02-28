@@ -6,6 +6,7 @@ import ListVenue from "../../../components/Venue/ListVenue";
 import { supabaseAuth } from "../../../utils/supabaseClient";
 import "./listVenue.css";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
 function page() {
   const [venuesData, setVenuesData] = useState([]);
@@ -55,16 +56,28 @@ function page() {
   filterUserVenue();
 
   return (
-    <div>
-      <div className="flex flex-wrap justify-center gap-8">
-        {readyVenues?.map((venue, index) => (
-          <ListVenue
-            key={index} // Add the key prop directly to ListVenue
-            venue={venue}
-            setVenueHasBeenUpdate={setVenueHasBeenUpdate}
-          />
-        ))}
-      </div>
+    <div className="venue_grid">
+      {venuesData.length === 0 ? (
+        <>
+          {" "}
+          <div className=" text-center">
+            <p className="mb-4 text-2xl">You dont have your hosted venues</p>
+            <Link href="/host/venue">
+              <Button color="primary">Host Venue</Button>
+            </Link>
+          </div>
+        </>
+      ) : (
+        <div className="venue_inside">
+          {readyVenues?.map((venue, index) => (
+            <ListVenue
+              key={index} // Add the key prop directly to ListVenue
+              venue={venue}
+              setVenueHasBeenUpdate={setVenueHasBeenUpdate}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
