@@ -106,9 +106,8 @@ export default function Hero() {
           Current Events
         </h2>
         {events.length > 0 ? (
-          <div className="font-satoshi flex justify-center items-center gap-[2rem] flex-col xl:flex-row">
+          <div className="flex flex-col items-center justify-center gap-[2rem] font-satoshi xl:flex-row">
             {[events[0], events[1], events[2]].map((event) => {
-              console.log(event);
               return (
                 <Card key={event.event_id} className="aspect-square max-w-sm">
                   <CardHeader>
@@ -132,7 +131,7 @@ export default function Hero() {
                     />
                   </CardBody>
                   <CardFooter>
-                    <div className="flex justify-center w-full items-center">
+                    <div className="flex w-full items-center justify-center">
                       <h3 className="text-lg font-semibold md:text-lg">
                         Entry Fee:{" "}
                         <span className="font-medium">

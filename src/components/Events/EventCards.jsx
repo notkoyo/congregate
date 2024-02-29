@@ -1,9 +1,8 @@
 "use client";
 
 import {
-  checkUserLoggedIn,
   deleteEventAttendee,
-  fetchIfUserExist,
+  fetchCurrentUserID,
   isUserBookedOn,
   postEventAttendee,
 } from "@/utils/api";
@@ -11,7 +10,6 @@ import { supabaseAuth } from "@/utils/supabaseClient";
 import {
   Card,
   CardBody,
-  Image,
   CardFooter,
   Modal,
   ModalBody,
@@ -23,8 +21,8 @@ import {
 } from "@nextui-org/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { useLogin } from "../loginContext";
 import BookedOnMessage from "./BookedOnMessage";
+import { useRouter } from "next/navigation";
 
 export default function EventCards({ item, showDelete, setIsLoading }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -33,10 +31,19 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [bookedOn, setBookedOn] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [messageBody, setMessageBody] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
+    });
+    fetchCurrentUserID().then((res) => {
+      if (!res) {
+        setIsLoggedIn(false);
+      } else {
+        setIsLoggedIn(true);
+      }
     });
   }, [isDeleted]);
 
@@ -46,6 +53,11 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   };
 
   const handleBooking = () => {
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
+
     postEventAttendee(item.event_id);
     setMessageBody("Success! You are going to this event!");
     setShowMessage(true);
