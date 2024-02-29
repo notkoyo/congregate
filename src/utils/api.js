@@ -1,4 +1,3 @@
-import { supabase } from "./supabase";
 import { supabaseAuth } from "./supabaseClient";
 
 export const fetchCurrentUserID = async () => {
