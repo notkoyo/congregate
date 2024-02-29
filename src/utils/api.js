@@ -222,11 +222,7 @@ export const fetchCurrentUserJoinedEvents = async () => {
     const { id } = await fetchUserData(auth_id);
     const { data, error } = await supabaseAuth
       .from("event_attendees")
-<<<<<<< HEAD
-      .select("event_id(*, venue_id(*))")
-=======
       .select("event_id(*, venue_id(photos))")
->>>>>>> 48833d85bedc9cb7b2a28e7710bbf5f8712e1ab0
       .eq("user_id", id);
     if (!error) {
       const outputData = data.map((obj) => {
