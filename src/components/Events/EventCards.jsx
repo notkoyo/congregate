@@ -35,10 +35,6 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [messageBody, setMessageBody] = useState("");
 
   useEffect(() => {
-<<<<<<< HEAD
-    fetchIfUserExist();
-=======
->>>>>>> 48833d85bedc9cb7b2a28e7710bbf5f8712e1ab0
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
