@@ -1,0 +1,21 @@
+.venue_grid {
+    padding-top: 40px;
+    width: 100%; /* Adjusted to 100% for better responsiveness */
+    max-width: 1500px; /* Added max-width to limit the container on larger screens */
+    margin: 0 auto;
+  }
+  
+  .venue_inside {
+    padding: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+    gap: 20px;
+  }
+  
+  @media (max-width: 490px) {
+    .venue_inside {
+      grid-template-columns: 1fr;
+    }
+  }
+  

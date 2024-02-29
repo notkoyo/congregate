@@ -20,7 +20,7 @@ export default function myEvents() {
       .then(({ data }) => {
         return supabaseAuth
           .from("events")
-          .select("*, venues(photos)")
+          .select("*, venues(photos), event_attendees(count)")
           .eq(`founder_id`, data[0].id);
       })
       .then(({ data }) => {
@@ -29,7 +29,11 @@ export default function myEvents() {
         }
         setUserEvents(
           data.map((event) => {
-            return { ...event, ...event.venues };
+            return {
+              ...event,
+              ...event.venues,
+              attendees: event.event_attendees[0].count,
+            };
           }),
         );
       });

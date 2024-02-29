@@ -18,6 +18,9 @@ import {
   Button,
   useDisclosure,
   ModalContent,
+  PopoverContent,
+  Popover,
+  PopoverTrigger,
 } from "@nextui-org/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -32,9 +35,22 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
   const [showMessage, setShowMessage] = useState(false);
   const [messageBody, setMessageBody] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [signedUpAttendees, setSignedUpAttendees] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
+    supabaseAuth
+      .from("event_attendees")
+      .select("event_id, users(given_names,surname)")
+      .eq("event_id", item.event_id)
+      .then(({ data }) =>
+        setSignedUpAttendees(
+          data.map((u) => {
+            console.log(u);
+            return { forename: u.users.given_names, surname: u.users.surname };
+          }),
+        ),
+      );
     isUserBookedOn(item.event_id).then((res) => {
       setBookedOn(res);
     });
@@ -62,6 +78,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
     setMessageBody("Success! You are going to this event!");
     setShowMessage(true);
     setBookedOn((prev) => !prev);
+    item.attendees++;
   };
 
   const handleDropout = () => {
@@ -69,6 +86,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
     setMessageBody("You have been removed from this event");
     setShowMessage(true);
     setBookedOn((prev) => !prev);
+    item.attendees--;
   };
 
   const handleHide = () => {
@@ -109,7 +127,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                     {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
                   </p>
                   <div className="flex gap-4">
-                    <p>👥 {item.attendees} </p>
+                    <p>👥 {item.attendees ? item.attendees : 0} </p>
                     <p>{item.event_price ? `£${item.event_price}` : "FREE"}</p>
                   </div>
                 </div>
@@ -126,7 +144,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           scrollBehavior="inside"
           placement={window.innerWidth < 384 ? "bottom" : "bottom-center"}
         >
-          <ModalContent className="mb-20">
+          <ModalContent className="mb-20 font-satoshi">
             {(onClose) => (
               <>
                 <ModalHeader>{openedEvent.name}</ModalHeader>
@@ -134,13 +152,28 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                   <img src={openedEvent.photos} alt="" />
                   <p>{openedEvent.description}</p>
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter className="font-bold">
                   <p className="flex-grow">
                     Starts:{" "}
                     {`${moment(openedEvent.start_date).format("DD/MM/YYYY")}, ${moment(openedEvent.start_date).format("HH:mm")}`}
                   </p>
                   <div className="flex gap-4">
-                    <p>👥 {item.attendees} </p>
+                    <Popover>
+                      <PopoverTrigger>
+                        <p className="cursor-pointer">
+                          👥 {item.attendees ? item.attendees : 0}{" "}
+                        </p>
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        {signedUpAttendees.map((a) => {
+                          return (
+                            <p>
+                              {a.forename} {a.surname}
+                            </p>
+                          );
+                        })}
+                      </PopoverContent>
+                    </Popover>
                     <p>
                       {openedEvent.event_price
                         ? `£${openedEvent.event_price}`
@@ -148,8 +181,9 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                     </p>
                   </div>
 
-                  {showDelete && <Button onPress={handleDelete}>Delete</Button>}
-                  {bookedOn ? (
+                  {showDelete ? (
+                    <Button onPress={handleDelete}>Delete</Button>
+                  ) : bookedOn ? (
                     <Button color="danger" onPress={handleDropout}>
                       Drop out
                     </Button>
