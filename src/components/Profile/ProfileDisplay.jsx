@@ -233,7 +233,7 @@ export default function ProfileDisplay() {
   };
 
   return (
-    <div className="flex flex-col px-4 py-4 font-satoshi sm:px-6 sm:py-6 md:px-8 md:py-8 lg:px-10 lg:py-10 xl:px-20">
+    <div className="flex flex-col bg-cyan-50 px-4 py-4 font-satoshi sm:px-6 sm:py-6 md:px-8 md:py-8 lg:px-10 lg:py-10 xl:px-20">
       <div>
         <div className="flex flex-col items-center gap-10 p-6">
           {currentUser && (
@@ -241,10 +241,11 @@ export default function ProfileDisplay() {
               <Avatar
                 showFallback
                 isBordered
-                color="warning"
+                color="primary"
                 src={currentUser.avatar_url}
                 alt="Avatar"
-                size="large"
+                size="extra-large"
+                className="h-20 w-20"
               />
               <p>{currentUser.email}</p>
             </>
