@@ -3,7 +3,7 @@ import { GoogleMap } from "../Maps/GoogleMap";
 import { GoogleMapAutocomplete } from "../Maps/GoogleMapAutocomplete";
 import { supabaseAuth } from "../../utils/supabaseClient";
 
-import { use, useEffect, useState } from "react";
+import { cloneElement, use, useEffect, useState } from "react";
 import EventCards from "./EventCards";
 import CardSkeleton from "../CardSkeleton";
 import moment from "moment";
@@ -33,7 +33,7 @@ export const Events = () => {
       });
     } else {
       supabaseAuth
-        .rpc("get_events_radius", {
+        .rpc("get_events_radius_with_count", {
           radius: distance,
           user_lat: selectedPos.center.lat,
           user_lng: selectedPos.center.lng,
@@ -44,6 +44,7 @@ export const Events = () => {
         .order(orderBy, { descending: true })
         .range(0, loadedEventsNum)
         .then(({ data }) => {
+          console.log(data);
           const currentEvents = data.filter(
             (e) => new Date(e.start_date) > Date.now(),
           );
@@ -69,7 +70,7 @@ export const Events = () => {
 
   return (
     <>
-      <div className="z-0 m-4 md:mt-8 flex h-full flex-col gap-8 sm:flex-row">
+      <div className="z-0 m-4 flex h-full flex-col gap-8 sm:flex-row md:mt-8">
         <div className="z-0 flex h-full w-full  flex-col gap-8 md:m-4 md:flex-row">
           <div className="flex h-fit flex-col gap-2 md:border-r-2 md:border-gray-300 md:pr-10">
             <section className="flex flex-col items-center gap-2">

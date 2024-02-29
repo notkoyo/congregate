@@ -97,7 +97,10 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                     Starts:{" "}
                     {`${moment(item.start_date).format("DD/MM/YYYY")}, ${moment(item.start_date).format("HH:mm")}`}
                   </p>
-                  <p>{item.event_price ? `£${item.event_price}` : "FREE"}</p>
+                  <div className="flex gap-4">
+                    <p>👥 {item.attendees} </p>
+                    <p>{item.event_price ? `£${item.event_price}` : "FREE"}</p>
+                  </div>
                 </div>
               </div>
             </CardFooter>
@@ -111,7 +114,6 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           backdrop="blur"
           scrollBehavior="inside"
           placement={window.innerWidth < 384 ? "bottom" : "bottom-center"}
-          
         >
           <ModalContent className="mb-20">
             {(onClose) => (
@@ -126,11 +128,15 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                     Starts:{" "}
                     {`${moment(openedEvent.start_date).format("DD/MM/YYYY")}, ${moment(openedEvent.start_date).format("HH:mm")}`}
                   </p>
-                  <p>
-                    {openedEvent.event_price
-                      ? `£${openedEvent.event_price}`
-                      : "FREE"}
-                  </p>
+                  <div className="flex gap-4">
+                    <p>👥 {item.attendees} </p>
+                    <p>
+                      {openedEvent.event_price
+                        ? `£${openedEvent.event_price}`
+                        : "FREE"}
+                    </p>
+                  </div>
+
                   {showDelete && <Button onPress={handleDelete}>Delete</Button>}
                   {bookedOn ? (
                     <Button color="danger" onPress={handleDropout}>
