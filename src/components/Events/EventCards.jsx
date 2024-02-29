@@ -110,10 +110,6 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
           backdrop="blur"
           scrollBehavior="inside"
           placement={window.innerWidth < 384 ? "bottom" : "bottom-center"}
-<<<<<<< HEAD
-          
-=======
->>>>>>> 48833d85bedc9cb7b2a28e7710bbf5f8712e1ab0
         >
           <ModalContent className="mb-20">
             {(onClose) => (
