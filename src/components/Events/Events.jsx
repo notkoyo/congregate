@@ -44,7 +44,6 @@ export const Events = () => {
         .order(orderBy, { descending: true })
         .range(0, loadedEventsNum)
         .then(({ data }) => {
-          console.log(data);
           const currentEvents = data.filter(
             (e) => new Date(e.start_date) > Date.now(),
           );

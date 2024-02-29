@@ -123,13 +123,14 @@ export default function ListVenue({ venue, setVenueHasBeenUpdate }) {
           onOpenChange={onOpenChange}
           size="4xl"
           backdrop="blur"
+          scrollBehavior="inside"
         >
           <ModalContent>
             {(onClose) => (
               <>
                 <ModalHeader>{openedVenue.name}</ModalHeader>
                 <ModalBody>
-                  <img src={openedVenue.photos} alt="" />
+                  <img src={openedVenue.photos} alt="" className="w-dvw object-cover"/>
                   <p>{openedVenue.description}</p>
                 </ModalBody>
                 <ModalFooter>

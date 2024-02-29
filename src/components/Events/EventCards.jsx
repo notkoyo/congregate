@@ -174,6 +174,7 @@ export default function EventCards({ item, showDelete, setIsLoading }) {
                         })}
                       </PopoverContent>
                     </Popover>
+
                     <p>
                       {openedEvent.event_price
                         ? `£${openedEvent.event_price}`
